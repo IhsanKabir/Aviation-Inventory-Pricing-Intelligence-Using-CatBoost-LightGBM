@@ -1,0 +1,15 @@
+{
+  "directories": {
+    "latest": "output/latest",
+    "archive": "output/archive"
+  },
+
+  "formats": {
+    "csv": true,
+    "excel": true,
+    "json": true
+  },
+
+  "archive_mode": "timestamp",
+  "file_prefix": "flights"
+}

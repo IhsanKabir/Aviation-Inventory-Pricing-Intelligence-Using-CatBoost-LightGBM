@@ -1,0 +1,5 @@
+{
+  "mode": "manual",
+  "concurrency": 6,
+  "auto_run_interval_hours": 1
+}

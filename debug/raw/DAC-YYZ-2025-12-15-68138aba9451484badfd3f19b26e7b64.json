@@ -1,0 +1,1641 @@
+{
+  "originalResponse": {
+    "searchResultMetaData": {
+      "branded": true,
+      "multipleDateResult": true,
+      "composedResult": false,
+      "interlineRoute": false,
+      "contextShopping": false
+    },
+    "fareFamilies": [
+      {
+        "brandId": "BS",
+        "brandLabel": [
+          {
+            "programId": "152791",
+            "languageId": "en_US",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_CN",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "fr_FR",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "de_DE",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ja_JP",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ko_KR",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ru_RU",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "vi_VI",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_TW",
+            "marketingText": "Business Saver"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152791",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class in Dreamliner , 02 PCs each weight up to 30kg , Internet in Air. BETWEEN  BD and CANADA. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      },
+      {
+        "brandId": "BF",
+        "brandLabel": [
+          {
+            "programId": "152791",
+            "languageId": "en_US",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_CN",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "fr_FR",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "de_DE",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ja_JP",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ko_KR",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ru_RU",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "vi_VI",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_TW",
+            "marketingText": "Business Flexi"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152791",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          },
+          {
+            "programId": "152791",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>Business Class Luxury. Baggage Allowance is 02 PCs each weight up to 30kg.Between BD and YYZ. Validate all baggage allowances during pricing.</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      }
+    ],
+    "unbundledOffers": [
+      [
+        {
+          "shoppingBasketHashCode": -1703541767,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "1",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "2",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 1791,
+                    "awardFare": false
+                  },
+                  "duration": 245,
+                  "equipment": "787",
+                  "flight": {
+                    "flightNumber": 5840,
+                    "operatingFlightNumber": 447,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "SQ",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "2",
+                    "arrivalTerminal": "0"
+                  },
+                  "origin": "DAC",
+                  "destination": "SIN",
+                  "departure": "2025-12-15T23:55:00",
+                  "arrival": "2025-12-16T06:00:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+08:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "3813024524625899082"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "3",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 7966,
+                    "awardFare": false
+                  },
+                  "duration": 840,
+                  "equipment": "789",
+                  "flight": {
+                    "flightNumber": 20,
+                    "operatingFlightNumber": 20,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "AC",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "2",
+                    "arrivalTerminal": "M"
+                  },
+                  "origin": "SIN",
+                  "destination": "YVR",
+                  "departure": "2025-12-16T08:50:00",
+                  "arrival": "2025-12-16T06:50:00",
+                  "departureGMTOffset": "+08:00",
+                  "arrivalGMTOffset": "-07:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "2518159895532495386"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "4",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 2085,
+                    "awardFare": false
+                  },
+                  "duration": 264,
+                  "equipment": "789",
+                  "flight": {
+                    "flightNumber": 104,
+                    "operatingFlightNumber": 104,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "AC",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "M",
+                    "arrivalTerminal": "1"
+                  },
+                  "origin": "YVR",
+                  "destination": "YYZ",
+                  "departure": "2025-12-16T08:45:00",
+                  "arrival": "2025-12-16T16:09:00",
+                  "departureGMTOffset": "-07:00",
+                  "arrivalGMTOffset": "-05:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1176227519441955417"
+                }
+              ],
+              "stops": 2,
+              "totalDuration": 1634,
+              "connectionInformations": [
+                {
+                  "@id": "5",
+                  "duration": 170,
+                  "changeOfAirport": false
+                },
+                {
+                  "@id": "6",
+                  "duration": 115,
+                  "changeOfAirport": false
+                }
+              ],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "identicalOffersRefs": [
+            -1703541767
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1703541767,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "1"
+            }
+          ],
+          "identicalOffersRefs": [
+            -1703541767
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1298404465,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "7",
+              "segments": [
+                {
+                  "@ref": "2"
+                },
+                {
+                  "@ref": "3"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "8",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 2085,
+                    "awardFare": false
+                  },
+                  "duration": 275,
+                  "equipment": "321",
+                  "flight": {
+                    "flightNumber": 108,
+                    "operatingFlightNumber": 108,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "AC",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "M",
+                    "arrivalTerminal": "1"
+                  },
+                  "origin": "YVR",
+                  "destination": "YYZ",
+                  "departure": "2025-12-16T10:20:00",
+                  "arrival": "2025-12-16T17:55:00",
+                  "departureGMTOffset": "-07:00",
+                  "arrivalGMTOffset": "-05:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "559903931594986518"
+                }
+              ],
+              "stops": 2,
+              "totalDuration": 1740,
+              "connectionInformations": [
+                {
+                  "@id": "9",
+                  "duration": 170,
+                  "changeOfAirport": false
+                },
+                {
+                  "@id": "10",
+                  "duration": 210,
+                  "changeOfAirport": false
+                }
+              ],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1298404465,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "7"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1253350623,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "11",
+              "segments": [
+                {
+                  "@ref": "2"
+                },
+                {
+                  "@ref": "3"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "12",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 2085,
+                    "awardFare": false
+                  },
+                  "duration": 269,
+                  "equipment": "77L",
+                  "flight": {
+                    "flightNumber": 34,
+                    "operatingFlightNumber": 34,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "AC",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "M",
+                    "arrivalTerminal": "1"
+                  },
+                  "origin": "YVR",
+                  "destination": "YYZ",
+                  "departure": "2025-12-16T09:30:00",
+                  "arrival": "2025-12-16T16:59:00",
+                  "departureGMTOffset": "-07:00",
+                  "arrivalGMTOffset": "-05:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "4022201219515759095"
+                }
+              ],
+              "stops": 2,
+              "totalDuration": 1684,
+              "connectionInformations": [
+                {
+                  "@id": "13",
+                  "duration": 170,
+                  "changeOfAirport": false
+                },
+                {
+                  "@id": "14",
+                  "duration": 160,
+                  "changeOfAirport": false
+                }
+              ],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1253350623,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "11"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 359671788,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "15",
+              "segments": [
+                {
+                  "@ref": "2"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "16",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 2862,
+                    "awardFare": false
+                  },
+                  "duration": 370,
+                  "equipment": "787",
+                  "flight": {
+                    "flightNumber": 5879,
+                    "operatingFlightNumber": 600,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "SQ",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "2",
+                    "arrivalTerminal": "1"
+                  },
+                  "origin": "SIN",
+                  "destination": "ICN",
+                  "departure": "2025-12-16T08:30:00",
+                  "arrival": "2025-12-16T15:40:00",
+                  "departureGMTOffset": "+08:00",
+                  "arrivalGMTOffset": "+09:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "126534287102670660"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "17",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 6617,
+                    "awardFare": false
+                  },
+                  "duration": 795,
+                  "equipment": "789",
+                  "flight": {
+                    "flightNumber": 62,
+                    "operatingFlightNumber": 62,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "AC",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "1",
+                    "arrivalTerminal": "1"
+                  },
+                  "origin": "ICN",
+                  "destination": "YYZ",
+                  "departure": "2025-12-16T20:10:00",
+                  "arrival": "2025-12-16T19:25:00",
+                  "departureGMTOffset": "+09:00",
+                  "arrivalGMTOffset": "-05:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "3716040299379227083"
+                }
+              ],
+              "stops": 2,
+              "totalDuration": 1830,
+              "connectionInformations": [
+                {
+                  "@id": "18",
+                  "duration": 150,
+                  "changeOfAirport": false
+                },
+                {
+                  "@id": "19",
+                  "duration": 270,
+                  "changeOfAirport": false
+                }
+              ],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 359671788,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "15"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 662277567,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "20",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "21",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 2202,
+                    "awardFare": false
+                  },
+                  "duration": 350,
+                  "equipment": "788",
+                  "flight": {
+                    "flightNumber": 347,
+                    "operatingFlightNumber": 347,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "2",
+                    "arrivalTerminal": "1"
+                  },
+                  "origin": "DAC",
+                  "destination": "DXB",
+                  "departure": "2025-12-15T20:40:00",
+                  "arrival": "2025-12-16T00:30:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+04:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "3180733964500456310"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "22",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 2702,
+                    "awardFare": false
+                  },
+                  "duration": 420,
+                  "equipment": "32Q",
+                  "flight": {
+                    "flightNumber": 857,
+                    "operatingFlightNumber": 857,
+                    "airlineCode": "AZ",
+                    "operatingAirlineCode": "AZ",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "1",
+                    "arrivalTerminal": "3"
+                  },
+                  "origin": "DXB",
+                  "destination": "FCO",
+                  "departure": "2025-12-16T01:50:00",
+                  "arrival": "2025-12-16T05:50:00",
+                  "departureGMTOffset": "+04:00",
+                  "arrivalGMTOffset": "+01:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1511217542986770470"
+                },
+                {
+                  "@type": "Segment",
+                  "@id": "23",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 4415,
+                    "awardFare": false
+                  },
+                  "duration": 575,
+                  "equipment": "789",
+                  "flight": {
+                    "flightNumber": 891,
+                    "operatingFlightNumber": 891,
+                    "airlineCode": "AC",
+                    "operatingAirlineCode": "AC",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "3",
+                    "arrivalTerminal": "1"
+                  },
+                  "origin": "FCO",
+                  "destination": "YYZ",
+                  "departure": "2025-12-16T13:10:00",
+                  "arrival": "2025-12-16T16:45:00",
+                  "departureGMTOffset": "+01:00",
+                  "arrivalGMTOffset": "-05:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "807131996624633449"
+                }
+              ],
+              "stops": 2,
+              "totalDuration": 1865,
+              "connectionInformations": [
+                {
+                  "@id": "24",
+                  "duration": 80,
+                  "changeOfAirport": false
+                },
+                {
+                  "@id": "25",
+                  "duration": 440,
+                  "changeOfAirport": false
+                }
+              ],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 662277567,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "20"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1703541767,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "1"
+            }
+          ],
+          "identicalOffersRefs": [
+            -1703541767
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        }
+      ]
+    ],
+    "unbundledAlternateDateOffers": [
+      [
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-12"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-13"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-14"
+          ]
+        },
+        {
+          "status": "SOLD_OUT",
+          "departureDates": [
+            "2025-12-15"
+          ]
+        },
+        {
+          "brandId": "BF",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 1,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "26",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "27",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 8804,
+                    "awardFare": false
+                  },
+                  "duration": 1245,
+                  "cabinClass": "Business",
+                  "equipment": "789",
+                  "flight": {
+                    "flightNumber": 305,
+                    "operatingFlightNumber": 305,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [
+                      {
+                        "airport": "IST",
+                        "arrival": "2025-12-16T09:40:00",
+                        "departure": "2025-12-16T10:45:00",
+                        "elapsedTime": 525,
+                        "duration": 65
+                      }
+                    ],
+                    "departureTerminal": "2",
+                    "arrivalTerminal": "3"
+                  },
+                  "origin": "DAC",
+                  "destination": "YYZ",
+                  "departure": "2025-12-16T03:55:00",
+                  "arrival": "2025-12-16T13:40:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "-05:00",
+                  "bookingClass": "C",
+                  "layoverDuration": 65,
+                  "fareBasis": "CLBDO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "YYZ",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "M"
+                    }
+                  ],
+                  "segmentRef": "1137097574852585132"
+                }
+              ],
+              "stops": 1,
+              "totalDuration": 1245,
+              "connectionInformations": [],
+              "bookingClass": "C",
+              "programIDs": [
+                "152791"
+              ],
+              "programCodes": [
+                "P39"
+              ]
+            }
+          ],
+          "cabinClass": "Business",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-16"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 14014,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 245460,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 259474,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-17"
+          ]
+        },
+        {
+          "brandId": "BS",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 5,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "28",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "29",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 8804,
+                    "awardFare": false
+                  },
+                  "duration": 1245,
+                  "cabinClass": "Business",
+                  "equipment": "789",
+                  "flight": {
+                    "flightNumber": 305,
+                    "operatingFlightNumber": 305,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [
+                      {
+                        "airport": "IST",
+                        "arrival": "2025-12-18T09:40:00",
+                        "departure": "2025-12-18T10:45:00",
+                        "elapsedTime": 525,
+                        "duration": 65
+                      }
+                    ],
+                    "departureTerminal": "2",
+                    "arrivalTerminal": "3"
+                  },
+                  "origin": "DAC",
+                  "destination": "YYZ",
+                  "departure": "2025-12-18T03:55:00",
+                  "arrival": "2025-12-18T13:40:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "-05:00",
+                  "bookingClass": "D",
+                  "layoverDuration": 65,
+                  "fareBasis": "DLBDO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "YYZ",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "M"
+                    }
+                  ],
+                  "segmentRef": "290268919177308539"
+                }
+              ],
+              "stops": 1,
+              "totalDuration": 1245,
+              "connectionInformations": [],
+              "bookingClass": "D",
+              "programIDs": [
+                "152791"
+              ],
+              "programCodes": [
+                "P39"
+              ]
+            }
+          ],
+          "cabinClass": "Business",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-18"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 14014,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 208641,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 222655,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    ],
+    "bundledOffers": [],
+    "bundledAlternateDateOffers": [],
+    "brandedResults": {
+      "itineraryPartBrands": [
+        [
+          {
+            "itineraryPart": {
+              "@ref": "1"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -1703541767,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1703541767,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1703541767,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 1634,
+            "departure": "2025-12-15T23:55:00",
+            "arrival": "2025-12-16T16:09:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "7"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 1298404465,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 1298404465,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 1740,
+            "departure": "2025-12-15T23:55:00",
+            "arrival": "2025-12-16T17:55:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "11"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -1253350623,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1253350623,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 1684,
+            "departure": "2025-12-15T23:55:00",
+            "arrival": "2025-12-16T16:59:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "15"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 359671788,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 359671788,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 1830,
+            "departure": "2025-12-15T23:55:00",
+            "arrival": "2025-12-16T19:25:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "20"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 662277567,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 662277567,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 1865,
+            "departure": "2025-12-15T20:40:00",
+            "arrival": "2025-12-16T16:45:00"
+          }
+        ]
+      ]
+    },
+    "travelPartAdvisories": [
+      []
+    ],
+    "soldOutDatesOutbound": [
+      "2025-12-15"
+    ],
+    "soldOutDatesInbound": [],
+    "noneScheduledDatesOutbound": [],
+    "noneScheduledDatesInbound": [],
+    "warnings": [],
+    "currency": "BDT",
+    "promocodeValid": false,
+    "negotiateFarePresent": true,
+    "conversionRatesFound": false,
+    "messages": [
+      {
+        "level": "warn",
+        "code": "flight_not_found.use_alternate_search",
+        "details": {
+          "@type": "AlternateSearchSuggestions",
+          "originalRoute": {
+            "origin": "DAC",
+            "destination": "YYZ",
+            "departure": "2025-12-15T00:00:00"
+          }
+        }
+      }
+    ]
+  },
+  "__typename": "DigitalConnectOriginalResponse"
+}

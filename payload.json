@@ -1,0 +1,29 @@
+{
+  "query": "query bookingAirSearch($airSearchInput: CustomAirSearchInput) { bookingAirSearch(airSearchInput: $airSearchInput) { originalResponse __typename }}",
+  "variables": {
+    "airSearchInput": {
+      "cabinClass": "Economy",
+      "awardBooking": false,
+      "promoCodes": [],
+      "searchType": "BRANDED",
+      "itineraryParts": [
+        {
+          "from": {
+            "useNearbyLocations": false,
+            "code": ""
+          },
+          "to": {
+            "useNearbyLocations": false,
+            "code": ""
+          },
+          "when": {
+            "date": ""
+          }
+        }
+      ],
+      "passengers": {
+        "ADT": 1
+      }
+    }
+  }
+}

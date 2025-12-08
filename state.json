@@ -1,0 +1,134 @@
+{
+  "cookies": [
+    {
+      "name": "visid_incap_2740837",
+      "value": "ItX0IKkASIylXnKw4YpDXxIkMWkAAAAAQUIPAAAAAAAAwqs+pHjJpCvjQlh+Iu6T",
+      "domain": ".biman-airlines.com",
+      "path": "/",
+      "expires": 1796313017,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "CID",
+      "value": "cmir14qvs8131j8si3uk9cg1b",
+      "domain": "booking.biman-airlines.com",
+      "path": "/",
+      "expires": 1764849886.677054,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SSWGID",
+      "value": "cmir14qvs8131j8si3uk9cg1b",
+      "domain": "booking.biman-airlines.com",
+      "path": "/",
+      "expires": 1799388286.677083,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "QuantumMetricUserID",
+      "value": "a6bb4bd562244e34fb1b78ae87147a0a",
+      "domain": ".biman-airlines.com",
+      "path": "/",
+      "expires": 1796367204,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "incap_ses_939_2740837",
+      "value": "PWGBRFllvyX6Yl8YoP8HDWovMWkAAAAAhMaJgMGH51tqxFEpJUnv7w==",
+      "domain": ".biman-airlines.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "reese84",
+      "value": "3:cr/awHk2RSiXOIvD7OuVVw==:+iiDJeDYY3bQtCOsWhdEVbmXTF0AL0y8u6n6p9TryEYJJyNRV1RJK17DRVeYKSQoqz/xiMU61tO3NblJcDWFOERZGD70Ck20wMLKHIBtDlE8jdJ+B2vm8YNNskEz92CmChNVNWTLbOns8KRgy/RMqZcJyhpfDYhFkrqbZ/BEWJmXi14mVLSGO6N+l53Cuq1lLklvq1S924Tv1o9Fp8JYNz4ifdSq+ZodGgrqNKMMClnponUhu220TIyoYrTQ46CM4K2Tb6mFcwM+9WEgbNTmd0Gpqk7crxO6ZWVdCJD6b8FENcNdqRaxcsQ+/6G02tSstw4Ri2l3Tsuw1EvN5m9DB24Nf/H7kZhfi2HZvRu223f0yO6/YDbA0zjLKNMLuhwgkk2FTZlz45obb9QzsKzjfE4DzlMPiG8wkkLXhItSWpbBUciANCi8yPPDQrkxzZkoYGrczHepf5DJVOxqzswnypnWwdIwP4JNn/FlbBJPwRbUEpiMgEv3iKmPRaI2hshgsH8rQqQYjFpXoo8AQve/TA==:ePU7abh6sgH+7f4NEjhhjchYzChBqClduBn3JKh8jY8=",
+      "domain": "booking.biman-airlines.com",
+      "path": "/",
+      "expires": 1767423193.111978,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "nlbi_2740837",
+      "value": "bOCeCYZFAwgGYKvGUjE9GAAAAAD7O6ja1LczNZCWZ4l90BZq",
+      "domain": ".biman-airlines.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "nlbi_2740837_2147483392",
+      "value": "bZGqUH/jK2aWoEwBUjE9GAAAAACtUhEyjn8gw2I+UTfP1OPJ",
+      "domain": ".biman-airlines.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "nlbi_2740837_2643930",
+      "value": "ZxpvKg487nQVwAhJUjE9GAAAAADUD7U50m2vvh8rMVXV2FfZ",
+      "domain": ".biman-airlines.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "QuantumMetricSessionID",
+      "value": "b758a43bb8d05a1233845d700cd21051",
+      "domain": ".biman-airlines.com",
+      "path": "/",
+      "expires": 1764833005,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "DCSESSIONID",
+      "value": "2b453fa8-50e2-4369-9346-42956316ba86-TargetGroupB",
+      "domain": "booking.biman-airlines.com",
+      "path": "/",
+      "expires": 1764832103.341164,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "AWSALB",
+      "value": "BTAlTU0mURio6NlLMqTCDZoOsmR+zkhktmvSAQXiiK4lHME1urh4v3SfJiFWBzGtSoMwLp+HueltXtql4IKUAjMdcuQhoFBGvz+qjrhCgGeIUnNY0t1AZ5elQo+g",
+      "domain": "booking.biman-airlines.com",
+      "path": "/",
+      "expires": 1765436004.507815,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AWSALBCORS",
+      "value": "BTAlTU0mURio6NlLMqTCDZoOsmR+zkhktmvSAQXiiK4lHME1urh4v3SfJiFWBzGtSoMwLp+HueltXtql4IKUAjMdcuQhoFBGvz+qjrhCgGeIUnNY0t1AZ5elQo+g",
+      "domain": "booking.biman-airlines.com",
+      "path": "/",
+      "expires": 1765436004.5079,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ]
+}

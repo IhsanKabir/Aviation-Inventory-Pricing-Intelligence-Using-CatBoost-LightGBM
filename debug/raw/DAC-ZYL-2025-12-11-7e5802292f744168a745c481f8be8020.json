@@ -1,0 +1,2644 @@
+{
+  "originalResponse": {
+    "searchResultMetaData": {
+      "branded": true,
+      "multipleDateResult": true,
+      "composedResult": false,
+      "interlineRoute": false,
+      "contextShopping": false
+    },
+    "fareFamilies": [
+      {
+        "brandId": "EV",
+        "brandLabel": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "Economy Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "Economy Saver"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      },
+      {
+        "brandId": "EF",
+        "brandLabel": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "Economy Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "Economy Flexi"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      },
+      {
+        "brandId": "SV",
+        "brandLabel": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "Super Saver Economy"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "Super Saver Economy"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>20KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only*</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      },
+      {
+        "brandId": "BS",
+        "brandLabel": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "Business Saver"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      },
+      {
+        "brandId": "BF",
+        "brandLabel": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "Business Flexi"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "Business Flexi"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      }
+    ],
+    "unbundledOffers": [
+      [
+        {
+          "shoppingBasketHashCode": 1199951873,
+          "brandId": "EF",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 1,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "1",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "2",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Economy",
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 605,
+                    "operatingFlightNumber": 605,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-11T19:00:00",
+                  "arrival": "2025-12-11T20:00:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "Y",
+                  "layoverDuration": 0,
+                  "fareBasis": "YDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "ZYL",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "470515598820228994"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "Y",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ],
+              "advisories": []
+            }
+          ],
+          "cabinClass": "Economy",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 9024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 10199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1274083184,
+          "brandId": "EF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "3",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "4",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 401,
+                    "operatingFlightNumber": 401,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": []
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-11T07:45:00",
+                  "arrival": "2025-12-11T08:45:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1780323290024553477"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1274083184,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "3"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1274083184,
+          "brandId": "EV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "3"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1274083184,
+          "brandId": "SV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "3"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1274083184,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "3"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -309759184,
+          "brandId": "EF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "5",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "6",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 601,
+                    "operatingFlightNumber": 601,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-11T10:50:00",
+                  "arrival": "2025-12-11T11:50:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "890600700347631016"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -309759184,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "5"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -309759184,
+          "brandId": "EV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "5"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -309759184,
+          "brandId": "SV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "5"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -309759184,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "5"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1008305220,
+          "brandId": "EF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "7",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "8",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 603,
+                    "operatingFlightNumber": 603,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-11T14:30:00",
+                  "arrival": "2025-12-11T15:30:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1833390306164190093"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1008305220,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "7"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1008305220,
+          "brandId": "EV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "7"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1008305220,
+          "brandId": "SV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "7"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1008305220,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "7"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1126932116,
+          "brandId": "EF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "9",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "10",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 607,
+                    "operatingFlightNumber": 607,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-11T20:45:00",
+                  "arrival": "2025-12-11T21:45:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "4122129012100226616"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1126932116,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "9"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1126932116,
+          "brandId": "EV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "9"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1126932116,
+          "brandId": "SV",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "9"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1126932116,
+          "brandId": "BF",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "9"
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        }
+      ]
+    ],
+    "unbundledAlternateDateOffers": [
+      [
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-08"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-09"
+          ]
+        },
+        {
+          "brandId": "EF",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 9,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "11",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "12",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Economy",
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 605,
+                    "operatingFlightNumber": 605,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-10T19:30:00",
+                  "arrival": "2025-12-10T20:30:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "S",
+                  "layoverDuration": 0,
+                  "fareBasis": "SDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "ZYL",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "1058645364724968313"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "S",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Economy",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-10"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 6024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 7199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "brandId": "EF",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 1,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "13",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "14",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Economy",
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 605,
+                    "operatingFlightNumber": 605,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-11T19:00:00",
+                  "arrival": "2025-12-11T20:00:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "Y",
+                  "layoverDuration": 0,
+                  "fareBasis": "YDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "ZYL",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "4396682452300590560"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "Y",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Economy",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-11"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 9024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 10199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "brandId": "EV",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 9,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "15",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "16",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 55,
+                  "cabinClass": "Economy",
+                  "equipment": "788",
+                  "flight": {
+                    "flightNumber": 247,
+                    "operatingFlightNumber": 247,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": []
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-12T18:35:00",
+                  "arrival": "2025-12-12T19:30:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "Q",
+                  "layoverDuration": 0,
+                  "fareBasis": "QDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "ZYL",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "3893868065743419295"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 55,
+              "connectionInformations": [],
+              "bookingClass": "Q",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Economy",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-12"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 5024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 6199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "brandId": "EF",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 8,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "17",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "18",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Economy",
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 607,
+                    "operatingFlightNumber": 607,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-13T20:45:00",
+                  "arrival": "2025-12-13T21:45:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "S",
+                  "layoverDuration": 0,
+                  "fareBasis": "SDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "ZYL",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "275403931658348932"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "S",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Economy",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-13"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 6024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 7199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "brandId": "EF",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 1,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "19",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "20",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 124,
+                    "awardFare": false
+                  },
+                  "duration": 55,
+                  "cabinClass": "Economy",
+                  "equipment": "738",
+                  "flight": {
+                    "flightNumber": 603,
+                    "operatingFlightNumber": 603,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "ZYL",
+                  "departure": "2025-12-14T15:30:00",
+                  "arrival": "2025-12-14T16:25:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "S",
+                  "layoverDuration": 0,
+                  "fareBasis": "SDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "ZYL",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "3205299208264780078"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 55,
+              "connectionInformations": [],
+              "bookingClass": "S",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Economy",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-14"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 6024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 7199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    ],
+    "bundledOffers": [],
+    "bundledAlternateDateOffers": [],
+    "brandedResults": {
+      "itineraryPartBrands": [
+        [
+          {
+            "itineraryPart": {
+              "@ref": "1"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 1199951873,
+                "brandId": "EF",
+                "soldout": false,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 1,
+                  "lowAvailability": false
+                },
+                "cabinClass": "Economy",
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": true,
+                  "negotiatedType": "OTHER"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": [
+                    [
+                      {
+                        "amount": 1175,
+                        "currency": "BDT"
+                      }
+                    ]
+                  ]
+                },
+                "fare": {
+                  "alternatives": [
+                    [
+                      {
+                        "amount": 9024,
+                        "currency": "BDT"
+                      }
+                    ]
+                  ]
+                },
+                "total": {
+                  "alternatives": [
+                    [
+                      {
+                        "amount": 10199,
+                        "currency": "BDT"
+                      }
+                    ]
+                  ]
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 60,
+            "departure": "2025-12-11T19:00:00",
+            "arrival": "2025-12-11T20:00:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "3"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -1274083184,
+                "brandId": "EF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1274083184,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1274083184,
+                "brandId": "EV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1274083184,
+                "brandId": "SV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1274083184,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 60,
+            "departure": "2025-12-11T07:45:00",
+            "arrival": "2025-12-11T08:45:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "5"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -309759184,
+                "brandId": "EF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -309759184,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -309759184,
+                "brandId": "EV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -309759184,
+                "brandId": "SV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -309759184,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 60,
+            "departure": "2025-12-11T10:50:00",
+            "arrival": "2025-12-11T11:50:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "7"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -1008305220,
+                "brandId": "EF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1008305220,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1008305220,
+                "brandId": "EV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1008305220,
+                "brandId": "SV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": -1008305220,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 60,
+            "departure": "2025-12-11T14:30:00",
+            "arrival": "2025-12-11T15:30:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "9"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 1126932116,
+                "brandId": "EF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 1126932116,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 1126932116,
+                "brandId": "EV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 1126932116,
+                "brandId": "SV",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 1126932116,
+                "brandId": "BF",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 60,
+            "departure": "2025-12-11T20:45:00",
+            "arrival": "2025-12-11T21:45:00"
+          }
+        ]
+      ]
+    },
+    "travelPartAdvisories": [
+      []
+    ],
+    "soldOutDatesOutbound": [],
+    "soldOutDatesInbound": [],
+    "noneScheduledDatesOutbound": [],
+    "noneScheduledDatesInbound": [],
+    "warnings": [],
+    "currency": "BDT",
+    "promocodeValid": false,
+    "negotiateFarePresent": true,
+    "conversionRatesFound": false
+  },
+  "__typename": "DigitalConnectOriginalResponse"
+}

@@ -1,0 +1,196 @@
+2025-12-07 18:39:16 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 18:39:16 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 18:39:25 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 18:39:25 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 18:44:23 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 18:44:23 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:42:50 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:42:50 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:47:54 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:47:54 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:50:54 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:50:54 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:51:44 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:51:44 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:52:01 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:52:01 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:52:27 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:52:27 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:54:08 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:54:08 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:57:49 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:57:49 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 20:58:05 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 20:58:05 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 21:13:52 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 21:13:52 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 21:18:04 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 21:18:04 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 21:18:27 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 21:18:27 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 21:18:27 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 21:18:28 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 21:18:28 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 21:18:28 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 21:18:28 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 21:18:28 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 21:18:28 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 21:18:28 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 21:18:28 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 21:18:28 [ERROR] MainProcess Failed to write CSV output
+Traceback (most recent call last):
+  File "C:\Users\TLL-90134\Documents\airline_scraper\run_all.py", line 434, in main
+    atomic_write_csv(csv_out, results, headers)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TLL-90134\Documents\airline_scraper\run_all.py", line 121, in atomic_write_csv
+    tmp.replace(path)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\TLL-90134\AppData\Local\Python\pythoncore-3.14-64\Lib\pathlib\__init__.py", line 1096, in replace
+    os.replace(self, target)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\TLL-90134\\Documents\\airline_scraper\\output\\latest\\combined_results.csv.tmp' -> 'C:\\Users\\TLL-90134\\Documents\\airline_scraper\\output\\latest\\combined_results.csv'
+2025-12-07 21:18:28 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 21:22:42 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 21:22:42 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 21:22:42 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 21:22:46 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 21:22:46 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 21:22:46 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 21:22:46 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 21:22:46 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 21:22:46 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 21:22:46 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 21:22:46 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 21:22:46 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 21:35:04 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 21:35:04 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 21:35:04 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 21:35:50 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 21:36:10 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 21:36:23 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 21:36:43 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 21:37:03 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 21:37:20 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 21:37:20 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 21:37:20 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 21:37:20 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:02:39 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:02:39 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:02:39 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:02:39 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:02:39 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:02:39 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:02:39 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:02:39 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:02:39 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:02:39 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:02:39 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:02:39 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:06:30 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:06:30 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:06:30 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:06:31 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:06:31 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:06:31 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:06:31 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:06:31 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:06:31 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:06:31 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:06:31 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:06:31 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:08:27 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:08:27 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:08:27 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:08:27 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:08:27 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:08:27 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:08:27 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:08:27 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:08:27 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:08:27 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:08:27 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:08:27 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:08:52 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:08:52 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:08:52 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:08:52 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:08:52 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:08:52 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:08:52 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:08:53 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:08:53 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:08:53 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:08:53 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:08:53 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:09:57 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:09:57 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:09:57 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:09:57 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:09:57 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:09:57 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:09:57 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:09:57 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:09:57 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:09:57 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:09:57 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:09:57 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:13:56 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:13:56 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:13:56 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:14:02 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:14:08 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:14:12 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:14:17 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:14:23 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:14:27 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:14:27 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:14:27 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:14:27 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:14:35 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:14:35 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:14:35 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:14:35 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:14:35 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:14:35 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:14:35 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:14:35 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:14:35 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:14:35 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:14:35 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:14:35 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:14:52 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:14:52 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:14:52 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:14:52 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:14:52 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:14:52 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:14:52 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:14:52 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:14:52 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:14:52 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:14:52 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:14:52 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:21:54 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:21:54 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:21:54 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:22:00 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:22:06 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:22:11 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:22:16 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:22:20 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:22:26 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:22:26 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:22:26 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:22:26 [INFO] MainProcess Done. Rows saved: 0
+2025-12-07 22:34:21 [INFO] MainProcess === Airline Scraper Engine Started ===
+2025-12-07 22:34:21 [DEBUG] MainProcess Loading cookies from C:\Users\TLL-90134\Documents\airline_scraper\core\state.json
+2025-12-07 22:34:21 [INFO] MainProcess Prepared 60 tasks. Workers=6
+2025-12-07 22:34:39 [INFO] MainProcess Processed 10/60 tasks
+2025-12-07 22:34:52 [INFO] MainProcess Processed 20/60 tasks
+2025-12-07 22:35:01 [INFO] MainProcess Processed 30/60 tasks
+2025-12-07 22:35:16 [INFO] MainProcess Processed 40/60 tasks
+2025-12-07 22:35:34 [INFO] MainProcess Processed 50/60 tasks
+2025-12-07 22:35:54 [INFO] MainProcess Processed 60/60 tasks
+2025-12-07 22:35:54 [INFO] MainProcess Writing JSON (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.json) rows=0
+2025-12-07 22:35:54 [INFO] MainProcess Writing CSV (C:\Users\TLL-90134\Documents\airline_scraper\output\latest\combined_results.csv)
+2025-12-07 22:35:55 [INFO] MainProcess Done. Rows saved: 0

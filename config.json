@@ -1,0 +1,15 @@
+{
+  "routes": [
+    ["DAC", "CXB"],
+    ["DAC", "CGP"],
+    ["DAC", "ZYL"],
+    ["DAC", "JED"],
+    ["DAC", "DXB"],
+    ["DAC", "SIN"],
+    ["DAC", "KUL"]
+  ],
+  "dates": [0, 3, 7, 15],
+  "output": {
+    "directory": "output"
+  }
+}

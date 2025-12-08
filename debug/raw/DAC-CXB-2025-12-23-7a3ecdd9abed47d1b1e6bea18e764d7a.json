@@ -1,0 +1,1196 @@
+{
+  "originalResponse": {
+    "searchResultMetaData": {
+      "branded": true,
+      "multipleDateResult": true,
+      "composedResult": false,
+      "interlineRoute": false,
+      "contextShopping": false
+    },
+    "fareFamilies": [
+      {
+        "brandId": "BS",
+        "brandLabel": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "Business Saver"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "Business Saver"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "152748",
+            "languageId": "en_US",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_CN",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "fr_FR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "de_DE",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ja_JP",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ko_KR",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "ru_RU",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "vi_VI",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          },
+          {
+            "programId": "152748",
+            "languageId": "zh_TW",
+            "marketingText": "<P ALIGN=\"LEFT\"><FONT FACE=\"VERDANA\" SIZE=\"11\" COLOR=\"#333333\" LETTERSPACING=\"0\" KERNING=\"0\"><font><p>30KG baggage</p></font><font><p>DigitalExperienceRef=1 **Digital Experience Use Only**</p></font></FONT></P>"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      }
+    ],
+    "unbundledOffers": [
+      [
+        {
+          "shoppingBasketHashCode": 494503486,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "1",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "2",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 75,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 433,
+                    "operatingFlightNumber": 433,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-23T08:00:00",
+                  "arrival": "2025-12-23T09:15:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "3073196580432422478"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 75,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "identicalOffersRefs": [
+            494503486
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 241709258,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "3",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "4",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 75,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 435,
+                    "operatingFlightNumber": 435,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-23T11:00:00",
+                  "arrival": "2025-12-23T12:15:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "2503588852832267795"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 75,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -2060918826,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "5",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "6",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 75,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 437,
+                    "operatingFlightNumber": 437,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-23T15:30:00",
+                  "arrival": "2025-12-23T16:45:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1674374684679827881"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 75,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1294020766,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "7",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "8",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 75,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 439,
+                    "operatingFlightNumber": 439,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-23T07:30:00",
+                  "arrival": "2025-12-23T08:45:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "2955105171747141686"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 75,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 494503486,
+          "brandId": "BS",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "1"
+            }
+          ],
+          "identicalOffersRefs": [
+            494503486
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        }
+      ]
+    ],
+    "unbundledAlternateDateOffers": [
+      [
+        {
+          "brandId": "BS",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 4,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "9",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "10",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 65,
+                  "cabinClass": "Business",
+                  "equipment": "738",
+                  "flight": {
+                    "flightNumber": 435,
+                    "operatingFlightNumber": 435,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-20T08:20:00",
+                  "arrival": "2025-12-20T09:25:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "D",
+                  "layoverDuration": 0,
+                  "fareBasis": "DDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "CXB",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "3760569534077364833"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 65,
+              "connectionInformations": [],
+              "bookingClass": "D",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Business",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-20"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 11024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 12199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-21"
+          ]
+        },
+        {
+          "brandId": "BS",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 1,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "11",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "12",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Business",
+                  "equipment": "738",
+                  "flight": {
+                    "flightNumber": 435,
+                    "operatingFlightNumber": 435,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-22T12:00:00",
+                  "arrival": "2025-12-22T13:00:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "D",
+                  "layoverDuration": 0,
+                  "fareBasis": "DDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "CXB",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "4403785681416576310"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "D",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Business",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-22"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 11024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 12199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "status": "SOLD_OUT",
+          "departureDates": [
+            "2025-12-23"
+          ]
+        },
+        {
+          "brandId": "BS",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 3,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "13",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "14",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Business",
+                  "equipment": "738",
+                  "flight": {
+                    "flightNumber": 439,
+                    "operatingFlightNumber": 439,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-24T12:30:00",
+                  "arrival": "2025-12-24T13:30:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "D",
+                  "layoverDuration": 0,
+                  "fareBasis": "DDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "CXB",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "693353971695424543"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "D",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Business",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-24"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 11024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 12199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "brandId": "BS",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 4,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "15",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "16",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Business",
+                  "equipment": "738",
+                  "flight": {
+                    "flightNumber": 439,
+                    "operatingFlightNumber": 439,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-25T07:45:00",
+                  "arrival": "2025-12-25T08:45:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "D",
+                  "layoverDuration": 0,
+                  "fareBasis": "DDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "CXB",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "3038204673133076103"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "D",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Business",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-25"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 11024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 12199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "brandId": "BS",
+          "soldout": false,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 8,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "17",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "18",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 60,
+                  "cabinClass": "Business",
+                  "equipment": "738",
+                  "flight": {
+                    "flightNumber": 435,
+                    "operatingFlightNumber": 435,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-26T13:00:00",
+                  "arrival": "2025-12-26T14:00:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "bookingClass": "D",
+                  "layoverDuration": 0,
+                  "fareBasis": "DDACFO",
+                  "subjectToGovernmentApproval": false,
+                  "fareComponentBeginAirport": "DAC",
+                  "fareComponentEndAirport": "CXB",
+                  "fareComponentDirectionality": "FROM",
+                  "meals": [
+                    {
+                      "passengerType": "ADT",
+                      "mealCode": "S"
+                    }
+                  ],
+                  "segmentRef": "1069156466062818011"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 60,
+              "connectionInformations": [],
+              "bookingClass": "D",
+              "programIDs": [
+                "152748"
+              ],
+              "programCodes": [
+                "DMB"
+              ]
+            }
+          ],
+          "cabinClass": "Business",
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": true,
+            "negotiatedType": "OTHER"
+          },
+          "status": "AVAILABLE",
+          "departureDates": [
+            "2025-12-26"
+          ],
+          "taxes": {
+            "alternatives": [
+              [
+                {
+                  "amount": 1175,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "fare": {
+            "alternatives": [
+              [
+                {
+                  "amount": 11024,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          },
+          "total": {
+            "alternatives": [
+              [
+                {
+                  "amount": 12199,
+                  "currency": "BDT"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    ],
+    "bundledOffers": [],
+    "bundledAlternateDateOffers": [],
+    "brandedResults": {
+      "itineraryPartBrands": [
+        [
+          {
+            "itineraryPart": {
+              "@ref": "1"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 494503486,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 494503486,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 75,
+            "departure": "2025-12-23T08:00:00",
+            "arrival": "2025-12-23T09:15:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "3"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 241709258,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 75,
+            "departure": "2025-12-23T11:00:00",
+            "arrival": "2025-12-23T12:15:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "5"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -2060918826,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 75,
+            "departure": "2025-12-23T15:30:00",
+            "arrival": "2025-12-23T16:45:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "7"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -1294020766,
+                "brandId": "BS",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 75,
+            "departure": "2025-12-23T07:30:00",
+            "arrival": "2025-12-23T08:45:00"
+          }
+        ]
+      ]
+    },
+    "travelPartAdvisories": [
+      []
+    ],
+    "soldOutDatesOutbound": [
+      "2025-12-23"
+    ],
+    "soldOutDatesInbound": [],
+    "noneScheduledDatesOutbound": [],
+    "noneScheduledDatesInbound": [],
+    "warnings": [],
+    "currency": "BDT",
+    "promocodeValid": false,
+    "negotiateFarePresent": true,
+    "conversionRatesFound": false,
+    "messages": [
+      {
+        "level": "warn",
+        "code": "flight_not_found.use_alternate_search",
+        "details": {
+          "@type": "AlternateSearchSuggestions",
+          "originalRoute": {
+            "origin": "DAC",
+            "destination": "CXB",
+            "departure": "2025-12-23T00:00:00"
+          }
+        }
+      }
+    ]
+  },
+  "__typename": "DigitalConnectOriginalResponse"
+}

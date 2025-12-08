@@ -1,0 +1,1814 @@
+[
+  {
+    "brand": "SV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 147,
+    "equipment_code": "788",
+    "aircraft": "Boeing 787-8",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:35:00",
+    "arrival": "2025-12-27T19:35:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "G",
+    "fare_basis": "GSPCLO",
+    "fare_amount": 2024,
+    "tax_amount": 1175,
+    "total_amount": 3199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -1134734854,
+      "brandId": "SV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "1",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "2",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "788",
+              "flight": {
+                "flightNumber": 147,
+                "operatingFlightNumber": 147,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:35:00",
+              "arrival": "2025-12-27T19:35:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "G",
+              "layoverDuration": 0,
+              "fareBasis": "GSPCLO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "M"
+                }
+              ],
+              "segmentRef": "3819475180096308358"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "G",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 2024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 3199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 147,
+    "equipment_code": "788",
+    "aircraft": "Boeing 787-8",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:35:00",
+    "arrival": "2025-12-27T19:35:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "O",
+    "fare_basis": "OSPCLO",
+    "fare_amount": 3024,
+    "tax_amount": 1175,
+    "total_amount": 4199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -283713093,
+      "brandId": "EV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "3",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "4",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "788",
+              "flight": {
+                "flightNumber": 147,
+                "operatingFlightNumber": 147,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:35:00",
+              "arrival": "2025-12-27T19:35:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "O",
+              "layoverDuration": 0,
+              "fareBasis": "OSPCLO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "M"
+                }
+              ],
+              "segmentRef": "461547061173595184"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "O",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 3024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 4199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EF",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 147,
+    "equipment_code": "788",
+    "aircraft": "Boeing 787-8",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:35:00",
+    "arrival": "2025-12-27T19:35:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "S",
+    "fare_basis": "SDACFO",
+    "fare_amount": 6024,
+    "tax_amount": 1175,
+    "total_amount": 7199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 5,
+    "raw_offer": {
+      "shoppingBasketHashCode": 538022804,
+      "brandId": "EF",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 5,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "5",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "6",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "788",
+              "flight": {
+                "flightNumber": 147,
+                "operatingFlightNumber": 147,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:35:00",
+              "arrival": "2025-12-27T19:35:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "S",
+              "layoverDuration": 0,
+              "fareBasis": "SDACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "M"
+                }
+              ],
+              "segmentRef": "3825984119726844860"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "S",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 6024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 7199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "BS",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 147,
+    "equipment_code": "788",
+    "aircraft": "Boeing 787-8",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:35:00",
+    "arrival": "2025-12-27T19:35:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Business",
+    "booking_class": "D",
+    "fare_basis": "DSPCLO",
+    "fare_amount": 5024,
+    "tax_amount": 1175,
+    "total_amount": 6199,
+    "currency": "BDT",
+    "baggage": "30 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -1556465537,
+      "brandId": "BS",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "7",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "8",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Business",
+              "equipment": "788",
+              "flight": {
+                "flightNumber": 147,
+                "operatingFlightNumber": 147,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:35:00",
+              "arrival": "2025-12-27T19:35:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "D",
+              "layoverDuration": 0,
+              "fareBasis": "DSPCLO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "M"
+                }
+              ],
+              "segmentRef": "1326796877480625389"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "D",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Business",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 5024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 6199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "BF",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 147,
+    "equipment_code": "788",
+    "aircraft": "Boeing 787-8",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:35:00",
+    "arrival": "2025-12-27T19:35:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Business",
+    "booking_class": "C",
+    "fare_basis": "CDACFO",
+    "fare_amount": 11024,
+    "tax_amount": 1175,
+    "total_amount": 12199,
+    "currency": "BDT",
+    "baggage": "30 KG",
+    "seats_remaining": 5,
+    "raw_offer": {
+      "shoppingBasketHashCode": 1523462178,
+      "brandId": "BF",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 5,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "9",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "10",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Business",
+              "equipment": "788",
+              "flight": {
+                "flightNumber": 147,
+                "operatingFlightNumber": 147,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:35:00",
+              "arrival": "2025-12-27T19:35:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "C",
+              "layoverDuration": 0,
+              "fareBasis": "CDACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "M"
+                }
+              ],
+              "segmentRef": "3266458468292895134"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "C",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Business",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 11024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 12199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "SV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 151,
+    "equipment_code": "738",
+    "aircraft": "Boeing 737-800",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:30:00",
+    "arrival": "2025-12-27T19:30:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "G",
+    "fare_basis": "GSPCLO",
+    "fare_amount": 2024,
+    "tax_amount": 1175,
+    "total_amount": 3199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -510775562,
+      "brandId": "SV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "11",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "12",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "738",
+              "flight": {
+                "flightNumber": 151,
+                "operatingFlightNumber": 151,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:30:00",
+              "arrival": "2025-12-27T19:30:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "G",
+              "layoverDuration": 0,
+              "fareBasis": "GSPCLO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "1927022743675294073"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "G",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 2024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 3199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 151,
+    "equipment_code": "738",
+    "aircraft": "Boeing 737-800",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:30:00",
+    "arrival": "2025-12-27T19:30:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "O",
+    "fare_basis": "OSPCLO",
+    "fare_amount": 3024,
+    "tax_amount": 1175,
+    "total_amount": 4199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": 340246199,
+      "brandId": "EV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "13",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "14",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "738",
+              "flight": {
+                "flightNumber": 151,
+                "operatingFlightNumber": 151,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:30:00",
+              "arrival": "2025-12-27T19:30:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "O",
+              "layoverDuration": 0,
+              "fareBasis": "OSPCLO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "3851870938851768897"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "O",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 3024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 4199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EF",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 151,
+    "equipment_code": "738",
+    "aircraft": "Boeing 737-800",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T18:30:00",
+    "arrival": "2025-12-27T19:30:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "S",
+    "fare_basis": "SDACFO",
+    "fare_amount": 6024,
+    "tax_amount": 1175,
+    "total_amount": 7199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 5,
+    "raw_offer": {
+      "shoppingBasketHashCode": 1161982096,
+      "brandId": "EF",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 5,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "15",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "16",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "738",
+              "flight": {
+                "flightNumber": 151,
+                "operatingFlightNumber": 151,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": []
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T18:30:00",
+              "arrival": "2025-12-27T19:30:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "S",
+              "layoverDuration": 0,
+              "fareBasis": "SDACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "4485773406881887677"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "S",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 6024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 7199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "SV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 611,
+    "equipment_code": "DH8",
+    "aircraft": "Unknown (DH8)",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T07:45:00",
+    "arrival": "2025-12-27T08:45:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "G",
+    "fare_basis": "GDACFO",
+    "fare_amount": 3524,
+    "tax_amount": 1175,
+    "total_amount": 4699,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -706339966,
+      "brandId": "SV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "17",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "18",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "DH8",
+              "flight": {
+                "flightNumber": 611,
+                "operatingFlightNumber": 611,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": [],
+                "departureTerminal": "D"
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T07:45:00",
+              "arrival": "2025-12-27T08:45:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "G",
+              "layoverDuration": 0,
+              "fareBasis": "GDACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "175222211056254917"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "G",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 3524,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 4699,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 611,
+    "equipment_code": "DH8",
+    "aircraft": "Unknown (DH8)",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T07:45:00",
+    "arrival": "2025-12-27T08:45:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "O",
+    "fare_basis": "ODACFO",
+    "fare_amount": 4324,
+    "tax_amount": 1175,
+    "total_amount": 5499,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -988711189,
+      "brandId": "EV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "19",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "20",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "DH8",
+              "flight": {
+                "flightNumber": 611,
+                "operatingFlightNumber": 611,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": [],
+                "departureTerminal": "D"
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T07:45:00",
+              "arrival": "2025-12-27T08:45:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "O",
+              "layoverDuration": 0,
+              "fareBasis": "ODACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "4376485454739414527"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "O",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 4324,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 5499,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EF",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 611,
+    "equipment_code": "DH8",
+    "aircraft": "Unknown (DH8)",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T07:45:00",
+    "arrival": "2025-12-27T08:45:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "S",
+    "fare_basis": "SDACFO",
+    "fare_amount": 6024,
+    "tax_amount": 1175,
+    "total_amount": 7199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -902142990,
+      "brandId": "EF",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "21",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "22",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "DH8",
+              "flight": {
+                "flightNumber": 611,
+                "operatingFlightNumber": 611,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": [],
+                "departureTerminal": "D"
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T07:45:00",
+              "arrival": "2025-12-27T08:45:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "S",
+              "layoverDuration": 0,
+              "fareBasis": "SDACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "468691028278950782"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "S",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 6024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 7199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "SV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 615,
+    "equipment_code": "DH8",
+    "aircraft": "Unknown (DH8)",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T13:55:00",
+    "arrival": "2025-12-27T14:55:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "G",
+    "fare_basis": "GDACFO",
+    "fare_amount": 3524,
+    "tax_amount": 1175,
+    "total_amount": 4699,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -123214150,
+      "brandId": "SV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "23",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "24",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "DH8",
+              "flight": {
+                "flightNumber": 615,
+                "operatingFlightNumber": 615,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": [],
+                "departureTerminal": "D"
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T13:55:00",
+              "arrival": "2025-12-27T14:55:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "G",
+              "layoverDuration": 0,
+              "fareBasis": "GDACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "3143341767302391030"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "G",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 3524,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 4699,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EV",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 615,
+    "equipment_code": "DH8",
+    "aircraft": "Unknown (DH8)",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T13:55:00",
+    "arrival": "2025-12-27T14:55:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "O",
+    "fare_basis": "ODACFO",
+    "fare_amount": 4324,
+    "tax_amount": 1175,
+    "total_amount": 5499,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -405585373,
+      "brandId": "EV",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "25",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "26",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "DH8",
+              "flight": {
+                "flightNumber": 615,
+                "operatingFlightNumber": 615,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": [],
+                "departureTerminal": "D"
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T13:55:00",
+              "arrival": "2025-12-27T14:55:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "O",
+              "layoverDuration": 0,
+              "fareBasis": "ODACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "2800348545014890315"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "O",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 4324,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 5499,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "brand": "EF",
+    "airline": "BG",
+    "operating_airline": "BG",
+    "flight_number": 615,
+    "equipment_code": "DH8",
+    "aircraft": "Unknown (DH8)",
+    "origin": "DAC",
+    "destination": "CGP",
+    "departure": "2025-12-27T13:55:00",
+    "arrival": "2025-12-27T14:55:00",
+    "duration_min": 60,
+    "stops": 0,
+    "cabin": "Economy",
+    "booking_class": "S",
+    "fare_basis": "SDACFO",
+    "fare_amount": 6024,
+    "tax_amount": 1175,
+    "total_amount": 7199,
+    "currency": "BDT",
+    "baggage": "20 KG",
+    "seats_remaining": 9,
+    "raw_offer": {
+      "shoppingBasketHashCode": -319017174,
+      "brandId": "EF",
+      "soldout": false,
+      "bundlePrice": {},
+      "availableObFees": [],
+      "seatsRemaining": {
+        "count": 9,
+        "lowAvailability": false
+      },
+      "itineraryPart": [
+        {
+          "@type": "ItineraryPart",
+          "@id": "27",
+          "segments": [
+            {
+              "@type": "Segment",
+              "@id": "28",
+              "segmentOfferInformation": {
+                "flightsMiles": 139,
+                "awardFare": false
+              },
+              "duration": 60,
+              "cabinClass": "Economy",
+              "equipment": "DH8",
+              "flight": {
+                "flightNumber": 615,
+                "operatingFlightNumber": 615,
+                "airlineCode": "BG",
+                "operatingAirlineCode": "BG",
+                "stopAirports": [],
+                "advisories": [],
+                "departureTerminal": "D"
+              },
+              "origin": "DAC",
+              "destination": "CGP",
+              "departure": "2025-12-27T13:55:00",
+              "arrival": "2025-12-27T14:55:00",
+              "departureGMTOffset": "+06:00",
+              "arrivalGMTOffset": "+06:00",
+              "bookingClass": "S",
+              "layoverDuration": 0,
+              "fareBasis": "SDACFO",
+              "subjectToGovernmentApproval": false,
+              "fareComponentBeginAirport": "DAC",
+              "fareComponentEndAirport": "CGP",
+              "fareComponentDirectionality": "FROM",
+              "meals": [
+                {
+                  "passengerType": "ADT",
+                  "mealCode": "S"
+                }
+              ],
+              "segmentRef": "2533000120009118348"
+            }
+          ],
+          "stops": 0,
+          "totalDuration": 60,
+          "connectionInformations": [],
+          "bookingClass": "S",
+          "programIDs": [
+            "152748"
+          ],
+          "programCodes": [
+            "DMB"
+          ],
+          "advisories": []
+        }
+      ],
+      "cabinClass": "Economy",
+      "offerInformation": {
+        "discounted": false,
+        "negotiated": true,
+        "negotiatedType": "OTHER"
+      },
+      "advisories": [],
+      "taxes": {
+        "alternatives": [
+          [
+            {
+              "amount": 1175,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "fare": {
+        "alternatives": [
+          [
+            {
+              "amount": 6024,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      },
+      "total": {
+        "alternatives": [
+          [
+            {
+              "amount": 7199,
+              "currency": "BDT"
+            }
+          ]
+        ]
+      }
+    }
+  }
+]

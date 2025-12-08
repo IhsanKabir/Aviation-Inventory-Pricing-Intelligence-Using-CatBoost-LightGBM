@@ -1,0 +1,8 @@
+{
+  "BG": {
+    "module": "biman",
+    "active": true,
+    "throttle_per_minute": 30,
+    "cabin_classes": ["Economy", "Business"]
+  }
+}

@@ -1,0 +1,578 @@
+[
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-16",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-24",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-12",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-09",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-09",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-12",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-09",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-09",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-12",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-24",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-12",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-12",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-16",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-09",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-16",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-16",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-12",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-24",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CGP",
+    "date": "2025-12-09",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-24",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "CXB",
+    "date": "2025-12-16",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-16",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-12",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-16",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-16",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-24",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-24",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-09",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-09",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-12",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-12",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-16",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-16",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-24",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "SPD",
+    "date": "2025-12-24",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-09",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-09",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-12",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-12",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-16",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-16",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-24",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "JSR",
+    "date": "2025-12-24",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-24",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "ZYL",
+    "date": "2025-12-24",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-09",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-09",
+    "cabin": "Business",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  },
+  {
+    "airline": "biman",
+    "origin": "DAC",
+    "destination": "RJH",
+    "date": "2025-12-12",
+    "cabin": "Economy",
+    "passengers": {
+      "ADT": 1
+    },
+    "ok": false,
+    "error": "run_search() got an unexpected keyword argument 'origin'"
+  }
+]

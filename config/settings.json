@@ -1,0 +1,16 @@
+{
+  "routes_path": "config/routes.json",
+  "output_latest_dir": "output/latest",
+  "output_archive_dir": "output/archive",
+  "debug_dir": "debug",
+  "interval_hours": 1,
+  "active_start_hour": 10,
+  "active_end_hour": 17,
+  "run_between_hours_enabled": false,
+  "max_shift_days": 3,
+  "rerun_attempts": 2,
+  "skip_blank_rows": true,
+  "sqlite_db": "output/combined_results.db",
+  "run_all_command": "python run_all.py",
+  "project_root": "."
+}

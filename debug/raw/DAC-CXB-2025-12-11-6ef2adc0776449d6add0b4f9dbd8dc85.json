@@ -1,0 +1,577 @@
+{
+  "originalResponse": {
+    "searchResultMetaData": {
+      "branded": true,
+      "multipleDateResult": true,
+      "composedResult": false,
+      "interlineRoute": false,
+      "contextShopping": false
+    },
+    "fareFamilies": [
+      {
+        "brandId": "DEFAULT",
+        "brandLabel": [
+          {
+            "programId": "DEFAULT",
+            "languageId": "en_US",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "zh_CN",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "fr_FR",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "de_DE",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "ja_JP",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "ko_KR",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "ru_RU",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "vi_VI",
+            "marketingText": "brand.default.label"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "zh_TW",
+            "marketingText": "brand.default.label"
+          }
+        ],
+        "marketingTexts": [
+          {
+            "programId": "DEFAULT",
+            "languageId": "en_US"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "zh_CN"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "fr_FR"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "de_DE"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "ja_JP"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "ko_KR"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "ru_RU"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "vi_VI"
+          },
+          {
+            "programId": "DEFAULT",
+            "languageId": "zh_TW"
+          }
+        ],
+        "brandAncillaries": {
+          "flightAncillary": []
+        },
+        "fareFamilyRemarkRPH": 0
+      }
+    ],
+    "unbundledOffers": [
+      [
+        {
+          "shoppingBasketHashCode": 1247498442,
+          "brandId": "DEFAULT",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "1",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "2",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 75,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 435,
+                    "operatingFlightNumber": 435,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-11T11:00:00",
+                  "arrival": "2025-12-11T12:15:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1861968938782397839"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 75,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "identicalOffersRefs": [
+            1247498442
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1500292670,
+          "brandId": "DEFAULT",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "3",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "4",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 75,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 433,
+                    "operatingFlightNumber": 433,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-11T08:00:00",
+                  "arrival": "2025-12-11T09:15:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1721808576256143152"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 75,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": -1055129642,
+          "brandId": "DEFAULT",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@type": "ItineraryPart",
+              "@id": "5",
+              "segments": [
+                {
+                  "@type": "Segment",
+                  "@id": "6",
+                  "segmentOfferInformation": {
+                    "flightsMiles": 189,
+                    "awardFare": false
+                  },
+                  "duration": 75,
+                  "equipment": "DH8",
+                  "flight": {
+                    "flightNumber": 437,
+                    "operatingFlightNumber": 437,
+                    "airlineCode": "BG",
+                    "operatingAirlineCode": "BG",
+                    "stopAirports": [],
+                    "advisories": [],
+                    "departureTerminal": "D"
+                  },
+                  "origin": "DAC",
+                  "destination": "CXB",
+                  "departure": "2025-12-11T15:30:00",
+                  "arrival": "2025-12-11T16:45:00",
+                  "departureGMTOffset": "+06:00",
+                  "arrivalGMTOffset": "+06:00",
+                  "layoverDuration": 0,
+                  "subjectToGovernmentApproval": false,
+                  "segmentRef": "1715409121629957672"
+                }
+              ],
+              "stops": 0,
+              "totalDuration": 75,
+              "connectionInformations": [],
+              "bookingClass": "ASSORTED",
+              "advisories": []
+            }
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        },
+        {
+          "shoppingBasketHashCode": 1247498442,
+          "brandId": "DEFAULT",
+          "soldout": true,
+          "bundlePrice": {},
+          "availableObFees": [],
+          "seatsRemaining": {
+            "count": 0,
+            "lowAvailability": false
+          },
+          "itineraryPart": [
+            {
+              "@ref": "1"
+            }
+          ],
+          "identicalOffersRefs": [
+            1247498442
+          ],
+          "offerInformation": {
+            "discounted": false,
+            "negotiated": false,
+            "negotiatedType": "NONE"
+          },
+          "advisories": [],
+          "taxes": {
+            "alternatives": []
+          },
+          "fare": {
+            "alternatives": []
+          },
+          "total": {
+            "alternatives": []
+          }
+        }
+      ]
+    ],
+    "unbundledAlternateDateOffers": [
+      [
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-08"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-09"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-10"
+          ]
+        },
+        {
+          "status": "SOLD_OUT",
+          "departureDates": [
+            "2025-12-11"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-12"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-13"
+          ]
+        },
+        {
+          "status": "UNAVAILABLE",
+          "departureDates": [
+            "2025-12-14"
+          ]
+        }
+      ]
+    ],
+    "bundledOffers": [],
+    "bundledAlternateDateOffers": [],
+    "brandedResults": {
+      "itineraryPartBrands": [
+        [
+          {
+            "itineraryPart": {
+              "@ref": "1"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 1247498442,
+                "brandId": "DEFAULT",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              },
+              {
+                "shoppingBasketHashCode": 1247498442,
+                "brandId": "DEFAULT",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 75,
+            "departure": "2025-12-11T11:00:00",
+            "arrival": "2025-12-11T12:15:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "3"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": 1500292670,
+                "brandId": "DEFAULT",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 75,
+            "departure": "2025-12-11T08:00:00",
+            "arrival": "2025-12-11T09:15:00"
+          },
+          {
+            "itineraryPart": {
+              "@ref": "5"
+            },
+            "brandOffers": [
+              {
+                "shoppingBasketHashCode": -1055129642,
+                "brandId": "DEFAULT",
+                "soldout": true,
+                "bundlePrice": {},
+                "availableObFees": [],
+                "seatsRemaining": {
+                  "count": 0,
+                  "lowAvailability": false
+                },
+                "offerInformation": {
+                  "discounted": false,
+                  "negotiated": false,
+                  "negotiatedType": "NONE"
+                },
+                "advisories": [],
+                "taxes": {
+                  "alternatives": []
+                },
+                "fare": {
+                  "alternatives": []
+                },
+                "total": {
+                  "alternatives": []
+                },
+                "totalMandatoryObFees": {
+                  "alternatives": []
+                }
+              }
+            ],
+            "duration": 75,
+            "departure": "2025-12-11T15:30:00",
+            "arrival": "2025-12-11T16:45:00"
+          }
+        ]
+      ]
+    },
+    "travelPartAdvisories": [
+      []
+    ],
+    "soldOutDatesOutbound": [
+      "2025-12-11"
+    ],
+    "soldOutDatesInbound": [],
+    "noneScheduledDatesOutbound": [],
+    "noneScheduledDatesInbound": [],
+    "warnings": [
+      "UNABLE_TO_APPLY_FLIGHT_PROMOTION_RULES"
+    ],
+    "promocodeValid": false,
+    "negotiateFarePresent": false,
+    "conversionRatesFound": false,
+    "messages": [
+      {
+        "level": "warn",
+        "code": "flight_not_found.use_alternate_search",
+        "details": {
+          "@type": "AlternateSearchSuggestions",
+          "originalRoute": {
+            "origin": "DAC",
+            "destination": "CXB",
+            "departure": "2025-12-11T00:00:00"
+          }
+        }
+      }
+    ]
+  },
+  "__typename": "DigitalConnectOriginalResponse"
+}

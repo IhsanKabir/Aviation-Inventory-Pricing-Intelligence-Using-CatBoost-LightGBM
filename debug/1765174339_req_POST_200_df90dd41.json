@@ -1,0 +1,37 @@
+{
+  "trace_id": "78fb187199e04e51b21180704e03e5d9",
+  "method": "POST",
+  "url": "https://booking.biman-airlines.com/api/graphql",
+  "kwargs": {
+    "json": {
+      "operationName": null,
+      "query": "query bookingAirSearch($airSearchInput: CustomAirSearchInput) {\n  bookingAirSearch(airSearchInput: $airSearchInput) {\n    originalResponse\n    __typename\n  }\n}",
+      "variables": {
+        "airSearchInput": {
+          "cabinClass": "Economy",
+          "awardBooking": false,
+          "promoCodes": [],
+          "searchType": "BRANDED",
+          "itineraryParts": [
+            {
+              "from": {
+                "useNearbyLocations": false,
+                "code": "DAC"
+              },
+              "to": {
+                "useNearbyLocations": false,
+                "code": "CXB"
+              },
+              "when": {
+                "date": "2025-12-10"
+              }
+            }
+          ],
+          "passengers": {
+            "ADT": 1
+          }
+        }
+      },
+      "extensions": {}
+    },
+    "headers": 

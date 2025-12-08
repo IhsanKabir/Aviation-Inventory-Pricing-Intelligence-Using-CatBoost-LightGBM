@@ -1,0 +1,8 @@
+[
+  { "origin": "DAC", "destination": "CXB" },
+  { "origin": "DAC", "destination": "CGP" },
+  { "origin": "DAC", "destination": "ZYL" },
+  { "origin": "DAC", "destination": "RJH" },
+  { "origin": "DAC", "destination": "SPD" },
+  { "origin": "DAC", "destination": "JSR" }
+]
