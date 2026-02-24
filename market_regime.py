@@ -1,0 +1,10 @@
+from enum import Enum
+
+
+class MarketRegime(str, Enum):
+    DEMAND_SURGE = "DEMAND_SURGE"
+    DEMAND_SOFT = "DEMAND_SOFT"
+    YIELD_PROTECTION = "YIELD_PROTECTION"
+    MARKET_TESTING = "MARKET_TESTING"
+    STABLE = "STABLE"
+    UNKNOWN = "UNKNOWN"

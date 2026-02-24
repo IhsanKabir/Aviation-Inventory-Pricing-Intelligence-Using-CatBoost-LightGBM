@@ -10,3 +10,7 @@ pytz
 requests
 SQLAlchemy
 xlsxwriter
+# Optional ML backends for predict_next_day.py (--ml-models)
+scikit-learn
+catboost
+lightgbm
