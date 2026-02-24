@@ -1,0 +1,18 @@
+{
+  "markdownlint.ignore": [
+    "**/output/reports/**/*.md",
+    "DAILY_PROGRESS_TRACKING.md"
+  ],
+  "markdownlint.config": {
+    "MD013": {
+      "line_length": 160,
+      "code_blocks": false,
+      "tables": false
+    },
+    "MD060": false
+  },
+  "cSpell.ignorePaths": [
+    "output/reports/**/*.md",
+    "DAILY_PROGRESS_TRACKING.md"
+  ]
+}

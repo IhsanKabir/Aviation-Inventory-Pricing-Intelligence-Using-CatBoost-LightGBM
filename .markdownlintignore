@@ -1,0 +1,4 @@
+output/reports/**/*.md
+DAILY_PROGRESS_TRACKING.md
+WEAKNESS_*.md
+PHASE_1_*.md
