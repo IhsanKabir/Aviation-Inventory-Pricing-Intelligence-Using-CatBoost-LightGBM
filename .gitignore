@@ -47,3 +47,13 @@ evidence/**/~$*.xlsx
 evidence/**/*.tmp
 evidence/**/*.bak
 evidence/**/*_latest.*
+
+# Local publish-prep exclusions (backups/experiments/runtime outputs)
+.github/copilot-instructions.md
+data/*.db
+reports/*.xlsx
+debug_*.py
+h_c_r_v5.py
+hourly_change_report_v*_stable.py
+/models.py
+run_all - *.py
