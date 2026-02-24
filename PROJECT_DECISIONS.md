@@ -749,6 +749,22 @@ Artifacts:
 - `output/reports/route_priority_policy_comparative_study_latest.csv`
 - `output/reports/route_priority_policy_comparative_study_latest.json`
 
+Rerun note (2026-02-24, trigger-based review):
+
+- Trigger met: `SPD-DAC` was no longer flagged `sparse_stage_b` at the
+  production Stage B floor, so the comparative policy study was re-run using
+  the same 4-route batch and the same model settings.
+- New rerun artifacts:
+  - `output/reports/route_priority_policy_comparative_study_20260224_134151.md`
+  - `output/reports/route_priority_policy_comparative_study_20260224_134151.csv`
+  - `output/reports/route_priority_policy_comparative_study_20260224_134151.json`
+- Rerun outcome: policy difference remained consistent with the prior study.
+  - Only `DAC-CXB` changed across policies (`watch` under
+    `beats_zero_folds` vs `high` under `mean_rmse`).
+  - `DAC-SPD`, `SPD-DAC`, and `CXB-DAC` were unchanged across policies.
+- Decision unchanged: keep `beats_zero_folds` as the production gate and use
+  `mean_rmse` as a watchlist-only signal.
+
 ## 16) DL Strategy Notes + Market Intelligence Expansion Hypotheses (2026-02-24)
 
 Context:
