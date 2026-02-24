@@ -29,6 +29,8 @@
    - `AirlineIntel_DailyOps`
    - `AirlineIntel_WeeklyPack`
    - `AirlineIntel_MaintenancePulse`
+   - `AirlineIntel_Ingestion4H`
+   - `AirlineIntel_IngestionOnLogon`
 
 ## Exact Verification Commands
 
@@ -48,6 +50,8 @@ Get-Content output\backups\db_restore_drill_latest.json
 schtasks /Query /TN AirlineIntel_DailyOps /FO LIST /V | findstr /I /C:"Status:" /C:"Next Run Time" /C:"Task To Run"
 schtasks /Query /TN AirlineIntel_WeeklyPack /FO LIST /V | findstr /I /C:"Status:" /C:"Next Run Time" /C:"Task To Run"
 schtasks /Query /TN AirlineIntel_MaintenancePulse /FO LIST /V | findstr /I /C:"Status:" /C:"Next Run Time" /C:"Repeat: Every"
+schtasks /Query /TN AirlineIntel_Ingestion4H /FO LIST /V | findstr /I /C:"Status:" /C:"Next Run Time" /C:"Repeat: Every" /C:"Task To Run"
+schtasks /Query /TN AirlineIntel_IngestionOnLogon /FO LIST /V | findstr /I /C:"Status:" /C:"Task To Run"
 ```
 
 ## Expected Good State
@@ -132,11 +136,13 @@ Reinstall no-admin autorun setup:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scheduler\install_always_on_autorun.ps1
+powershell -ExecutionPolicy Bypass -File scheduler\install_ingestion_autorun.ps1
 ```
 
 Then confirm:
 - Startup shortcut exists:
   - `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\AirlineIntel AlwaysOn.lnk`
+  - `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\AirlineIntel Ingestion Kickoff.lnk`
 - Pulse task exists:
   - `AirlineIntel_MaintenancePulse`
 
@@ -183,7 +189,7 @@ Active recovery run (executes targeted scrapes):
 .\.venv\Scripts\python.exe tools\recover_missed_windows.py --output-dir output\reports --timestamp-tz local --max-routes 8
 ```
 
-## Runtime Profiling / Safe Parallel Scrape
+## Runtime Profiling / Safe Parallel Accumulation
 
 Single-airline runtime profile:
 
@@ -200,6 +206,39 @@ Safe parallel-by-airline run:
 Check outputs:
 - `output/reports/runtime_profile_latest.json`
 - `output/reports/scrape_parallel_latest.json`
+
+## Passenger-Mix Basis (ADT/CHD/INF) Checks
+
+Rule:
+- Compare like-for-like only. Do not compare `ADT=1` runs to `ADT=2+` runs unless explicitly treating it as a probe analysis.
+
+Default baseline:
+- `ADT=1 CHD=0 INF=0`
+
+Live run monitoring (heartbeat + watcher):
+
+```powershell
+.\.venv\Scripts\python.exe tools\watch_run_status.py
+```
+
+Look for:
+- `pax=1/0/0` for baseline runs
+- `pax=2/0/0` (or other probe mix) when intentionally probing party-size sensitivity
+
+Direct heartbeat file check:
+
+```powershell
+Get-Content output\reports\run_all_status_latest.json
+```
+
+Verify:
+- `search_passengers.adt/chd/inf`
+- `overall_query_completed` is increasing during active runs
+- `state` is not `STALE` for long intervals in the watcher
+
+Route monitor comparison basis check:
+- `generate_route_flight_fare_monitor.py` now warns if current/previous compared scrapes have mismatched passenger mix (`ADT/CHD/INF`).
+- If warning appears, regenerate using a like-for-like accumulation pair for valid change analysis.
 
 ## Local CI Guard (Every Commit)
 
