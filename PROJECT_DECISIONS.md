@@ -765,6 +765,22 @@ Rerun note (2026-02-24, trigger-based review):
 - Decision unchanged: keep `beats_zero_folds` as the production gate and use
   `mean_rmse` as a watchlist-only signal.
 
+Rerun note (2026-02-24, trigger-based review; post-accumulation cycle):
+
+- Trigger met again after additional probe accumulation and weekly batch
+  re-evaluation, so the comparative policy study was re-run on the same
+  4-route batch and the same fixed model settings.
+- New rerun artifacts:
+  - `output/reports/route_priority_policy_comparative_study_20260224_141446.md`
+  - `output/reports/route_priority_policy_comparative_study_20260224_141446.csv`
+  - `output/reports/route_priority_policy_comparative_study_20260224_141446.json`
+- Rerun outcome:
+  - No route priority changed across policies (`changed_routes = []`).
+  - `beats_zero_folds` and `mean_rmse` produced the same route-priority
+    assignments on this rerun.
+- Decision unchanged: keep `beats_zero_folds` as the production gate and use
+  `mean_rmse` as a watchlist-only signal.
+
 ## 16) DL Strategy Notes + Market Intelligence Expansion Hypotheses (2026-02-24)
 
 Context:
