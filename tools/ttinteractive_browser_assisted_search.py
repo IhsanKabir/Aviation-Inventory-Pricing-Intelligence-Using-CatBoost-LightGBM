@@ -339,6 +339,28 @@ def _print_env_hint(module, cookies_path: Path | None, proxy_server: str | None)
             print(f"  $env:{env_proxy} = '{proxy_server}'")
 
 
+def _maybe_wait_for_operator(
+    *,
+    prompt: str,
+    non_interactive: bool,
+    settle_ms: int,
+    page=None,
+    settle_multiplier: float = 1.0,
+) -> None:
+    if non_interactive:
+        wait_ms = max(300, int(max(0, settle_ms) * max(0.0, settle_multiplier)))
+        print(f"[non-interactive] {prompt} (auto-continue after {wait_ms} ms)")
+        if page is not None:
+            try:
+                page.wait_for_timeout(wait_ms)
+                return
+            except Exception:
+                pass
+        time.sleep(wait_ms / 1000.0)
+        return
+    input(prompt)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--carrier", required=True, choices=["BS", "2A"])
@@ -371,6 +393,11 @@ def main() -> None:
     parser.add_argument("--settle-ms", type=int, default=3000)
     parser.add_argument("--max-search-attempts", type=int, default=3, help="Retries for automated same-browser search when challenge blocks")
     parser.add_argument("--keep-browser-open", action="store_true", help="Pause before closing browser at the end (manual inspection)")
+    parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Do not block on input() prompts; auto-continue with short waits and skip manual fallback waits.",
+    )
     args = parser.parse_args()
 
     if args.session_bundle_in:
@@ -516,7 +543,12 @@ def main() -> None:
             print("4. Return here and press ENTER to let the script send the search itself.")
         else:
             print("4. Return here and press ENTER to save cookies.")
-        input("Press ENTER when ready: ")
+        _maybe_wait_for_operator(
+            prompt="Press ENTER when ready:",
+            non_interactive=bool(args.non_interactive),
+            settle_ms=args.settle_ms,
+            page=page,
+        )
 
         cookies_simple, cookies_full = _write_cookie_outputs(context, cookie_path, cookies_full_path)
         print(f"Saved {len(cookies_simple)} cookies (simple dict) to {cookie_path}")
@@ -546,7 +578,11 @@ def main() -> None:
             _print_env_hint(module, cookie_path, args.proxy_server)
             if args.keep_browser_open:
                 print("")
-                input("Inspection pause: press ENTER to close the browser and exit... ")
+                _maybe_wait_for_operator(
+                    prompt="Inspection pause: press ENTER to close the browser and exit... ",
+                    non_interactive=bool(args.non_interactive),
+                    settle_ms=args.settle_ms,
+                )
             if cdp_attached:
                 print("[cdp] Leaving attached browser open.")
             elif persistent_context:
@@ -662,7 +698,15 @@ def main() -> None:
             )
             print("A captcha/challenge page should now be open in the same browser window.")
             print("Solve the challenge only. Do NOT type routes/date and DO NOT click the website Search button.")
-            input("Press ENTER after the search-step challenge is solved to retry the same search: ")
+            if args.non_interactive:
+                print("[non-interactive] Search-step challenge retry prompt skipped; leaving this job as blocked.")
+                break
+            _maybe_wait_for_operator(
+                prompt="Press ENTER after the search-step challenge is solved to retry the same search: ",
+                non_interactive=False,
+                settle_ms=args.settle_ms,
+                page=page,
+            )
             page = _get_active_page(context, page)
             page.wait_for_timeout(args.settle_ms)
 
@@ -720,7 +764,13 @@ def main() -> None:
             print("  - Click the website Search button")
             print("  - Solve any captcha/challenge shown")
             print("  - Wait until results load (SearchResult / FlexibleFlightListStatic) if possible")
-            input("Press ENTER after the manual UI search flow has settled (or press ENTER to skip): ")
+            _maybe_wait_for_operator(
+                prompt="Press ENTER after the manual UI search flow has settled (or press ENTER to skip): ",
+                non_interactive=bool(args.non_interactive),
+                settle_ms=args.settle_ms,
+                page=page,
+                settle_multiplier=2.0,
+            )
             page = _get_active_page(context, page)
             page.wait_for_timeout(args.settle_ms)
             current_url = str(page.url or "")
@@ -759,7 +809,13 @@ def main() -> None:
             print(f"SearchFlightsAction reached TTInteractive results flow URL: {final_url}")
             print("If a challenge appears on the results page, complete it. Otherwise just wait for the page to finish loading.")
             print("Do NOT click the website Search button here either.")
-            input("Press ENTER after the results page has settled: ")
+            _maybe_wait_for_operator(
+                prompt="Press ENTER after the results page has settled: ",
+                non_interactive=bool(args.non_interactive),
+                settle_ms=args.settle_ms,
+                page=page,
+                settle_multiplier=2.0,
+            )
             page = _get_active_page(context, page)
             page.wait_for_timeout(args.settle_ms)
             result_html = page.content()
@@ -790,6 +846,7 @@ def main() -> None:
             "transport": resp.get("transport"),
             "redirected": resp.get("redirected"),
             "search_attempts": search_attempts,
+            "non_interactive": bool(args.non_interactive),
             "reached_search_result_url": reached_search_result,
             "reached_flexibleflightliststatic_url": "/BookingEngine/FlexibleFlightListStatic" in final_url,
             "headers": resp.get("headers"),
@@ -938,7 +995,11 @@ def main() -> None:
         _print_env_hint(module, cookie_path, args.proxy_server)
         if args.keep_browser_open:
             print("")
-            input("Inspection pause: press ENTER to close the browser and exit... ")
+            _maybe_wait_for_operator(
+                prompt="Inspection pause: press ENTER to close the browser and exit... ",
+                non_interactive=bool(args.non_interactive),
+                settle_ms=args.settle_ms,
+            )
         if cdp_attached:
             print("[cdp] Leaving attached browser open.")
         elif persistent_context:

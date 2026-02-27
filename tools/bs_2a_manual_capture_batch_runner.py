@@ -213,6 +213,8 @@ def _runner_cmd_for_job(args: argparse.Namespace, job: dict[str, Any]) -> list[s
     _add_arg(cmd, "--max-search-attempts", args.max_search_attempts)
     _add_arg(cmd, "--timeout-ms", args.timeout_ms)
     _add_arg(cmd, "--settle-ms", args.settle_ms)
+    if args.non_interactive:
+        cmd.append("--non-interactive")
     if args.launch_cdp_browser:
         cmd.append("--launch-cdp-browser")
     if args.chrome_path:
@@ -258,6 +260,7 @@ def main() -> int:
     parser.add_argument("--max-search-attempts", type=int, default=1)
     parser.add_argument("--timeout-ms", type=int, default=120000)
     parser.add_argument("--settle-ms", type=int, default=3000)
+    parser.add_argument("--non-interactive", action="store_true", help="Run capture jobs without input() waits (auto-skip manual prompts)")
     parser.add_argument("--cabin", default="Economy")
     parser.add_argument("--adt", type=int, default=1)
     parser.add_argument("--chd", type=int, default=0)
@@ -273,6 +276,7 @@ def main() -> int:
     parser.add_argument("--keep-browser-open", action="store_true")
     parser.add_argument("--print-command", action="store_true")
     parser.add_argument("--result-out", help="Write queue run summary JSON (default under output/manual_sessions/queue_runs)")
+    parser.add_argument("--retry-queue-out", help="Write failed jobs to a retry queue JSON (default under output/manual_sessions/queue_runs)")
     args = parser.parse_args()
 
     queue_path = Path(args.queue_file)
@@ -289,6 +293,7 @@ def main() -> int:
     queue_runs_dir = session_root / "queue_runs"
     queue_runs_dir.mkdir(parents=True, exist_ok=True)
     result_out = Path(args.result_out) if args.result_out else (queue_runs_dir / f"queue_run_{_now_tag()}.json")
+    retry_queue_out = Path(args.retry_queue_out) if args.retry_queue_out else (queue_runs_dir / f"queue_retry_{_now_tag()}.json")
 
     summary: dict[str, Any] = {
         "started_at_utc": _now_utc_iso(),
@@ -299,6 +304,7 @@ def main() -> int:
             "carrier": args.carrier,
             "cdp_url": args.cdp_url,
             "ingest": bool(args.ingest),
+            "non_interactive": bool(args.non_interactive),
             "cabin": args.cabin,
             "adt": args.adt,
             "chd": args.chd,
@@ -306,6 +312,7 @@ def main() -> int:
         },
         "jobs": jobs,
         "results": [],
+        "retry_queue_file": str(retry_queue_out),
     }
 
     print(f"[batch] Loaded {len(raw_rows)} queue rows ({len(jobs)} after dedupe) from {queue_path}")
@@ -321,6 +328,7 @@ def main() -> int:
 
     failures = 0
     successes = 0
+    failed_jobs: list[dict[str, Any]] = []
 
     for idx, job in enumerate(jobs, start=1):
         print("")
@@ -345,6 +353,7 @@ def main() -> int:
             successes += 1
         else:
             failures += 1
+            failed_jobs.append(job)
 
         result_item = {
             "index": idx,
@@ -398,7 +407,16 @@ def main() -> int:
     summary["succeeded"] = successes
     summary["failed"] = failures
     summary["ok"] = failures == 0
+    summary["failed_jobs"] = failed_jobs
     result_out.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    retry_payload = {
+        "generated_at_utc": _now_utc_iso(),
+        "source_result_out": str(result_out),
+        "failed_count": len(failed_jobs),
+        "jobs": failed_jobs,
+    }
+    retry_queue_out.write_text(json.dumps(retry_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print("")
     print("[batch] Queue summary")
@@ -409,6 +427,7 @@ def main() -> int:
             "failed": failures,
             "ok": failures == 0,
             "result_out": str(result_out),
+            "retry_queue_out": str(retry_queue_out),
         },
         indent=2,
     ))

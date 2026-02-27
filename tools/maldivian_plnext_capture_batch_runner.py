@@ -261,6 +261,7 @@ def main() -> int:
     parser.add_argument("--keep-browser-open", action="store_true")
     parser.add_argument("--print-command", action="store_true")
     parser.add_argument("--result-out", help="Write queue run summary JSON (default under output/manual_sessions/queue_runs)")
+    parser.add_argument("--retry-queue-out", help="Write failed jobs to a retry queue JSON (default under output/manual_sessions/queue_runs)")
     args = parser.parse_args()
 
     if args.ingest_dry_run and not args.ingest:
@@ -283,6 +284,7 @@ def main() -> int:
     queue_runs_dir = session_root / "queue_runs"
     queue_runs_dir.mkdir(parents=True, exist_ok=True)
     result_out = Path(args.result_out) if args.result_out else (queue_runs_dir / f"q2_queue_run_{_now_tag()}.json")
+    retry_queue_out = Path(args.retry_queue_out) if args.retry_queue_out else (queue_runs_dir / f"q2_queue_retry_{_now_tag()}.json")
 
     summary: dict[str, Any] = {
         "started_at_utc": _now_utc_iso(),
@@ -304,6 +306,7 @@ def main() -> int:
         },
         "jobs": jobs,
         "results": [],
+        "retry_queue_file": str(retry_queue_out),
     }
 
     print(f"[q2-batch] Loaded {len(raw_rows)} queue rows ({len(jobs)} after dedupe) from {queue_path}")
@@ -319,6 +322,7 @@ def main() -> int:
 
     failures = 0
     successes = 0
+    failed_jobs: list[dict[str, Any]] = []
 
     for idx, job in enumerate(jobs, start=1):
         print("")
@@ -343,6 +347,7 @@ def main() -> int:
             successes += 1
         else:
             failures += 1
+            failed_jobs.append(job)
 
         result_item: dict[str, Any] = {
             "index": idx,
@@ -394,7 +399,16 @@ def main() -> int:
     summary["succeeded"] = successes
     summary["failed"] = failures
     summary["ok"] = failures == 0
+    summary["failed_jobs"] = failed_jobs
     result_out.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    retry_payload = {
+        "generated_at_utc": _now_utc_iso(),
+        "source_result_out": str(result_out),
+        "failed_count": len(failed_jobs),
+        "jobs": failed_jobs,
+    }
+    retry_queue_out.write_text(json.dumps(retry_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print("")
     print("[q2-batch] Queue summary")
@@ -405,6 +419,7 @@ def main() -> int:
             "failed": failures,
             "ok": failures == 0,
             "result_out": str(result_out),
+            "retry_queue_out": str(retry_queue_out),
         },
         indent=2,
     ))

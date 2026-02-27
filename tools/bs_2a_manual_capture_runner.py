@@ -278,6 +278,7 @@ def main() -> int:
     parser.add_argument("--max-search-attempts", type=int, default=1, help="Automated same-browser search retries before manual UI fallback")
     parser.add_argument("--timeout-ms", type=int, default=120000)
     parser.add_argument("--settle-ms", type=int, default=3000)
+    parser.add_argument("--non-interactive", action="store_true", help="Do not block on capture-tool input() prompts")
     parser.add_argument("--cabin", default="Economy")
     parser.add_argument("--adt", type=int, default=1)
     parser.add_argument("--chd", type=int, default=0)
@@ -346,6 +347,8 @@ def main() -> int:
     _add_arg(cmd, "--timeout-ms", args.timeout_ms)
     _add_arg(cmd, "--settle-ms", args.settle_ms)
     _add_arg(cmd, "--max-search-attempts", args.max_search_attempts)
+    if args.non_interactive:
+        cmd.append("--non-interactive")
     _add_arg(cmd, "--cabin", args.cabin)
     _add_arg(cmd, "--adt", args.adt)
     _add_arg(cmd, "--chd", args.chd)

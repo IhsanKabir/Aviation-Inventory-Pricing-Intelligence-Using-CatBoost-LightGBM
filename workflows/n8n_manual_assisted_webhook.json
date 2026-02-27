@@ -1,0 +1,311 @@
+{
+  "name": "Manual-Assisted Orchestrator (Webhook Worker, No executeCommand)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "worker-url",
+              "name": "workerBaseUrl",
+              "value": "http://127.0.0.1:8787",
+              "type": "string"
+            },
+            {
+              "id": "worker-token",
+              "name": "workerToken",
+              "value": "REPLACE_WITH_TOKEN_OR_EMPTY",
+              "type": "string"
+            },
+            {
+              "id": "cli-args",
+              "name": "cliArgs",
+              "value": "=[\"--limit-dates\",\"1\",\"--ingest\",\"--non-interactive\",\"--stop-on-error\"]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a2",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        470,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$json.workerBaseUrl + '/run-all-manual-assisted'}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{$json.workerToken && $json.workerToken !== 'REPLACE_WITH_TOKEN_OR_EMPTY' ? 'Bearer ' + $json.workerToken : ''}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\"cli_args\": $json.cliArgs} }}",
+        "options": {}
+      },
+      "id": "a3",
+      "name": "Start Run (POST)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        760,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "a4",
+      "name": "Wait 30s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        970,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$node['Config'].json.workerBaseUrl + '/jobs/' + $node['Start Run (POST)'].json.job_id}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{$node['Config'].json.workerToken && $node['Config'].json.workerToken !== 'REPLACE_WITH_TOKEN_OR_EMPTY' ? 'Bearer ' + $node['Config'].json.workerToken : ''}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a5",
+      "name": "Get Job Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1180,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "done-check",
+              "leftValue": "={{$json.job.status}}",
+              "rightValue": "succeeded",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "failed-check",
+              "leftValue": "={{$json.job.status}}",
+              "rightValue": "failed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "a6",
+      "name": "Is Done?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1390,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "final-job-id",
+              "name": "job_id",
+              "value": "={{$node['Start Run (POST)'].json.job_id}}",
+              "type": "string"
+            },
+            {
+              "id": "final-status",
+              "name": "status",
+              "value": "={{$node['Get Job Status'].json.job.status}}",
+              "type": "string"
+            },
+            {
+              "id": "final-rc",
+              "name": "return_code",
+              "value": "={{$node['Get Job Status'].json.job.return_code}}",
+              "type": "number"
+            },
+            {
+              "id": "final-summary",
+              "name": "summary_out",
+              "value": "={{$node['Get Job Status'].json.job.summary_out}}",
+              "type": "string"
+            },
+            {
+              "id": "final-log",
+              "name": "log_path",
+              "value": "={{$node['Get Job Status'].json.job.log_path}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7",
+      "name": "Final Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "a8",
+      "name": "Wait Again",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        360
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Start Run (POST)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Run (POST)": {
+      "main": [
+        [
+          {
+            "node": "Wait 30s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30s": {
+      "main": [
+        [
+          {
+            "node": "Get Job Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Job Status": {
+      "main": [
+        [
+          {
+            "node": "Is Done?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Done?": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait Again": {
+      "main": [
+        [
+          {
+            "node": "Get Job Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "manual-assisted-webhook-worker-v1"
+}
