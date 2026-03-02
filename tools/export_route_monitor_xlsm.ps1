@@ -62,11 +62,11 @@ try {
     }
 
     $wsCtl.Cells.Item(1, 1).Value2 = "Route Monitor Macro Controls"
-    $wsCtl.Cells.Item(2, 1).Value2 = "Airlines CSV"
-    $wsCtl.Cells.Item(2, 2).Value2 = "BG,BS,2A"
-    $wsCtl.Cells.Item(3, 1).Value2 = "Signals CSV"
-    $wsCtl.Cells.Item(3, 2).Value2 = "INCREASE,DECREASE,NEW,SOLD OUT,UNKNOWN"
-    $wsCtl.Cells.Item(5, 1).Value2 = "Use buttons below, or run macros:"
+    $wsCtl.Cells.Item(2, 1).Value2 = "Airlines CSV (optional)"
+    $wsCtl.Cells.Item(2, 2).Value2 = ""
+    $wsCtl.Cells.Item(3, 1).Value2 = "Signals CSV (optional)"
+    $wsCtl.Cells.Item(3, 2).Value2 = ""
+    $wsCtl.Cells.Item(5, 1).Value2 = "Main sheet is click-based. Use CSV fields only for Route Filter View."
     $wsCtl.Cells.Item(6, 1).Value2 = "ApplyRouteFilters"
     $wsCtl.Cells.Item(7, 1).Value2 = "ClearRouteFilters"
     $wsCtl.Columns.Item("A:B").AutoFit() | Out-Null
@@ -116,6 +116,47 @@ Private Function FindHeaderColumn(ByVal ws As Worksheet, ByVal headerRow As Long
     FindHeaderColumn = 0
 End Function
 
+Private Sub AddUnique(ByVal coll As Collection, ByVal token As String)
+    If Len(token) = 0 Then Exit Sub
+    On Error Resume Next
+    coll.Add token, token
+    On Error GoTo 0
+End Sub
+
+Private Function CsvToCollection(ByVal raw As String) As Collection
+    Dim out As New Collection
+    Dim arr As Variant
+    arr = ParseCsv(raw)
+    If IsEmpty(arr) Then
+        Set CsvToCollection = out
+        Exit Function
+    End If
+    Dim i As Long
+    For i = LBound(arr) To UBound(arr)
+        AddUnique out, CStr(arr(i))
+    Next i
+    Set CsvToCollection = out
+End Function
+
+Private Function CollectionToCsv(ByVal coll As Collection) As String
+    Dim txt As String
+    Dim item As Variant
+    For Each item In coll
+        If Len(txt) > 0 Then txt = txt & ","
+        txt = txt & UCase(CStr(item))
+    Next item
+    CollectionToCsv = txt
+End Function
+
+Private Function CloneCollection(ByVal src As Collection) As Collection
+    Dim out As New Collection
+    Dim item As Variant
+    For Each item In src
+        AddUnique out, UCase(CStr(item))
+    Next item
+    Set CloneCollection = out
+End Function
+
 Private Function CollectionContains(ByVal coll As Collection, ByVal token As String) As Boolean
     If coll Is Nothing Then Exit Function
     Dim item As Variant
@@ -125,6 +166,16 @@ Private Function CollectionContains(ByVal coll As Collection, ByVal token As Str
             Exit Function
         End If
     Next item
+End Function
+
+Private Function CollectionEquals(ByVal a As Collection, ByVal b As Collection) As Boolean
+    If a Is Nothing Or b Is Nothing Then Exit Function
+    If a.Count <> b.Count Then Exit Function
+    Dim item As Variant
+    For Each item In a
+        If Not CollectionContains(b, UCase(CStr(item))) Then Exit Function
+    Next item
+    CollectionEquals = True
 End Function
 
 Private Function CsvIntersectsSelection(ByVal csvText As String, ByVal selected As Collection) As Boolean
@@ -147,20 +198,171 @@ Private Function CsvIntersectsSelection(ByVal csvText As String, ByVal selected 
     CsvIntersectsSelection = False
 End Function
 
-Private Function SelectedFromChecks(ByVal ws As Worksheet, ByVal prefix As String) As Collection
-    Dim out As New Collection
-    Dim cb As Object
-    For Each cb In ws.CheckBoxes
-        If LCase(Left(CStr(cb.Name), Len(prefix))) = LCase(prefix) Then
-            If cb.Value = 1 Then
-                On Error Resume Next
-                out.Add UCase(Trim(CStr(cb.Caption))), UCase(Trim(CStr(cb.Caption)))
-                On Error GoTo 0
-            End If
-        End If
-    Next cb
-    Set SelectedFromChecks = out
+Private Function NormalizeSignalToken(ByVal raw As String) As String
+    Dim t As String
+    t = UCase(Trim(raw))
+    If Len(t) = 0 Then Exit Function
+    If InStr(t, "INCREASE") > 0 Then
+        NormalizeSignalToken = "INCREASE"
+        Exit Function
+    End If
+    If InStr(t, "DECREASE") > 0 Then
+        NormalizeSignalToken = "DECREASE"
+        Exit Function
+    End If
+    If t = "NEW" Then
+        NormalizeSignalToken = "NEW"
+        Exit Function
+    End If
+    If InStr(t, "SOLD") > 0 Then
+        NormalizeSignalToken = "SOLD OUT"
+        Exit Function
+    End If
+    If InStr(t, "UNKNOWN") > 0 Then
+        NormalizeSignalToken = "UNKNOWN"
+        Exit Function
+    End If
 End Function
+
+Private Function GetLegendAirlines(ByVal wsMain As Worksheet) As Collection
+    Dim out As New Collection
+    Dim c As Long
+    For c = 2 To 250
+        Dim v As String
+        v = UCase(Trim(CStr(wsMain.Cells(2, c).Value2)))
+        If Len(v) = 0 Then Exit For
+        AddUnique out, v
+    Next c
+    Set GetLegendAirlines = out
+End Function
+
+Private Function GetLegendSignals(ByVal wsMain As Worksheet) As Collection
+    Dim out As New Collection
+    Dim c As Long
+    For c = 2 To 250
+        Dim t As String
+        t = NormalizeSignalToken(CStr(wsMain.Cells(3, c).Value2))
+        If Len(t) = 0 Then Exit For
+        AddUnique out, t
+    Next c
+    If out.Count = 0 Then
+        AddUnique out, "INCREASE"
+        AddUnique out, "DECREASE"
+        AddUnique out, "NEW"
+        AddUnique out, "SOLD OUT"
+        AddUnique out, "UNKNOWN"
+    End If
+    Set GetLegendSignals = out
+End Function
+
+Private Function StateCell(ByVal kind As String) As String
+    If LCase(kind) = "air" Then
+        StateCell = "B2"
+    Else
+        StateCell = "B3"
+    End If
+End Function
+
+Private Function GetUniverse(ByVal kind As String, ByVal wsMain As Worksheet) As Collection
+    If LCase(kind) = "air" Then
+        Set GetUniverse = GetLegendAirlines(wsMain)
+    Else
+        Set GetUniverse = GetLegendSignals(wsMain)
+    End If
+End Function
+
+Private Function GetSelected(ByVal kind As String, ByVal wsCtl As Worksheet, ByVal wsMain As Worksheet) As Collection
+    Dim allVals As Collection
+    Set allVals = GetUniverse(kind, wsMain)
+
+    Dim raw As String
+    raw = CStr(wsCtl.Range(StateCell(kind)).Value2)
+    Dim parsed As Collection
+    Set parsed = CsvToCollection(raw)
+
+    If parsed.Count = 0 Then
+        Set GetSelected = allVals
+        Exit Function
+    End If
+
+    Dim out As New Collection
+    Dim item As Variant
+    For Each item In parsed
+        If CollectionContains(allVals, UCase(CStr(item))) Then
+            AddUnique out, UCase(CStr(item))
+        End If
+    Next item
+
+    If out.Count = 0 Then
+        Set out = allVals
+    End If
+    Set GetSelected = out
+End Function
+
+Private Sub SetSelected(ByVal kind As String, ByVal wsCtl As Worksheet, ByVal coll As Collection)
+    wsCtl.Range(StateCell(kind)).Value2 = CollectionToCsv(coll)
+End Sub
+
+Private Sub ToggleSelection(ByVal kind As String, ByVal token As String)
+    Dim wsCtl As Worksheet, wsMain As Worksheet
+    Set wsCtl = ThisWorkbook.Worksheets("Macro Control")
+    Set wsMain = ThisWorkbook.Worksheets("Route Flight Fare Monitor")
+
+    token = UCase(Trim(token))
+    If Len(token) = 0 Then Exit Sub
+
+    Dim sel As Collection, allVals As Collection
+    Set sel = GetSelected(kind, wsCtl, wsMain)
+    Set allVals = GetUniverse(kind, wsMain)
+
+    Dim nextVals As Collection
+    Set nextVals = New Collection
+
+    If CollectionEquals(sel, allVals) Then
+        AddUnique nextVals, token
+    ElseIf sel.Count = 1 And CollectionContains(sel, token) Then
+        Set nextVals = CloneCollection(allVals)
+    Else
+        Set nextVals = CloneCollection(sel)
+        If CollectionContains(nextVals, token) Then
+            On Error Resume Next
+            nextVals.Remove token
+            On Error GoTo 0
+        Else
+            AddUnique nextVals, token
+        End If
+        If nextVals.Count = 0 Then
+            Set nextVals = CloneCollection(allVals)
+        End If
+    End If
+
+    SetSelected kind, wsCtl, nextVals
+End Sub
+
+Private Sub RefreshLegendSelectionStyling()
+    Dim wsCtl As Worksheet, wsMain As Worksheet
+    Set wsCtl = ThisWorkbook.Worksheets("Macro Control")
+    Set wsMain = ThisWorkbook.Worksheets("Route Flight Fare Monitor")
+
+    Dim selAir As Collection, selSig As Collection
+    Set selAir = GetSelected("air", wsCtl, wsMain)
+    Set selSig = GetSelected("sig", wsCtl, wsMain)
+
+    Dim c As Long
+    For c = 2 To 250
+        Dim at As String
+        at = UCase(Trim(CStr(wsMain.Cells(2, c).Value2)))
+        If Len(at) = 0 Then Exit For
+        wsMain.Cells(2, c).Font.Strikethrough = Not CollectionContains(selAir, at)
+    Next c
+
+    For c = 2 To 250
+        Dim st As String
+        st = NormalizeSignalToken(CStr(wsMain.Cells(3, c).Value2))
+        If Len(st) = 0 Then Exit For
+        wsMain.Cells(3, c).Font.Strikethrough = Not CollectionContains(selSig, st)
+    Next c
+End Sub
 
 Public Sub ApplyRouteFilters()
     Dim wsData As Worksheet, wsCtl As Worksheet
@@ -210,13 +412,14 @@ End Sub
 Public Sub ApplyMainSheetFilters()
     On Error GoTo EH
 
-    Dim wsMain As Worksheet, wsIdx As Worksheet
+    Dim wsCtl As Worksheet, wsMain As Worksheet, wsIdx As Worksheet
+    Set wsCtl = ThisWorkbook.Worksheets("Macro Control")
     Set wsMain = ThisWorkbook.Worksheets("Route Flight Fare Monitor")
     Set wsIdx = ThisWorkbook.Worksheets("Route Block Index")
 
     Dim selAir As Collection, selSig As Collection
-    Set selAir = SelectedFromChecks(wsMain, "mflt_air_")
-    Set selSig = SelectedFromChecks(wsMain, "mflt_sig_")
+    Set selAir = GetSelected("air", wsCtl, wsMain)
+    Set selSig = GetSelected("sig", wsCtl, wsMain)
 
     wsMain.Rows.Hidden = False
     wsMain.Rows("1:4").Hidden = False
@@ -240,6 +443,7 @@ Public Sub ApplyMainSheetFilters()
 NextRow:
     Next r
 
+    RefreshLegendSelectionStyling
     wsMain.Activate
     Exit Sub
 EH:
@@ -247,18 +451,53 @@ EH:
 End Sub
 
 Public Sub ClearMainSheetFilters()
-    Dim wsMain As Worksheet
-    Set wsMain = ThisWorkbook.Worksheets("Route Flight Fare Monitor")
+    Dim wsCtl As Worksheet
+    Set wsCtl = ThisWorkbook.Worksheets("Macro Control")
+    wsCtl.Range("B2").Value2 = ""
+    wsCtl.Range("B3").Value2 = ""
+    ApplyMainSheetFilters
+End Sub
 
-    Dim cb As Object
-    For Each cb In wsMain.CheckBoxes
-        If LCase(Left(CStr(cb.Name), 9)) = "mflt_air_" Or LCase(Left(CStr(cb.Name), 9)) = "mflt_sig_" Then
-            cb.Value = 1
+Public Sub HandleLegendClick(ByVal ws As Worksheet, ByVal Target As Range)
+    If ws Is Nothing Or Target Is Nothing Then Exit Sub
+    If ws.Name <> "Route Flight Fare Monitor" Then Exit Sub
+    If Target.CountLarge <> 1 Then Exit Sub
+
+    Dim r As Long, c As Long
+    r = Target.Row
+    c = Target.Column
+
+    If r = 2 Then
+        If c = 1 Then
+            ThisWorkbook.Worksheets("Macro Control").Range("B2").Value2 = ""
+            ApplyMainSheetFilters
+            Exit Sub
         End If
-    Next cb
+        Dim airToken As String
+        airToken = UCase(Trim(CStr(Target.Value2)))
+        If Len(airToken) = 0 Then Exit Sub
+        If CollectionContains(GetLegendAirlines(ws), airToken) Then
+            ToggleSelection "air", airToken
+            ApplyMainSheetFilters
+        End If
+        Exit Sub
+    End If
 
-    wsMain.Rows.Hidden = False
-    wsMain.Activate
+    If r = 3 Then
+        If c = 1 Then
+            ThisWorkbook.Worksheets("Macro Control").Range("B3").Value2 = ""
+            ApplyMainSheetFilters
+            Exit Sub
+        End If
+        Dim sigToken As String
+        sigToken = NormalizeSignalToken(CStr(Target.Value2))
+        If Len(sigToken) = 0 Then Exit Sub
+        If CollectionContains(GetLegendSignals(ws), sigToken) Then
+            ToggleSelection "sig", sigToken
+            ApplyMainSheetFilters
+        End If
+        Exit Sub
+    End If
 End Sub
 "@
 
@@ -274,6 +513,21 @@ End Sub
         $vbComp = $vbProj.VBComponents.Add(1)
         $vbComp.Name = "RouteMonitorFilters"
         $vbComp.CodeModule.AddFromString($vba) | Out-Null
+
+        $wsComp = $vbProj.VBComponents.Item($wsMain.CodeName)
+        $wsCode = @"
+Option Explicit
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    On Error Resume Next
+    RouteMonitorFilters.HandleLegendClick Me, Target
+End Sub
+"@
+        $lineCount = $wsComp.CodeModule.CountOfLines
+        if ($lineCount -gt 0) {
+            $wsComp.CodeModule.DeleteLines(1, $lineCount)
+        }
+        $wsComp.CodeModule.AddFromString($wsCode) | Out-Null
     } catch {
         throw "VBA injection failed. Enable Excel setting: Trust Center > Macro Settings > Trust access to the VBA project object model."
     }
@@ -294,25 +548,11 @@ End Sub
     $btn2.TextFrame.Characters().Text = "Clear Route Filters"
     $btn2.OnAction = "ClearRouteFilters"
 
-    # In-sheet interactive controls on current monitor tab.
-    $airlineCodes = @()
-    for ($c = 2; $c -le 250; $c++) {
-        $v = $wsMain.Cells.Item(2, $c).Value2
-        if ($null -eq $v) { break }
-        $sv = [string]$v
-        if ([string]::IsNullOrWhiteSpace($sv)) { break }
-        $airlineCodes += $sv.Trim().ToUpper()
-    }
-    if ($airlineCodes.Count -eq 0) {
-        $airlineCodes = @("BG", "BS", "2A")
-    }
-    $signalCodes = @("INCREASE", "DECREASE", "NEW", "SOLD OUT", "UNKNOWN")
-
+    # In-sheet click-action controls on current monitor tab.
     $shapeNamesMain = @()
     foreach ($shape in @($wsMain.Shapes)) {
         $n = [string]$shape.Name
         if (
-            $n -eq "btnApplyMainFilters" -or
             $n -eq "btnClearMainFilters" -or
             $n -like "mflt_air_*" -or
             $n -like "mflt_sig_*"
@@ -324,60 +564,26 @@ End Sub
         try { $wsMain.Shapes.Item($n).Delete() } catch {}
     }
 
+    foreach ($cb in @($wsMain.CheckBoxes())) {
+        $n = [string]$cb.Name
+        if ($n -like "mflt_air_*" -or $n -like "mflt_sig_*") {
+            try { $cb.Delete() } catch {}
+        }
+    }
+
     $anchorCol = 28
     $baseLeft = [double]$wsMain.Cells.Item(1, $anchorCol).Left
     $baseTop = [double]$wsMain.Cells.Item(1, $anchorCol).Top
-    $wsMain.Cells.Item(1, $anchorCol).Value2 = "Interactive Filters (Current Sheet)"
-    $wsMain.Cells.Item(2, $anchorCol).Value2 = "Airlines:"
+    $wsMain.Cells.Item(1, $anchorCol).Value2 = "Interactive Actions (Click Legends)"
+    $wsMain.Cells.Item(2, $anchorCol).Value2 = "Click Airline cells (row 2) and Signal cells (row 3)."
+    $wsMain.Cells.Item(3, $anchorCol).Value2 = "Click 'Airlines' or 'Signals' label to reset that group."
 
-    $perRow = 6
-    $cbW = 70
-    $cbH = 16
-    $xGap = 74
-    $yGap = 18
-
-    for ($i = 0; $i -lt $airlineCodes.Count; $i++) {
-        $code = [string]$airlineCodes[$i]
-        $r = [int][Math]::Floor($i / $perRow)
-        $k = [int]($i % $perRow)
-        $left = $baseLeft + ($k * $xGap)
-        $top = $baseTop + 20 + ($r * $yGap)
-        $cb = $wsMain.CheckBoxes().Add($left, $top, $cbW, $cbH)
-        $cb.Caption = $code
-        $cb.Name = "mflt_air_$code"
-        $cb.Value = 1
-        $cb.OnAction = "ApplyMainSheetFilters"
-    }
-
-    $airRows = [int][Math]::Ceiling([double]$airlineCodes.Count / [double]$perRow)
-    if ($airRows -lt 1) { $airRows = 1 }
-    $signalTop = $baseTop + 20 + (($airRows + 1) * $yGap)
-    $wsMain.Cells.Item(2 + $airRows + 1, $anchorCol).Value2 = "Signals:"
-
-    for ($i = 0; $i -lt $signalCodes.Count; $i++) {
-        $code = [string]$signalCodes[$i]
-        $r = [int][Math]::Floor($i / $perRow)
-        $k = [int]($i % $perRow)
-        $left = $baseLeft + ($k * $xGap)
-        $top = $signalTop + ($r * $yGap)
-        $codeName = $code.Replace(" ", "_")
-        $cb = $wsMain.CheckBoxes().Add($left, $top, $cbW + 8, $cbH)
-        $cb.Caption = $code
-        $cb.Name = "mflt_sig_$codeName"
-        $cb.Value = 1
-        $cb.OnAction = "ApplyMainSheetFilters"
-    }
-
-    $sigRows = [int][Math]::Ceiling([double]$signalCodes.Count / [double]$perRow)
-    if ($sigRows -lt 1) { $sigRows = 1 }
-    $btnTop = $signalTop + ($sigRows * $yGap) + 6
-
-    $wsMain.Cells.Item(2 + $airRows + $sigRows + 3, $anchorCol).Value2 = "Click any checkbox to apply instantly."
-
-    $btnMainB = $wsMain.Shapes.AddShape(1, $baseLeft, $btnTop, 200, 24)
+    $btnMainB = $wsMain.Shapes.AddShape(1, $baseLeft, $baseTop + 62, 200, 24)
     $btnMainB.Name = "btnClearMainFilters"
     $btnMainB.TextFrame.Characters().Text = "Clear Main Sheet Filters"
     $btnMainB.OnAction = "ClearMainSheetFilters"
+
+    try { $excel.Run("ApplyMainSheetFilters") | Out-Null } catch {}
 
     $wb.Save()
     Write-Output "xlsm_exported=$outPath"
