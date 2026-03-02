@@ -15,6 +15,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from core.runtime_config import get_database_url
+from core.market_priors import apply_market_priors
 
 
 DEFAULT_SCHEMA_VERSION = "inventory_state_v1"
@@ -128,6 +129,15 @@ def _parse_dt_like(v: Optional[str]) -> Optional[datetime]:
         return datetime.fromisoformat(str(v).replace("Z", "+00:00"))
     except Exception:
         return None
+
+
+def _apply_market_priors_safe(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return df
+    try:
+        return apply_market_priors(df)
+    except Exception:
+        return df
 
 
 def _build_where_clause(args) -> tuple[str, dict[str, Any]]:
@@ -1005,6 +1015,7 @@ def main():
     if schema_version == "inventory_state_v2":
         state_df = _add_party_gap_profile_features(state_df)
         state_df = _add_route_specific_engineered_features(state_df)
+    state_df = _apply_market_priors_safe(state_df)
 
     # Stable sort for exports.
     sort_cols = [c for c in ["observed_at_utc", "airline", "origin", "destination", "departure", "flight_number", "cabin", "adt_count", "chd_count", "inf_count"] if c in state_df.columns]
@@ -1036,6 +1047,12 @@ def main():
             c
             for c in state_df.columns
             if c.startswith(("fare_adt", "availability_adt", "probe_", "party_breakpoint_", "party_gap_profile"))
+        ],
+        "market_prior_feature_columns": [
+            c
+            for c in state_df.columns
+            if c.startswith(("market_", "airline_model_proxy", "trip_purpose_proxy", "yield_class_proxy", "horizon_"))
+            or c in {"origin_country", "destination_country"}
         ],
         "same_pax_label_rule": "Labels are generated using next-search rows grouped by identical airline/route/flight/departure/cabin/ADT/CHD/INF.",
     }

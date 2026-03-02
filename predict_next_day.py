@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine, text
 
+from core.market_priors import apply_market_priors
 from db import DATABASE_URL as DEFAULT_DATABASE_URL
 
 
@@ -16,6 +17,25 @@ SEARCH_GROUP_COLS = BASE_GROUP_COLS + ["departure_day"]
 EVENT_TARGETS = {"total_change_events", "price_events", "availability_events"}
 SEARCH_TARGETS = {"min_price_bdt", "avg_seat_available", "offers_count", "soldout_rate"}
 SUPPORTED_ML_MODELS = {"catboost", "lightgbm"}
+SUPPORTED_DL_MODELS = {"mlp"}
+
+MARKET_PRIOR_NUMERIC_COLS = [
+    "market_is_middle_east",
+    "market_is_ksa",
+    "market_is_thailand_tourism",
+    "market_is_labor_outbound",
+    "market_is_labor_return",
+    "airline_is_hub_spoke",
+    "airline_is_lcc",
+    "airline_is_return_oriented",
+    "horizon_is_visa_window",
+    "horizon_is_long_window",
+]
+
+AIRLINE_MODEL_CODE = {"hybrid": 0.0, "hub_spoke": 1.0, "lcc": 2.0}
+TRIP_PURPOSE_CODE = {"general": 0.0, "labor_outbound": 1.0, "labor_return": 2.0, "tourism": 3.0}
+YIELD_CLASS_CODE = {"unknown": 0.0, "balanced": 1.0, "medium_high": 2.0, "tourism": 3.0, "high": 4.0}
+HORIZON_BUCKET_CODE = {"unknown": 0.0, "D0_visa": 1.0, "D8_30": 2.0, "D31_90": 3.0, "D91_180": 4.0, "D181p": 5.0}
 
 
 def parse_args():
@@ -72,6 +92,18 @@ def parse_args():
     )
     parser.add_argument("--ml-min-history", type=int, default=14, help="Minimum history rows required for ML")
     parser.add_argument("--ml-random-seed", type=int, default=42, help="Random seed for ML models")
+    parser.add_argument(
+        "--dl-models",
+        default="mlp",
+        help="Comma-separated optional DL models: mlp (default: mlp)",
+    )
+    parser.add_argument(
+        "--dl-quantiles",
+        default="0.1,0.5,0.9",
+        help="Comma-separated quantiles for DL models (default: 0.1,0.5,0.9)",
+    )
+    parser.add_argument("--dl-min-history", type=int, default=8, help="Minimum history rows required for DL")
+    parser.add_argument("--dl-random-seed", type=int, default=42, help="Random seed for DL models")
     parser.add_argument("--output-dir", default="output/reports")
     parser.add_argument("--db-url", default=os.getenv("AIRLINE_DB_URL", DEFAULT_DATABASE_URL))
     return parser.parse_args()
@@ -265,8 +297,34 @@ def _resolve_ml_models(requested_models: list[str]):
     return available, skipped
 
 
+def _resolve_dl_models(requested_models: list[str]):
+    available = {}
+    skipped = {}
+    for model_name in requested_models:
+        if model_name not in SUPPORTED_DL_MODELS:
+            skipped[model_name] = "unsupported"
+            continue
+        try:
+            if model_name == "mlp":
+                from sklearn.neural_network import MLPRegressor
+
+                available[model_name] = MLPRegressor
+        except Exception as exc:  # pragma: no cover
+            skipped[model_name] = str(exc)
+    return available, skipped
+
+
 def _quantile_suffix(q: float):
     return f"q{int(round(float(q) * 100)):02d}"
+
+
+def _apply_market_priors_safe(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return df
+    try:
+        return apply_market_priors(df)
+    except Exception:
+        return df
 
 
 def _ml_feature_frame(part: pd.DataFrame, target: str):
@@ -285,6 +343,26 @@ def _ml_feature_frame(part: pd.DataFrame, target: str):
     if "departure_day" in part.columns:
         dep = pd.to_datetime(part["departure_day"], errors="coerce")
         work["days_to_departure"] = (dep - report_day).dt.days
+    for col in MARKET_PRIOR_NUMERIC_COLS:
+        if col in part.columns:
+            work[col] = pd.to_numeric(part[col], errors="coerce")
+
+    if "airline_model_proxy" in part.columns:
+        work["airline_model_proxy_code"] = (
+            part["airline_model_proxy"].astype(str).str.strip().str.lower().map(AIRLINE_MODEL_CODE)
+        )
+    if "trip_purpose_proxy" in part.columns:
+        work["trip_purpose_proxy_code"] = (
+            part["trip_purpose_proxy"].astype(str).str.strip().str.lower().map(TRIP_PURPOSE_CODE)
+        )
+    if "yield_class_proxy" in part.columns:
+        work["yield_class_proxy_code"] = (
+            part["yield_class_proxy"].astype(str).str.strip().str.lower().map(YIELD_CLASS_CODE)
+        )
+    if "horizon_bucket_proxy" in part.columns:
+        work["horizon_bucket_proxy_code"] = (
+            part["horizon_bucket_proxy"].astype(str).str.strip().map(HORIZON_BUCKET_CODE)
+        )
     return work
 
 
@@ -337,11 +415,55 @@ def _fit_predict_quantile(model_name: str, model_cls, quantile: float, train_x: 
     return None
 
 
+def _fit_predict_dl_quantile(model_name: str, model_cls, quantile: float, train_x: pd.DataFrame, train_y: pd.Series, pred_x: pd.DataFrame, seed: int):
+    train_f, pred_f = _fill_ml_features(train_x, pred_x)
+    y = pd.to_numeric(train_y, errors="coerce")
+    mask = y.notna()
+    train_f = train_f.loc[mask]
+    y = y.loc[mask]
+    if len(y) < 8:
+        return None
+
+    if model_name == "mlp":
+        model = model_cls(
+            hidden_layer_sizes=(64, 32),
+            activation="relu",
+            solver="adam",
+            alpha=5e-4,
+            learning_rate_init=0.01,
+            max_iter=700,
+            early_stopping=True,
+            validation_fraction=0.15,
+            n_iter_no_change=25,
+            random_state=int(seed),
+        )
+        model.fit(train_f, y)
+
+        pred_mean = float(np.asarray(model.predict(pred_f)).reshape(-1)[0])
+        train_pred = np.asarray(model.predict(train_f)).reshape(-1)
+        residuals = np.asarray(y, dtype=float) - train_pred
+        residuals = residuals[np.isfinite(residuals)]
+        if residuals.size == 0:
+            return pred_mean
+        q_adj = float(np.quantile(residuals, float(quantile)))
+        return pred_mean + q_adj
+
+    return None
+
+
 def _ml_prediction_columns(model_names: list[str], quantiles: list[float]):
     cols = []
     for m in model_names:
         for q in quantiles:
             cols.append(f"pred_ml_{m}_{_quantile_suffix(q)}")
+    return cols
+
+
+def _dl_prediction_columns(model_names: list[str], quantiles: list[float]):
+    cols = []
+    for m in model_names:
+        for q in quantiles:
+            cols.append(f"pred_dl_{m}_{_quantile_suffix(q)}")
     return cols
 
 
@@ -456,6 +578,117 @@ def build_next_day_ml_predictions(
     return pd.DataFrame(rows)
 
 
+def add_dl_prediction_columns(
+    df: pd.DataFrame,
+    target: str,
+    group_cols: list[str],
+    model_classes: dict,
+    quantiles: list[float],
+    min_history: int,
+    random_seed: int,
+):
+    if not model_classes:
+        return df
+
+    out = df.copy()
+    out = out.sort_values(group_cols + ["report_day"]).reset_index(drop=True)
+    pred_cols = _dl_prediction_columns(list(model_classes.keys()), quantiles)
+    for col in pred_cols:
+        out[col] = pd.NA
+
+    min_history = max(int(min_history), 8)
+    for _, part in out.groupby(group_cols, dropna=False):
+        part = part.sort_values("report_day")
+        idx_list = part.index.tolist()
+        features = _ml_feature_frame(part, target=target)
+        y = pd.to_numeric(part[target], errors="coerce")
+        for i, row_idx in enumerate(idx_list):
+            if pd.isna(y.loc[row_idx]):
+                continue
+            train_idx = [idx_list[j] for j in range(i) if pd.notna(y.loc[idx_list[j]])]
+            if len(train_idx) < min_history:
+                continue
+            train_x = features.loc[train_idx]
+            train_y = y.loc[train_idx]
+            pred_x = features.loc[[row_idx]]
+            for model_name, model_cls in model_classes.items():
+                for q in quantiles:
+                    col = f"pred_dl_{model_name}_{_quantile_suffix(q)}"
+                    try:
+                        pred = _fit_predict_dl_quantile(
+                            model_name=model_name,
+                            model_cls=model_cls,
+                            quantile=q,
+                            train_x=train_x,
+                            train_y=train_y,
+                            pred_x=pred_x,
+                            seed=random_seed,
+                        )
+                    except Exception:
+                        pred = None
+                    if pred is not None:
+                        out.at[row_idx, col] = pred
+    return out
+
+
+def build_next_day_dl_predictions(
+    df: pd.DataFrame,
+    target: str,
+    group_cols: list[str],
+    model_classes: dict,
+    quantiles: list[float],
+    min_history: int,
+    random_seed: int,
+):
+    if not model_classes or df.empty:
+        return pd.DataFrame()
+
+    rows = []
+    min_history = max(int(min_history), 8)
+    for key, part in df.groupby(group_cols, dropna=False):
+        part = part.sort_values("report_day").copy()
+        y = pd.to_numeric(part[target], errors="coerce")
+        train_mask = y.notna()
+        if int(train_mask.sum()) < min_history:
+            continue
+
+        last_day = pd.to_datetime(part["report_day"].iloc[-1], errors="coerce")
+        if pd.isna(last_day):
+            continue
+        next_day = last_day + timedelta(days=1)
+
+        next_row = part.iloc[-1:].copy()
+        next_row["report_day"] = next_day.date()
+        next_row[target] = np.nan
+        extended = pd.concat([part, next_row], ignore_index=True)
+
+        feature_train = _ml_feature_frame(part, target=target)
+        feature_ext = _ml_feature_frame(extended, target=target)
+        pred_x = feature_ext.tail(1)
+
+        row = {col: key[idx] for idx, col in enumerate(group_cols)}
+        row["latest_report_day"] = last_day.date()
+        row["predicted_for_day"] = next_day.date()
+        for model_name, model_cls in model_classes.items():
+            for q in quantiles:
+                col = f"pred_dl_{model_name}_{_quantile_suffix(q)}"
+                try:
+                    pred = _fit_predict_dl_quantile(
+                        model_name=model_name,
+                        model_cls=model_cls,
+                        quantile=q,
+                        train_x=feature_train.loc[train_mask[train_mask].index],
+                        train_y=y.loc[train_mask],
+                        pred_x=pred_x,
+                        seed=random_seed,
+                    )
+                except Exception:
+                    pred = None
+                row[col] = pred
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def load_daily_frame(args):
     engine = create_engine(args.db_url, pool_pre_ping=True, future=True)
     where_sql, params = _build_where_clause(args)
@@ -484,8 +717,8 @@ def load_daily_frame(args):
     if df["report_day"].nunique() < 2:
         fallback = _load_from_offer_history(engine, args)
         if not fallback.empty and fallback["report_day"].nunique() >= 2:
-            return fallback
-    return df
+            return _apply_market_priors_safe(fallback)
+    return _apply_market_priors_safe(df)
 
 
 def load_search_dynamic_frame(args):
@@ -549,7 +782,8 @@ def load_search_dynamic_frame(args):
         """
     )
     with engine.connect() as conn:
-        return pd.read_sql(sql, conn, params=params)
+        df = pd.read_sql(sql, conn, params=params)
+    return _apply_market_priors_safe(df)
 
 
 def add_prediction_columns(df: pd.DataFrame, target: str, windows: list[int], group_cols: list[str]):
@@ -1015,6 +1249,10 @@ def main():
     ml_quantiles = _parse_quantiles(args.ml_quantiles)
     ml_model_classes, ml_skipped = _resolve_ml_models(requested_ml_models)
     active_ml_models = list(ml_model_classes.keys())
+    requested_dl_models = _parse_ml_models(args.dl_models)
+    dl_quantiles = _parse_quantiles(args.dl_quantiles)
+    dl_model_classes, dl_skipped = _resolve_dl_models(requested_dl_models)
+    active_dl_models = list(dl_model_classes.keys())
 
     if args.series_mode == "event_daily":
         allowed_targets = EVENT_TARGETS
@@ -1057,6 +1295,16 @@ def main():
             min_history=args.ml_min_history,
             random_seed=args.ml_random_seed,
         )
+    if dl_model_classes:
+        history_df = add_dl_prediction_columns(
+            history_df,
+            target=target,
+            group_cols=group_cols,
+            model_classes=dl_model_classes,
+            quantiles=dl_quantiles,
+            min_history=args.dl_min_history,
+            random_seed=args.dl_random_seed,
+        )
 
     pred_cols = (
         ["pred_last_value"]
@@ -1066,6 +1314,8 @@ def main():
     )
     if ml_model_classes:
         pred_cols += _ml_prediction_columns(active_ml_models, ml_quantiles)
+    if dl_model_classes:
+        pred_cols += _dl_prediction_columns(active_dl_models, dl_quantiles)
 
     overall_eval, route_eval = evaluate_predictions(history_df, target=target, pred_cols=pred_cols, group_cols=group_cols)
     next_day_df = build_next_day_predictions(
@@ -1094,6 +1344,23 @@ def main():
                 merge_cols = [c for c in group_cols if c in next_ml_df.columns and c in next_day_df.columns]
                 merge_cols += [c for c in ["latest_report_day", "predicted_for_day"] if c in next_ml_df.columns and c in next_day_df.columns]
                 next_day_df = next_day_df.merge(next_ml_df, on=merge_cols, how="left", suffixes=("", "_ml"))
+    if dl_model_classes:
+        next_dl_df = build_next_day_dl_predictions(
+            history_df,
+            target=target,
+            group_cols=group_cols,
+            model_classes=dl_model_classes,
+            quantiles=dl_quantiles,
+            min_history=args.dl_min_history,
+            random_seed=args.dl_random_seed,
+        )
+        if not next_dl_df.empty:
+            if next_day_df.empty:
+                next_day_df = next_dl_df.copy()
+            else:
+                merge_cols = [c for c in group_cols if c in next_dl_df.columns and c in next_day_df.columns]
+                merge_cols += [c for c in ["latest_report_day", "predicted_for_day"] if c in next_dl_df.columns and c in next_day_df.columns]
+                next_day_df = next_day_df.merge(next_dl_df, on=merge_cols, how="left", suffixes=("", "_dl"))
     trend_df = build_trend_summary(history_df, target=target, group_cols=group_cols)
 
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -1154,6 +1421,10 @@ def main():
                     "ml_active_models": active_ml_models,
                     "ml_skipped_models": ml_skipped,
                     "ml_quantiles": ml_quantiles,
+                    "dl_requested_models": requested_dl_models,
+                    "dl_active_models": active_dl_models,
+                    "dl_skipped_models": dl_skipped,
+                    "dl_quantiles": dl_quantiles,
                     "backtest": backtest_meta,
                 },
                 f,
@@ -1169,6 +1440,10 @@ def main():
     print(f"ml_active_models={active_ml_models}")
     if ml_skipped:
         print(f"ml_skipped_models={ml_skipped}")
+    print(f"dl_requested_models={requested_dl_models}")
+    print(f"dl_active_models={active_dl_models}")
+    if dl_skipped:
+        print(f"dl_skipped_models={dl_skipped}")
     if args.disable_backtest:
         print("backtest=disabled")
     else:

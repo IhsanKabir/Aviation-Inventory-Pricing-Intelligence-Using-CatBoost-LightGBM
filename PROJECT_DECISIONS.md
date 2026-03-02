@@ -1,9 +1,257 @@
-# Airline Fare & Inventory Intelligence via Inventory-State Modeling, Probe Analysis, and Two-Stage Route-Gated ML Forecasting (Thesis Track)
+# Aero Pulse Intelligence Platform: Multi-Airline Fare, Inventory, OTA Benchmarking, and Forecasting (Thesis Track)
 
-_Current implemented intelligence stack: Inventory-State Modeling + Passenger-Size Probe Analysis + Two-Stage Route-Gated ML Forecasting (rolling-viability-gated route selection)._  
-_Planned DL path (exact methods): TCN (first), TFT (later), survival/hazard models for event timing, and network-aware models in later phases._
+_Current implemented intelligence stack: Inventory-State Modeling + Passenger-Size Probe Analysis + Two-Stage Route-Gated Forecasting + optional ML (`catboost`,`lightgbm`) + optional DL (`mlp`) quantile forecasting (rolling-viability-gated route selection)._  
+_Planned advanced DL path (exact methods): TCN (first), TFT (later), survival/hazard models for event timing, and network-aware models in later phases._
 
-Last updated: 2026-02-22
+Last updated: 2026-03-02
+
+## 0) Current Operating Clarifications (2026-03-02)
+
+### Goal Statement Update (ML + DL)
+
+- Program goal explicitly includes ML and DL under the same multi-airline intelligence roadmap:
+  monitoring + reporting + forecasting + benchmarking.
+- Ultimate top-priority research goal: ML + DL prediction of fare and inventory changes.
+- Current implemented forecasting layer now includes:
+  - baseline models (naive/rolling/seasonal/EWMA)
+  - optional ML quantile models (`catboost`, `lightgbm`)
+  - optional DL quantile model (`mlp`)
+- Advanced sequence DL (TCN/TFT) remains the next layer after stable all-airline data depth.
+
+### Priority Order Override (2026-03-01)
+
+- Strategic priority (top): prediction intelligence using both ML and DL.
+- Immediate execution order:
+  1. get reliable data coverage for all target airlines first
+  2. then implement OTA discount/markup comparative calculations
+  3. continue ML baseline + DL preparation on top of the stabilized data foundation
+- OTA comparative pricing analytics are intentionally sequenced after all-airline data coverage is operational.
+
+### Reporting Script Boundaries
+
+- `generate_reports.py`:
+  - Main reporting pack generator.
+  - Pulls reporting views, emits CSV/XLSX dashboards, data-quality report sheets, route/airline summaries, and run metadata.
+  - Optionally calls `generate_route_flight_fare_monitor.py` when `--route-monitor` is enabled.
+- `generate_route_flight_fare_monitor.py`:
+  - Dedicated two-scrape comparison workbook at route/flight/fare level.
+  - Focuses on current-vs-previous scrape deltas, seat/fare movement, and exception flags.
+  - Includes guardrails for tiny/partial scrapes and warns on passenger-mix mismatch between compared scrapes.
+
+### Penalty Data (BG + OTA)
+
+- Penalty tracking is now treated as a first-class metadata stream in raw-meta storage.
+- BG (direct channel):
+  - Category-16 fare-rule text can be parsed into structured change/cancel fee buckets (`before_24h`, `within_24h`, `no_show`) when fare-rule payloads are available.
+  - Extraction utility: `tools/extract_bg_fare_rules.py`.
+- OTA (Gozayaan channel):
+  - HAR-based extractor now supports `POST /api/flight/v4.0/search/legs/fares/` payloads, including:
+    - fare-level details
+    - route-level policy rows
+    - normalized change/cancel penalty buckets
+  - Extraction utility: `tools/extract_gozayaan_har.py`.
+- OTA connector status (ShareTrip path, updated 2026-03-02):
+  - `modules/bs.py` and `modules/airastra.py` now default to OTA feed through `modules/sharetrip.py`.
+  - BS/2A runtime fallback now active: when ShareTrip returns no usable rows, connector automatically retries via `modules/bdfare.py` before failing.
+  - ShareTrip path (`initialize` + `search/{id}`) is operational for BS/2A plus additional interim OTA carrier coverage without AMYBD interactive login.
+  - ShareTrip currently exposes fare details reliably; seat inventory is not explicitly exposed in returned payload and is stored as unknown.
+  - ShareTrip normalization now captures OTA fare split fields:
+    - `ota_gross_fare` from `displayPrice.totalFare.total`
+    - `ota_display_fare` from `displayPrice.totalFare.promotionalAmount` (fallback to total)
+    - `ota_discount_pct` and `ota_discount_amount` from API payload
+  - `price_total_bdt` for ShareTrip rows now tracks the payable/display amount (not gross/list amount) so reports reflect customer-visible payable fare.
+  - AMYBD endpoint is still integrated but currently returns `Invalid Login` in direct API mode in this environment.
+  - AMYBD connector search strategy now uses command fallback:
+    - primary: `_FLIGHTSEARCH_`
+    - fallback: `_FLIGHTSEARCHOPEN_`
+    - token is optional, with retry path that can include token when needed.
+  - AMYBD connector now persists search signature when available (`svdid`) into raw metadata and normalized rows (`fare_search_signature`).
+  - Optional AMYBD fare-detail follow-up is now supported via `_PRICECOMBO_` calls (feature-flagged) for future penalty enrichment.
+  - Source-mode overrides remain available:
+    - `BS_SOURCE_MODE=sharetrip|amybd|gozayaan|ttinteractive`
+    - `AIRASTRA_SOURCE_MODE=sharetrip|amybd|gozayaan|ttinteractive`
+  - BS/2A direct TTInteractive scrapers are retained as fallback (`BS_SOURCE_MODE=ttinteractive`, `AIRASTRA_SOURCE_MODE=ttinteractive`).
+  - `modules/gozayaan.py` remains integrated as optional OTA fallback and supports token cache + auto-refresh retry on 419/420/429:
+    - Cache file: `GOZAYAAN_TOKEN_CACHE_FILE` (default `output/manual_sessions/gozayaan_token_latest.json`)
+    - Auto refresh switch: `GOZAYAAN_TOKEN_AUTO_REFRESH=1`
+    - Refresh command: `GOZAYAAN_TOKEN_REFRESH_CMD` (supports placeholders: `{cache_file}`, `{cookies_file}`, `{headers_file}`, `{origin}`, `{destination}`, `{date}`, `{cabin}`, `{adt}`, `{chd}`, `{inf}`)
+  - Manual fallback token injection remains available via `GOZAYAAN_X_KONG_SEGMENT_ID`.
+  - OTA seat inventory is currently not consistently exposed in returned payloads; inventory fields are persisted as unknown when not present.
+  - New BDFare connector (`modules/bdfare.py`) added (2026-03-02):
+    - Automated flow: `AirSearch` -> `GetAirSearch` (+ `RefreshAirSearch` polling when required).
+    - No interactive login required for base search in current tests.
+    - Returns fare-rich OTA rows (`grossAmount`, `customerNetAmount`, `netAmount`) with discount/markup derivation.
+    - Seat inventory is not explicitly exposed in current BDFare response shape (stored as unknown).
+- Channel note:
+  - OTA penalties are not assumed identical to airline-direct policy text; keep channel provenance in analytics.
+  - OTA markup vs airline-original fare cannot be inferred from ShareTrip payload alone; it requires an external baseline (airline-direct or another validated reference source).
+
+### OTA Comparative Pricing Study Scope (Updated 2026-03-01)
+
+- Primary OTA study objective:
+  - compare OTA pricing behavior by `route + airline + ota` to identify discount vs markup patterns.
+- For this study, frontend-visible search-result pricing is sufficient as the baseline source.
+  - Deep backend fare-rule payloads are optional enrichment, not mandatory for core discount/markup analytics.
+- Minimum OTA pricing fields for each observed offer:
+  - `ota_display_fare` (customer-visible payable fare)
+  - `ota_gross_fare` (crossed/reference/gross fare when shown)
+  - `ota_currency`
+  - `ota_name`
+  - `source_channel=ota`
+- Calculation policy (store both amount and percent):
+  - `discount_amount = max(ota_gross_fare - ota_display_fare, 0)`
+  - `discount_pct = discount_amount / ota_gross_fare * 100` (when `ota_gross_fare > 0`)
+  - `markup_amount = max(ota_display_fare - ota_gross_fare, 0)`
+  - `markup_pct = markup_amount / ota_gross_fare * 100` (when `ota_gross_fare > 0`)
+- Missing-gross policy:
+  - if gross/reference fare is not exposed by the OTA response/page, set discount/markup metrics as `unknown` (do not infer).
+- Comparative reporting objective:
+  - rank OTAs per route+airline by lowest payable fare and quantify spread (`max - min`) across OTAs.
+
+### OTA-First Coverage Strategy for Blocked Airlines (Updated 2026-03-01)
+
+- Because airline-direct automation can be blocked by anti-bot/challenge systems, OTA feeds are now an explicit coverage path for affected airlines.
+- Current operational intent:
+  - prioritize OTA collection for blocked or unstable direct channels.
+  - keep direct channel connectors where feasible for policy-depth and source-validation use.
+
+### Automation Blockage Register (Updated 2026-03-01)
+
+| Source / Website | Channel | Blockage Observed | Current Workaround / Status |
+| --- | --- | --- | --- |
+| TTInteractive (direct BS/2A) | Airline-direct | Anti-bot/challenge behavior caused unstable automation and repeated failures in prior runs. | BS/2A defaulted to OTA path via `modules/sharetrip.py`; TTInteractive retained as fallback only. |
+| Gozayaan (`gozayaan.com`) | OTA | Frequent request rejection/rate-limit (`419/420/429`) and short-lived `x-kong-segment-id` token; non-interactive capture can return stale token. | Semi-automatic flow with `tools/refresh_gozayaan_token.py`; may require manual browser search, cookie accept, and popup handling. |
+| AMYBD (`www.amybd.com`) | OTA | API now frequently returns `Invalid Login` without a live authenticated session. | Kept as optional connector, but no longer primary for BS/2A; ShareTrip is used as default path. |
+| Akij Air OTA (`akijair.com`) | OTA | Search request body uses encrypted payload (`iv` + `payload`) with Next.js server-action headers; direct static replay is brittle. | Browser-assisted/session-coupled capture likely needed; not yet set as production OTA connector. |
+| ShareTrip (`sharetrip.net`) | OTA | Requires `accesstoken` header; token longevity can change over time. | `modules/sharetrip.py` now operational via `initialize` + `search/{id}` flow; currently used as default OTA path for BS/2A and interim additional OTA carriers. |
+| Indigo direct (`goindigo.in`) | Airline-direct | Search endpoint may return WAF/`Access Denied` depending on network and session context. | `modules/indigo.py` now runs in `auto` mode by default: direct attempt first, then ShareTrip fallback for continuity. |
+| BDFare (`bdfare.com`) | OTA | No mandatory login observed for core `AirSearch` flow in current verification; request IDs are session-bound and expire. | `modules/bdfare.py` implemented with fresh request generation (`AirSearch`) and polling (`GetAirSearch`/`RefreshAirSearch`). |
+
+- Register maintenance rule:
+  - add/update a row whenever a new automation block appears or an existing block is resolved; include date and workaround state.
+
+### Prediction Status (Now vs Later)
+
+- Current prediction implementation (`predict_next_day.py`) uses:
+  - Naive/persistence baseline
+  - Rolling mean baselines (default windows `3,7`)
+  - Seasonal naive baseline (default lag `7`)
+  - EWMA baseline (default alpha `0.3`)
+  - Rolling-window backtest artifacts and evaluation exports
+  - Optional ML models: `catboost`, `lightgbm` (quantile mode)
+  - Optional DL model: `mlp` (quantile outputs via residual-quantile calibration)
+- Training data basis (current design):
+  - Training uses previously captured search history only (past `report_day` rows).
+  - Event mode uses route-airline daily history (`event_daily`).
+  - Dynamic mode uses search-day x departure-day history (`search_dynamic`).
+  - No future leakage: each prediction row is trained only on data prior to that row.
+- Validation and strengthening loop:
+  - Historical validation: rolling backtest metrics (`MAE`, `RMSE`, directional metrics).
+  - Forward validation: each new pipeline run adds realized future rows; model performance is re-evaluated against newly observed outcomes.
+  - Accuracy improves as date history grows across routes/airlines/departure windows.
+- Planned advanced DL path:
+  - TCN first
+  - TFT next (if/when justified by data volume and multi-horizon needs)
+  - Survival/hazard timing models as follow-on for event-timing intelligence
+
+### ML/DL Workflow (Operational)
+
+1. Data accumulation runs (`run_all.py` / `run_pipeline.py`) append new observed fare/inventory rows.
+2. `predict_next_day.py` builds supervised history from prior days:
+   - lag/rolling/ewm time features
+   - grouped by route-airline context (and departure day in dynamic mode)
+3. Model fitting/prediction:
+   - baselines always
+   - optional ML quantiles (`catboost`,`lightgbm`)
+   - optional DL quantiles (`mlp`)
+4. Artifacts generated each run:
+   - `prediction_history_*`
+   - `prediction_eval_*`
+   - `prediction_eval_by_route_*`
+   - `prediction_next_day_*`
+   - optional `prediction_backtest_*` (when backtest enabled)
+5. Next run validates previous forecast automatically as new actual rows arrive.
+6. Model tuning cycle:
+   - compare eval/backtest files
+   - adjust windows/quantiles/min-history/model set
+   - keep changes only when metrics improve consistently.
+
+### `strategy_engine.py` Role
+
+- Converts change events into candidate strategy signals:
+  - `PRICE_INCREASE`
+  - `INVENTORY_TIGHTENING`
+- Current behavior:
+  - `run_all.py` calls `strategy_engine.process(events)`, but returned signals are not yet persisted/exported in the active pipeline.
+  - Treat this as an internal strategy hook, not yet a finalized decision-output module.
+
+### `setup_env.ps1` Role
+
+- Bootstraps local environment:
+  - Creates `.venv` if missing
+  - Upgrades `pip/setuptools/wheel`
+  - Installs dependencies from `requirements-lock.txt` (fallback: `requirements.txt`)
+  - Prints post-setup validation commands
+
+### `requirements.txt` vs `requirements-lock.txt` (Status + Purpose)
+
+- `requirements.txt`:
+  - Curated top-level dependency intent, including optional ML packages.
+- `requirements-lock.txt`:
+  - Fully pinned versions for reproducible installs.
+- Current status check (2026-03-01):
+  - Optional ML packages listed in `requirements.txt` are now present in `requirements-lock.txt` (`scikit-learn`, `catboost`, `lightgbm`).
+  - Lock file still includes additional transitive/local packages from the current environment snapshot.
+  - Action: keep lock refresh intentional (environment-controlled) before release/cutover.
+
+### OTA Airline Coverage Expansion (2026-03-02)
+
+- OTA source path now expanded beyond BS/2A for interim all-airline coverage using `modules/sharetrip.py`.
+- Indigo (`6E`) connector status update (2026-03-02):
+  - Added `modules/indigo.py` with `INDIGO_SOURCE_MODE=auto|direct|sharetrip`.
+  - `auto` mode attempts Indigo direct API (`token/refresh` + `flight/search`) and falls back to ShareTrip when direct access is blocked or returns no rows.
+  - `config/airlines.json` now maps `6E` to module `indigo`, so the auto path is active in normal runs.
+  - Added browser-assisted session capture utility: `tools/refresh_indigo_session.py` to persist cookies/headers from a real browser flow for direct-mode retries.
+- Route policy applied:
+  - `2A` route set aligned to all domestic VQ routes (same as Novo route matrix).
+  - `BS` route set aligned to BG route coverage (domestic + international BG-defined routes).
+  - Additional OTA carriers enabled on designated routes:
+    - `SV`: DAC<->JED, DAC<->RUH
+    - `G9`: DAC<->SHJ
+    - `3L`: DAC<->AUH
+    - `FZ`: DAC<->DXB
+    - `EK`: DAC<->DXB
+    - `QR`: DAC<->DOH
+    - `WY`: DAC<->MCT
+    - `CZ`: DAC<->CAN
+    - `8D`: DAC<->MLE
+    - `UL`: DAC<->MLE
+    - `MH`: DAC<->KUL
+    - `AK`: DAC<->KUL
+    - `OD`: DAC<->KUL
+    - `SQ`: DAC<->SIN
+    - `TG`: DAC<->BKK
+    - `6E`: DAC<->MAA and DAC<->CCU
+- Airport metadata updated for KSA expansion:
+  - Added `RUH` to `config/airport_countries.json` and `config/airport_timezones.json`.
+- Note:
+  - This is an interim OTA-first collection strategy; carrier/source mappings can be swapped later without changing downstream schema.
+
+### Runtime and Scheduler Adjustment (2026-03-02)
+
+- Current enabled route-cabin workload after expansion:
+  - total route-cabin pairs: `250` per departure-date slice.
+- Runtime evidence sample (quick representative probes):
+  - BG query around `~1s` (direct source).
+  - VQ query around `~40s` on high-offer searches.
+  - ShareTrip OTA query around `~6-12s` (carrier/date dependent).
+- Operational estimate:
+  - ~`30 minutes` per date slice (current mixed-source composition).
+  - Previous `17-date` combined auto window could exceed `8 hours`.
+- Scheduler tuning applied:
+  - `config/schedule.json` `auto_run_interval_hours` updated from `4` to `6`.
+  - Auto date defaults reduced to offsets `[0, 3, 7, 15, 30]` (5-date window) for operational stability.
+  - `scheduler/install_ingestion_autorun.ps1` default repeat interval updated to `360` minutes and execution-time limit increased to `8` hours.
 
 ## 1) Program Vision
 
@@ -51,19 +299,24 @@ Target: implement as much as possible in parallel, but execute in phases when ne
 
 ### Accumulation Frequency
 
-- Target every 3-4 hours (adaptive by actual runtime/load)
+- Target every 4-6 hours (adaptive by actual runtime/load and route/date workload size)
 
 ### Required Data Fields
 
 Mandatory for analysis (minimum set):
 
 - Fare components: fare, tax, total, currency
+- OTA comparison fields (when source is OTA): displayed fare, gross/reference fare, computed discount/markup amount and percent
 - Inventory: seats available, sold-out state
 - Fare structure: fare basis, booking class (RBD), brand
 - Product/cabin: cabin class and fare basis-to-cabin mapping
 - Flight/ops: airline, flight number, origin, destination, departure, arrival, aircraft/equipment, duration, stops
 - Passenger mix dimensions: ADT/CHD/INF
 - Other available fields from source responses should be preserved in raw metadata
+
+Practical source caveat:
+- For OTA-fed airlines (currently BS/2A), inventory may be null/unknown when the OTA API does not expose seat counts.
+- For OTA discount studies, gross/reference fare may be absent on some sources; discount/markup metrics should remain null/unknown in that case.
 
 ### Change Definition
 
@@ -127,8 +380,9 @@ Include over time:
 
 ### Phase-1 Must-Have
 
-- Reports working for all target airlines first
-- Then move to prediction layer
+- All target airlines onboarded with stable data collection first (coverage and quality gates passed).
+- Then execute OTA discount/markup comparative calculations and reporting layer.
+- In parallel, keep ML/DL prediction track active as the ultimate thesis objective.
 
 ## 3) Thesis-Grade Upgrade Decisions (Added)
 
@@ -188,11 +442,14 @@ throttling, retry policy, and source-specific compliance controls into each conn
 ## 6) Immediate Build Sequence
 
 1. Stabilize canonical schema across airlines
-2. Implement connector contract for each airline (same output contract)
+2. Implement connector contract for each airline (same output contract) until all-airline coverage is operational
 3. Enable multi-airline accumulation orchestration + quality checks
-4. Make dynamic report pack stable (hourly/daily/on-demand)
-5. Add baseline forecasting pipeline (price then availability)
-6. Add benchmarking and thesis evaluation framework
+4. Lock all-airline data coverage and reliability gates
+5. Implement OTA discount/markup comparative calculations (route + airline + OTA)
+6. Make dynamic report pack stable (hourly/daily/on-demand), including OTA comparison outputs
+7. Expand baseline forecasting pipeline (price then availability) on stabilized multi-airline data
+8. Progress DL path (TCN first, TFT later) under the same route-gated evaluation framework
+9. Add benchmarking and thesis evaluation framework
 
 ## 7) Open Questions (Need Answers)
 
@@ -861,6 +1118,61 @@ Working market-behavior hypotheses (to validate with accumulated evidence):
    - Use 30-45 day alteration/transition patterns as a broad behavior lens, but
      do not assume this fully captures all labor-market long-horizon effects.
 
+Additional field priors for market movement (added 2026-03-02; speculative, not
+yet fully validated):
+
+1. One-month forward view often provides practical market-readability.
+   - Working practice: near-term movement can often be interpreted from roughly
+     the next 30 days of snapshots, while longer-horizon behavior needs separate
+     treatment.
+
+2. South Asian labor-flow markets to Middle East can have short outbound booking
+   windows after visa readiness.
+   - Countries emphasized in current field understanding: Bangladesh, India,
+     Pakistan, Nepal.
+   - Working hypothesis: some segments book within about 7 days regardless of
+     fare sensitivity.
+
+3. Return-side behavior is structurally different from outbound labor movement.
+   - Return ticketing may be issued far ahead (roughly 1-8 months from departure
+     context), and should be modeled separately from one-way dynamics.
+   - Current limitation: existing parsing/training is still primarily point-to-
+     point one-way oriented; return-fare learning is not yet a mature layer.
+
+4. Airline inventory timing is airline/model dependent.
+   - Example prior: some network carriers (for example Singapore Airlines) may
+     show visible fill behavior starting around ~2 months before departure.
+   - This should be treated as a carrier-specific prior, not a universal rule.
+
+5. Network model differences matter for fare comparison.
+   - Hub-and-spoke oriented carriers (for example SQ/EK/QR) and LCC-oriented
+     carriers (for example 6E/G9/3L/8D/FZ) can exhibit different one-way vs
+     return and connection-driven behavior.
+   - Working commercial prior: BS/BG often show stronger return-oriented demand
+     signatures relative to pure one-way route behavior.
+
+6. Destination-class priors should be tracked explicitly.
+   - Thailand routes: keep tagged as tourism-weighted behavior class.
+   - KSA routes: working prior that meaningful load build-up can start up to
+     ~6 months before departure.
+
+7. Current comparison scope note.
+   - Current monitoring is largely point-to-point sales/comparison oriented.
+   - Next expansion is required for high-yield vs low-yield segmentation and
+     market-class-based benchmarking.
+
+8. Causality caution for analysts.
+   - Observed availability/fare shifts should be mapped to possible causes:
+     demand surge, policy release/closure, seasonality, visa cycle, competition,
+     or unknown.
+   - Unknown-cause classification should remain explicit until evidence supports
+     stronger attribution.
+
+9. Data coverage watch item.
+   - Keep Flydubai (`FZ`) ingestion/completeness under active verification during
+     OTA-based coverage checks to avoid blind spots in Middle East movement
+     analysis.
+
 Decision: intelligence modeling must expand beyond route-only forecasting
 
 1. Keep route-level inventory-state modeling as the base layer.
@@ -878,11 +1190,13 @@ Decision: intelligence modeling must expand beyond route-only forecasting
 
 DL strategy roadmap (exact method names, future-facing but grounded):
 
-Current production research baseline (not DL):
+Current production research baseline (includes active ML + initial DL):
 
 - Inventory-State Modeling
 - Passenger-Size Probe Analysis
 - Two-Stage Route-Gated Forecasting
+- Optional ML quantile models (`catboost`, `lightgbm`)
+- Optional DL quantile model (`mlp`)
 
 Planned DL path (ordered):
 
@@ -939,6 +1253,20 @@ Required data/feature expansion for DL (future steps, not immediate patching):
 4. Inventory-policy uncertainty flags
    - mark sudden availability changes as potential release/closure events
    - do not automatically treat them as sold-seat events
+
+Implemented conversion (2026-03-02, initial priors-to-features layer):
+
+- Added configurable market-prior schema in `config/market_priors.json`.
+- Added reusable tagging utility `core/market_priors.py` and wired it into:
+  - `predict_next_day.py` (ML/DL input frame now includes market and horizon proxy features)
+  - `tools/build_inventory_state_dataset.py` (inventory-state training dataset now carries the same priors)
+- Current generated proxy features include:
+  - route/market: `market_is_middle_east`, `market_is_ksa`, `market_is_thailand_tourism`
+  - labor-flow: `market_is_labor_outbound`, `market_is_labor_return`
+  - airline model: `airline_is_hub_spoke`, `airline_is_lcc`, `airline_is_return_oriented`, `airline_model_proxy`
+  - yield proxy: `yield_class_proxy`
+  - horizon proxy: `horizon_is_visa_window`, `horizon_is_long_window`, `horizon_bucket_proxy`
+- These are priors (not ground truth labels) and must be validated against observed outcomes before hard policy decisions.
 
 Decision rule (important for future work):
 

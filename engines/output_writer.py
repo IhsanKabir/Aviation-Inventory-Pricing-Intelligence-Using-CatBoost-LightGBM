@@ -1,4 +1,5 @@
 import pandas as pd
+import hashlib
 from xlsxwriter.utility import xl_range
 
 from modules.fleet_mapping import get_fleet_capacity_map, get_fleet_inventory
@@ -53,6 +54,15 @@ class OutputWriter:
             return None
 
     @staticmethod
+    def _bool_label(value):
+        if OutputWriter._is_na(value):
+            return "--"
+        try:
+            return "Yes" if bool(value) else "No"
+        except Exception:
+            return "--"
+
+    @staticmethod
     def _delta_sign(value) -> int:
         if OutputWriter._is_na(value):
             return 0
@@ -83,6 +93,245 @@ class OutputWriter:
         if len(vals) <= limit:
             return ", ".join(vals)
         return ", ".join(vals[:limit]) + f" (+{len(vals) - limit})"
+
+    @staticmethod
+    def _airline_theme_map(airlines=None):
+        # Curated themes for known carriers + deterministic palette for new ones.
+        themes = {
+            "BG": {
+                "header_bg": "#C8102E",
+                "subheader_bg": "#FFFFFF",
+                "cell_bg": "#F7F7F8",
+                "header_font": "#FFFFFF",
+                "text_font": "#2F2F2F",
+            },
+            "VQ": {
+                "header_bg": "#003A70",
+                "subheader_bg": "#F58220",
+                "cell_bg": "#FFF3E8",
+                "header_font": "#FFFFFF",
+                "text_font": "#123A6E",
+            },
+            "BS": {
+                "header_bg": "#00557F",
+                "subheader_bg": "#D8EBF7",
+                "cell_bg": "#F1F8FC",
+                "header_font": "#FFFFFF",
+                "text_font": "#12384D",
+            },
+            "2A": {
+                "header_bg": "#B78700",
+                "subheader_bg": "#FDEFC7",
+                "cell_bg": "#FFF9EA",
+                "header_font": "#1E1E1E",
+                "text_font": "#6B4E00",
+            },
+            "G9": {
+                "header_bg": "#C6282B",
+                "subheader_bg": "#F9E1E2",
+                "cell_bg": "#FDF2F3",
+                "header_font": "#FFFFFF",
+                "text_font": "#7A1D20",
+            },
+            "3L": {
+                "header_bg": "#C6282B",
+                "subheader_bg": "#F9E1E2",
+                "cell_bg": "#FDF2F3",
+                "header_font": "#FFFFFF",
+                "text_font": "#7A1D20",
+            },
+            "8D": {
+                "header_bg": "#1B5E9A",
+                "subheader_bg": "#DDEBFA",
+                "cell_bg": "#F2F8FE",
+                "header_font": "#FFFFFF",
+                "text_font": "#0E3A66",
+            },
+            "F8": {
+                "header_bg": "#1B5E9A",
+                "subheader_bg": "#DDEBFA",
+                "cell_bg": "#F2F8FE",
+                "header_font": "#FFFFFF",
+                "text_font": "#0E3A66",
+            },
+            "CZ": {
+                "header_bg": "#2A9FD8",
+                "subheader_bg": "#DDF3FD",
+                "cell_bg": "#F2FBFF",
+                "header_font": "#FFFFFF",
+                "text_font": "#0C4E6A",
+            },
+            "EK": {
+                "header_bg": "#C61E23",
+                "subheader_bg": "#F8DFE1",
+                "cell_bg": "#FEF2F3",
+                "header_font": "#FFFFFF",
+                "text_font": "#7A1A1E",
+            },
+            "MH": {
+                "header_bg": "#00408C",
+                "subheader_bg": "#DEE9FA",
+                "cell_bg": "#F2F7FE",
+                "header_font": "#FFFFFF",
+                "text_font": "#112F66",
+            },
+            "QR": {
+                "header_bg": "#5A0F3A",
+                "subheader_bg": "#F2E2EA",
+                "cell_bg": "#FAF1F6",
+                "header_font": "#FFFFFF",
+                "text_font": "#4A1633",
+            },
+            "SQ": {
+                "header_bg": "#B78A00",
+                "subheader_bg": "#FEEEC0",
+                "cell_bg": "#FFF9E4",
+                "header_font": "#1F1F1F",
+                "text_font": "#6D5200",
+            },
+            "TG": {
+                "header_bg": "#5E2D82",
+                "subheader_bg": "#EDE0F9",
+                "cell_bg": "#F7F1FD",
+                "header_font": "#FFFFFF",
+                "text_font": "#3E2559",
+            },
+            "UL": {
+                "header_bg": "#8B2042",
+                "subheader_bg": "#F4E0E8",
+                "cell_bg": "#FDF3F7",
+                "header_font": "#FFFFFF",
+                "text_font": "#5C2135",
+            },
+            "WY": {
+                "header_bg": "#7E2D35",
+                "subheader_bg": "#F2E4E6",
+                "cell_bg": "#FBF4F5",
+                "header_font": "#FFFFFF",
+                "text_font": "#4C2126",
+            },
+            "AK": {
+                "header_bg": "#C4202F",
+                "subheader_bg": "#F8DEE2",
+                "cell_bg": "#FDF3F5",
+                "header_font": "#FFFFFF",
+                "text_font": "#7D1E2A",
+            },
+            "6E": {
+                "header_bg": "#2B2F83",
+                "subheader_bg": "#E2E4F6",
+                "cell_bg": "#F3F4FD",
+                "header_font": "#FFFFFF",
+                "text_font": "#272A67",
+            },
+            "FZ": {
+                "header_bg": "#0E5F9D",
+                "subheader_bg": "#DCEAF7",
+                "cell_bg": "#F3F8FD",
+                "header_font": "#FFFFFF",
+                "text_font": "#11456B",
+            },
+            "SV": {
+                "header_bg": "#0B5A7A",
+                "subheader_bg": "#D7EAF1",
+                "cell_bg": "#EFF8FC",
+                "header_font": "#FFFFFF",
+                "text_font": "#11435A",
+            },
+            "OD": {
+                "header_bg": "#B52025",
+                "subheader_bg": "#F6DEE0",
+                "cell_bg": "#FDF2F3",
+                "header_font": "#FFFFFF",
+                "text_font": "#7A2025",
+            },
+            "Q2": {
+                "header_bg": "#2D4F8B",
+                "subheader_bg": "#DEE8F7",
+                "cell_bg": "#F3F7FD",
+                "header_font": "#FFFFFF",
+                "text_font": "#1F365C",
+            },
+        }
+        themes["DEFAULT"] = {
+            "header_bg": "#EAEAEA",
+            "subheader_bg": "#F5F5F5",
+            "cell_bg": "#FFFFFF",
+            "header_font": "#333333",
+            "text_font": "#333333",
+        }
+
+        palette = [
+            ("#1565C0", "#DCEBFA", "#F3F8FE", "#FFFFFF", "#103D6B"),
+            ("#6A1B9A", "#ECDDFA", "#F8F2FD", "#FFFFFF", "#4C2171"),
+            ("#AD1457", "#FADBE8", "#FDF2F7", "#FFFFFF", "#7A1F4B"),
+            ("#EF6C00", "#FDE8D3", "#FFF6EE", "#FFFFFF", "#8A4D19"),
+            ("#2E7D32", "#E3F1E4", "#F5FBF6", "#FFFFFF", "#1F4E28"),
+            ("#455A64", "#E4E9EC", "#F5F7F8", "#FFFFFF", "#2B3B42"),
+        ]
+        for code in sorted({str(a or "").strip().upper() for a in (airlines or []) if str(a or "").strip()}):
+            if code in themes:
+                continue
+            idx = int(hashlib.md5(code.encode("utf-8")).hexdigest(), 16) % len(palette)
+            hbg, sbg, cbg, hfont, tfont = palette[idx]
+            themes[code] = {
+                "header_bg": hbg,
+                "subheader_bg": sbg,
+                "cell_bg": cbg,
+                "header_font": hfont,
+                "text_font": tfont,
+            }
+        return themes
+
+    @staticmethod
+    def _has_inventory_signal(frame: pd.DataFrame) -> bool:
+        if frame is None or frame.empty:
+            return False
+        inv_cols = [
+            "min_seats",
+            "max_seats",
+            "load_pct",
+            "previous_min_seats",
+            "previous_max_seats",
+            "previous_load_pct",
+        ]
+        for col in inv_cols:
+            if col not in frame.columns:
+                continue
+            vals = pd.to_numeric(frame[col], errors="coerce")
+            if vals.notna().any():
+                return True
+        return False
+
+    @staticmethod
+    def _collect_route_signals(route_df: pd.DataFrame):
+        if route_df is None or route_df.empty:
+            return ["UNKNOWN"]
+
+        signals = set()
+        for _, rec in route_df.iterrows():
+            status = str(rec.get("status") or "").strip().upper()
+            if status == "NEW":
+                signals.add("NEW")
+            elif status == "SOLD OUT":
+                signals.add("SOLD OUT")
+
+            for dcol in ("min_fare_delta", "max_fare_delta", "seat_delta", "tax_delta", "load_delta"):
+                val = rec.get(dcol)
+                if OutputWriter._is_na(val):
+                    continue
+                try:
+                    fv = float(val)
+                except Exception:
+                    continue
+                if fv > 0:
+                    signals.add("INCREASE")
+                elif fv < 0:
+                    signals.add("DECREASE")
+
+        if not signals:
+            signals.add("UNKNOWN")
+        return sorted(signals)
 
     @staticmethod
     def _peak_concurrent_flights_lower_bound(sub: pd.DataFrame):
@@ -130,9 +379,9 @@ class OutputWriter:
             "SOLD OUT = explicit zero seats.\n"
             "N/O = flight not operating on that date.\n"
             "-- means source did not provide value.\n"
+            "Open/Cap and Inv Press are shown only when inventory data exists.\n"
             "Open/Cap = total opened seats (visible fare buckets) / carrier capacity.\n"
-            "Inv Press = bounded inventory pressure proxy from Open/Cap (not actual load factor).\n"
-            "Formula: Inv Press = 100 x (1 - min(1, Open/Cap)).\n"
+            "Inv Press = 100 x (1 - min(1, Open/Cap)); proxy only, not exact load.\n"
             "Compare only runs with same passenger mix (ADT/CHD/INF)."
         )
         sheet.merge_range(start_row + 1, start_col, start_row + 9, start_col + 4, note, fmt_box)
@@ -384,33 +633,8 @@ class OutputWriter:
         fmt_metric = workbook.add_format({"bold": True, "font_name": "Segoe UI", "font_size": cfg["header"], "border": 1, "bg_color": "#F2F2F2"})
         fmt_cell = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "left"})
         fmt_center = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center"})
+        fmt_gray = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "font_color": "#777777"})
         fmt_legend_key = workbook.add_format({"bold": True, "font_name": "Segoe UI", "font_size": cfg["header"], "border": 1, "bg_color": "#F2F2F2", "align": "center"})
-
-        airline_theme = {
-            # BG (Biman Bangladesh): bold crimson + white + subtle gray
-            "BG": {
-                "header_bg": "#C8102E",
-                "subheader_bg": "#FFFFFF",
-                "cell_bg": "#F7F7F8",
-                "header_font": "#FFFFFF",
-                "text_font": "#2F2F2F",
-            },
-            # VQ (NOVOAIR): logo-led deep blue + vibrant orange
-            "VQ": {
-                "header_bg": "#003A70",
-                "subheader_bg": "#F58220",
-                "cell_bg": "#FFF3E8",
-                "header_font": "#FFFFFF",
-                "text_font": "#123A6E",
-            },
-            "DEFAULT": {
-                "header_bg": "#EAEAEA",
-                "subheader_bg": "#F5F5F5",
-                "cell_bg": "#FFFFFF",
-                "header_font": "#333333",
-                "text_font": "#333333",
-            },
-        }
 
         required = ["airline", "route", "flight_key", "flight_number", "departure_time", "aircraft", "flight_date"]
         if any(c not in df.columns for c in required):
@@ -430,6 +654,7 @@ class OutputWriter:
             working["arrival"] = pd.to_datetime(working["arrival"], errors="coerce")
 
         airlines = sorted([a for a in working["airline"].dropna().unique() if str(a).strip()])
+        airline_theme = self._airline_theme_map(airlines)
         capacity_map = get_fleet_capacity_map(airlines=airlines) if airlines else {}
         inventory_map = get_fleet_inventory(airlines=airlines) if airlines else {}
 
@@ -462,7 +687,7 @@ class OutputWriter:
         sheet.write(2, legend_col, "Heatmap columns: Daily / Weekly", fmt_cell)
         legend_note = "LB = peak concurrent flights from observed search results (lower bound, not exact fleet). Fleet Coverage = LB / Website Fleet Count."
         sheet.merge_range(3, 0, 3, max(6, legend_col + 2), legend_note, fmt_note)
-        self._write_methodology_note(sheet, 0, 10, workbook)
+        self._write_methodology_note(sheet, 0, max(10, legend_col + 4), workbook)
 
         # -------------------------
         # Section A: Fleet snapshot side-by-side
@@ -494,8 +719,8 @@ class OutputWriter:
             for idx, airline in enumerate(airlines):
                 sub = working[working["airline"] == airline]
                 dep_times = sorted(t for t in sub["departure_time"].dropna().unique() if t and t != "nan")
-                first_dep = dep_times[0] if dep_times else "—"
-                last_dep = dep_times[-1] if dep_times else "—"
+                first_dep = dep_times[0] if dep_times else "--"
+                last_dep = dep_times[-1] if dep_times else "--"
                 route_n = int(sub["route"].nunique())
                 day_n = int(sub["flight_date"].dropna().nunique())
                 obs_rows = int(len(sub))
@@ -503,7 +728,7 @@ class OutputWriter:
                 weekly_est = round(daily_avg * 7.0, 2)
 
                 known_rows = inventory_map.get(airline, [])
-                known_types = self._join_limited([r.get("aircraft_type") for r in known_rows], limit=8) if known_rows else "—"
+                known_types = self._join_limited([r.get("aircraft_type") for r in known_rows], limit=8) if known_rows else "--"
                 known_count = sum(int(r.get("aircraft_count") or 0) for r in known_rows) if known_rows else None
                 search_fleet_lb = self._peak_concurrent_flights_lower_bound(sub)
                 fleet_coverage_pct = None
@@ -512,13 +737,13 @@ class OutputWriter:
                 known_caps = self._join_limited(
                     sorted({str(r.get("seats_per_aircraft")) for r in known_rows if r.get("seats_per_aircraft")}),
                     limit=8,
-                ) if known_rows else "—"
+                ) if known_rows else "--"
 
-                value = "—"
+                value = "--"
                 if metric == "Known Fleet Types":
                     value = known_types
                 elif metric == "Website Fleet Count":
-                    value = known_count if known_count is not None else "—"
+                    value = known_count if known_count is not None else "--"
                 elif metric == "Search Fleet (LB)":
                     value = search_fleet_lb if search_fleet_lb is not None else "?"
                 elif metric == "Fleet Coverage (LB/Website)":
@@ -591,10 +816,10 @@ class OutputWriter:
             for airline in airlines:
                 m = grp[(grp["airline"] == airline) & (grp["route"] == route)]
                 if m.empty:
-                    daily_avg = ""
-                    weekly_est = ""
-                    op_days = ""
-                    timings = ""
+                    daily_avg = "--"
+                    weekly_est = "--"
+                    op_days = "--"
+                    timings = "--"
                 else:
                     rec = m.iloc[0]
                     op_days = int(rec["operating_days"]) if pd.notna(rec["operating_days"]) else 0
@@ -617,21 +842,683 @@ class OutputWriter:
                 sheet.conditional_format(routes_start_row, base, routes_end_row, base, {"type": "3_color_scale"})
                 sheet.conditional_format(routes_start_row, base + 1, routes_end_row, base + 1, {"type": "3_color_scale"})
 
+        # -------------------------
+        # Section C: Route x Day operations (summed flights + timings)
+        # -------------------------
+        row += 2
+        sheet.write(row, 0, "C) Route-Day Operations (Summed Flights + Timings)", fmt_section)
+        row += 1
+
+        day_order = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        working["day_name"] = working["flight_date"].dt.day_name()
+        day_grp = (
+            working.groupby(["route", "day_name", "airline"], as_index=False)
+            .agg(
+                flights=("flight_key", "count"),
+                timings=("departure_time", lambda s: sorted({str(v) for v in s if str(v).strip()})),
+            )
+        )
+        route_list = sorted(day_grp["route"].dropna().astype(str).unique().tolist())
+
+        sheet.write(row, 0, "Route", fmt_header)
+        for i, dname in enumerate(day_order):
+            sheet.write(row, 1 + i, dname, fmt_header)
+        row += 1
+
+        day_start_row = row
+        for route in route_list:
+            sheet.write(row, 0, route, fmt_cell)
+            for i, dname in enumerate(day_order):
+                block = day_grp[(day_grp["route"] == route) & (day_grp["day_name"] == dname)]
+                if block.empty:
+                    value = "--"
+                    fmt = fmt_gray
+                else:
+                    total = int(pd.to_numeric(block["flights"], errors="coerce").fillna(0).sum())
+                    entries = []
+                    for _, rec in block.sort_values("airline").iterrows():
+                        ac = str(rec.get("airline") or "").upper()
+                        fl = int(rec.get("flights") or 0)
+                        tms = self._join_limited(rec.get("timings") or [], limit=4)
+                        entries.append(f"{ac}:{fl}[{tms}]")
+                    details = self._join_limited(entries, limit=5)
+                    value = f"Σ{total} | {details}"
+                    fmt = fmt_cell
+                sheet.write(row, 1 + i, value, fmt)
+            row += 1
+        day_end_row = row - 1
+
+        for i in range(len(day_order)):
+            col_idx = 1 + i
+            if day_end_row >= day_start_row:
+                sheet.conditional_format(day_start_row, col_idx, day_end_row, col_idx, {"type": "text", "criteria": "not containing", "value": "--", "format": fmt_cell})
+
         # Column sizing and freeze
-        sheet.set_column(0, 0, 16)
-        col = 1
-        for _airline in airlines:
-            sheet.set_column(col, col, 10)       # Daily
-            sheet.set_column(col + 1, col + 1, 10)  # Weekly
-            sheet.set_column(col + 2, col + 2, 8)   # Days
-            sheet.set_column(col + 3, col + 3, 28)  # Timings
-            col += 4
+        sheet.set_column(0, 0, 16)  # Route
+        for i in range(len(day_order)):
+            sheet.set_column(1 + i, 1 + i, 42)  # route-day summary value
         sheet.freeze_panes(3, 1)
 
-    def write_route_flight_fare_monitor(self, writer, df: pd.DataFrame):
-        # ==============================
-        # REQUIRED COLUMNS CHECK
-        # ==============================
+    def _write_penalty_comparison(self, workbook, df: pd.DataFrame):
+        sheet = workbook.add_worksheet("Penalty Comparison")
+        cfg = self._style_cfg()
+        sheet.set_zoom(cfg["zoom"])
+        sheet.set_default_row(cfg["default_row"])
+
+        fmt_title = workbook.add_format({"bold": True, "font_size": cfg["title"], "font_name": "Segoe UI", "font_color": "#1F4E78"})
+        fmt_note = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "font_color": "#555555"})
+        fmt_header = workbook.add_format({"bold": True, "font_size": cfg["header"], "font_name": "Segoe UI", "bg_color": "#D9E1F2", "border": 1, "align": "center", "text_wrap": True})
+        fmt_cell = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "center"})
+        fmt_cell_left = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "left"})
+
+        sheet.write(0, 0, "Penalty Change Timeline (Route + Airline)", fmt_title)
+        sheet.write(1, 0, "Shows only dates where route+airline penalty state changed vs previous scrape.", fmt_note)
+
+        if df is None or df.empty:
+            sheet.write(3, 0, "No rows available.", fmt_note)
+            return
+
+        fee_fields = [
+            "fare_change_fee_before_24h",
+            "fare_change_fee_within_24h",
+            "fare_change_fee_no_show",
+            "fare_cancel_fee_before_24h",
+            "fare_cancel_fee_within_24h",
+            "fare_cancel_fee_no_show",
+        ]
+        required = ["route", "airline", "flight_date", "current_capture_label", "previous_capture_label"]
+        required += [f"current_{f}" for f in fee_fields]
+        required += [f"previous_{f}" for f in fee_fields]
+        required += [
+            "current_penalty_currency",
+            "previous_penalty_currency",
+            "current_penalty_rule_text",
+            "previous_penalty_rule_text",
+            "current_fare_refundable",
+            "previous_fare_refundable",
+            "current_fare_changeable",
+            "previous_fare_changeable",
+        ]
+        work = df.copy()
+        for col in required:
+            if col not in work.columns:
+                work[col] = pd.NA
+        work["flight_date"] = pd.to_datetime(work["flight_date"], errors="coerce")
+
+        def _first_text(series):
+            for v in series:
+                if v is None:
+                    continue
+                s = str(v).strip()
+                if s:
+                    return s
+            return None
+
+        def _agg_bool(series):
+            vals = [v for v in series if pd.notna(v)]
+            if not vals:
+                return None
+            bools = [bool(v) for v in vals]
+            return True if any(bools) else False
+
+        def _agg_fee(series):
+            vals = pd.to_numeric(series, errors="coerce").dropna()
+            if vals.empty:
+                return None
+            return float(vals.min())
+
+        def _norm_rule(text):
+            s = str(text or "").strip()
+            if not s:
+                return ""
+            return " ".join(s.split()).lower()
+
+        def _state(rec, prefix):
+            out = {}
+            for f in fee_fields:
+                out[f] = rec.get(f"{prefix}_{f}")
+            out["currency"] = rec.get(f"{prefix}_penalty_currency")
+            out["rule"] = rec.get(f"{prefix}_penalty_rule_text")
+            out["fare_refundable"] = rec.get(f"{prefix}_fare_refundable")
+            out["fare_changeable"] = rec.get(f"{prefix}_fare_changeable")
+            return out
+
+        def _has_state(st):
+            if not isinstance(st, dict):
+                return False
+            for f in fee_fields:
+                if st.get(f) is not None and pd.notna(st.get(f)):
+                    return True
+            if st.get("fare_refundable") is not None:
+                return True
+            if st.get("fare_changeable") is not None:
+                return True
+            if str(st.get("rule") or "").strip():
+                return True
+            return False
+
+        def _state_key(st):
+            return (
+                tuple(st.get(f) for f in fee_fields),
+                st.get("fare_refundable"),
+                st.get("fare_changeable"),
+                str(st.get("currency") or "").strip().upper(),
+                _norm_rule(st.get("rule")),
+            )
+
+        def _state_snapshot(st):
+            def _fee_txt(v):
+                if v is None or pd.isna(v):
+                    return "--"
+                return f"{float(v):,.0f}"
+
+            chg = "/".join(
+                [
+                    _fee_txt(st.get("fare_change_fee_before_24h")),
+                    _fee_txt(st.get("fare_change_fee_within_24h")),
+                    _fee_txt(st.get("fare_change_fee_no_show")),
+                ]
+            )
+            can = "/".join(
+                [
+                    _fee_txt(st.get("fare_cancel_fee_before_24h")),
+                    _fee_txt(st.get("fare_cancel_fee_within_24h")),
+                    _fee_txt(st.get("fare_cancel_fee_no_show")),
+                ]
+            )
+            ccy = str(st.get("currency") or "").strip().upper()
+            ccy_tok = ccy if ccy else "--"
+            note = str(st.get("rule") or "").strip()
+            if len(note) > 80:
+                note = note[:77] + "..."
+            return (
+                f"{ccy_tok} | Chg:{chg} | Can:{can} | "
+                f"Refundable:{self._bool_label(st.get('fare_refundable'))} | "
+                f"Changeable:{self._bool_label(st.get('fare_changeable'))}"
+                + (f" | Note:{note}" if note else "")
+            )
+
+        records = []
+        group_cols = ["route", "airline", "flight_date"]
+        for (route, airline, fdate), grp in work.groupby(group_cols, sort=True):
+            rec = {
+                "route": route,
+                "airline": str(airline or "").upper(),
+                "flight_date": fdate,
+                "current_capture_label": _first_text(grp["current_capture_label"]) or "Current snapshot",
+                "previous_capture_label": _first_text(grp["previous_capture_label"]) or "Previous snapshot",
+                "current_penalty_currency": _first_text(grp["current_penalty_currency"]),
+                "previous_penalty_currency": _first_text(grp["previous_penalty_currency"]),
+                "current_penalty_rule_text": _first_text(grp["current_penalty_rule_text"]),
+                "previous_penalty_rule_text": _first_text(grp["previous_penalty_rule_text"]),
+                "current_fare_refundable": _agg_bool(grp["current_fare_refundable"]),
+                "previous_fare_refundable": _agg_bool(grp["previous_fare_refundable"]),
+                "current_fare_changeable": _agg_bool(grp["current_fare_changeable"]),
+                "previous_fare_changeable": _agg_bool(grp["previous_fare_changeable"]),
+            }
+            for f in fee_fields:
+                rec[f"current_{f}"] = _agg_fee(grp[f"current_{f}"])
+                rec[f"previous_{f}"] = _agg_fee(grp[f"previous_{f}"])
+            records.append(rec)
+
+        summary = pd.DataFrame(records)
+        if summary.empty:
+            sheet.write(3, 0, "No penalty summary rows available.", fmt_note)
+            return
+
+        changes = []
+        for _, rec in summary.iterrows():
+            curr = _state(rec, "current")
+            prev = _state(rec, "previous")
+            curr_has = _has_state(curr)
+            prev_has = _has_state(prev)
+            if not curr_has and not prev_has:
+                continue
+            if curr_has and not prev_has:
+                change_type = "NEW"
+            elif prev_has and not curr_has:
+                change_type = "REMOVED"
+            elif _state_key(curr) != _state_key(prev):
+                change_type = "UPDATED"
+            else:
+                continue
+            changes.append(
+                {
+                    "route": rec["route"],
+                    "airline": rec["airline"],
+                    "flight_date": rec["flight_date"],
+                    "previous_capture_label": rec["previous_capture_label"],
+                    "current_capture_label": rec["current_capture_label"],
+                    "change_type": change_type,
+                    "previous_snapshot": _state_snapshot(prev),
+                    "current_snapshot": _state_snapshot(curr),
+                }
+            )
+
+        row = 3
+        headers = [
+            "Route",
+            "Airline",
+            "Date",
+            "Previous Capture",
+            "Current Capture",
+            "Change Type",
+            "Previous Penalty Snapshot",
+            "Current Penalty Snapshot",
+        ]
+        for i, h in enumerate(headers):
+            sheet.write(row, i, h, fmt_header)
+        row += 1
+
+        if not changes:
+            sheet.write(row, 0, "No route+airline penalty changes detected for selected scrapes.", fmt_note)
+            row += 1
+        else:
+            for rec in sorted(changes, key=lambda x: (str(x["route"]), str(x["airline"]), str(x["flight_date"]))):
+                date_txt = pd.to_datetime(rec["flight_date"], errors="coerce")
+                date_str = date_txt.strftime("%Y-%m-%d") if pd.notna(date_txt) else "--"
+                sheet.write(row, 0, rec["route"], fmt_cell_left)
+                sheet.write(row, 1, rec["airline"], fmt_cell)
+                sheet.write(row, 2, date_str, fmt_cell)
+                sheet.write(row, 3, rec["previous_capture_label"], fmt_cell)
+                sheet.write(row, 4, rec["current_capture_label"], fmt_cell)
+                sheet.write(row, 5, rec["change_type"], fmt_cell)
+                sheet.write(row, 6, rec["previous_snapshot"], fmt_cell_left)
+                sheet.write(row, 7, rec["current_snapshot"], fmt_cell_left)
+                row += 1
+
+        sheet.set_column(0, 0, 14)
+        sheet.set_column(1, 1, 9)
+        sheet.set_column(2, 2, 12)
+        sheet.set_column(3, 4, 19)
+        sheet.set_column(5, 5, 11)
+        sheet.set_column(6, 7, 58)
+        sheet.freeze_panes(4, 0)
+
+    def _write_tax_comparison(self, workbook, df: pd.DataFrame):
+        sheet = workbook.add_worksheet("Tax Comparison")
+        cfg = self._style_cfg()
+        sheet.set_zoom(cfg["zoom"])
+        sheet.set_default_row(cfg["default_row"])
+
+        fmt_title = workbook.add_format({"bold": True, "font_size": cfg["title"], "font_name": "Segoe UI", "font_color": "#1F4E78"})
+        fmt_note = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "font_color": "#555555"})
+        fmt_header = workbook.add_format({"bold": True, "font_size": cfg["header"], "font_name": "Segoe UI", "bg_color": "#D9E1F2", "border": 1, "align": "center", "text_wrap": True})
+        fmt_cell = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "center"})
+        fmt_cell_left = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "left"})
+
+        sheet.write(0, 0, "Tax Change Timeline (Route + Airline)", fmt_title)
+        sheet.write(1, 0, "Shows only dates where route+airline tax range changed vs previous scrape.", fmt_note)
+
+        if df is None or df.empty:
+            sheet.write(3, 0, "No rows available.", fmt_note)
+            return
+
+        work = df.copy()
+        for col in ["route", "airline", "flight_date", "current_tax", "previous_tax", "current_capture_label", "previous_capture_label"]:
+            if col not in work.columns:
+                work[col] = pd.NA
+        work["flight_date"] = pd.to_datetime(work["flight_date"], errors="coerce")
+        work["current_tax"] = pd.to_numeric(work["current_tax"], errors="coerce")
+        work["previous_tax"] = pd.to_numeric(work["previous_tax"], errors="coerce")
+
+        def _first_text(series):
+            for v in series:
+                if v is None:
+                    continue
+                s = str(v).strip()
+                if s:
+                    return s
+            return None
+
+        rows = []
+        for (route, airline, fdate), grp in work.groupby(["route", "airline", "flight_date"], sort=True):
+            curr = grp["current_tax"].dropna()
+            prev = grp["previous_tax"].dropna()
+            rec = {
+                "route": route,
+                "airline": str(airline or "").upper(),
+                "flight_date": fdate,
+                "current_capture_label": _first_text(grp["current_capture_label"]) or "Current snapshot",
+                "previous_capture_label": _first_text(grp["previous_capture_label"]) or "Previous snapshot",
+                "curr_min": float(curr.min()) if not curr.empty else None,
+                "curr_max": float(curr.max()) if not curr.empty else None,
+                "curr_count": int(curr.shape[0]),
+                "prev_min": float(prev.min()) if not prev.empty else None,
+                "prev_max": float(prev.max()) if not prev.empty else None,
+                "prev_count": int(prev.shape[0]),
+            }
+            rows.append(rec)
+        summary = pd.DataFrame(rows)
+
+        def _range_text(mn, mx):
+            if mn is None and mx is None:
+                return "--"
+            if mn is None:
+                return f"-- to {mx:,.0f}"
+            if mx is None:
+                return f"{mn:,.0f} to --"
+            return f"{mn:,.0f} to {mx:,.0f}"
+
+        changes = []
+        for _, rec in summary.iterrows():
+            prev_has = rec["prev_count"] > 0
+            curr_has = rec["curr_count"] > 0
+            if not prev_has and not curr_has:
+                continue
+            if curr_has and not prev_has:
+                ctype = "NEW"
+            elif prev_has and not curr_has:
+                ctype = "REMOVED"
+            else:
+                changed = (
+                    rec["curr_min"] != rec["prev_min"]
+                    or rec["curr_max"] != rec["prev_max"]
+                    or rec["curr_count"] != rec["prev_count"]
+                )
+                if not changed:
+                    continue
+                ctype = "UPDATED"
+            dmin = None
+            dmax = None
+            if rec["curr_min"] is not None and rec["prev_min"] is not None:
+                dmin = rec["curr_min"] - rec["prev_min"]
+            if rec["curr_max"] is not None and rec["prev_max"] is not None:
+                dmax = rec["curr_max"] - rec["prev_max"]
+            changes.append(
+                {
+                    "route": rec["route"],
+                    "airline": rec["airline"],
+                    "flight_date": rec["flight_date"],
+                    "previous_capture_label": rec["previous_capture_label"],
+                    "current_capture_label": rec["current_capture_label"],
+                    "change_type": ctype,
+                    "prev_range": _range_text(rec["prev_min"], rec["prev_max"]),
+                    "curr_range": _range_text(rec["curr_min"], rec["curr_max"]),
+                    "delta_min": dmin,
+                    "delta_max": dmax,
+                    "prev_count": rec["prev_count"],
+                    "curr_count": rec["curr_count"],
+                }
+            )
+
+        row = 3
+        headers = [
+            "Route",
+            "Airline",
+            "Date",
+            "Previous Capture",
+            "Current Capture",
+            "Change Type",
+            "Previous Tax Range",
+            "Current Tax Range",
+            "Delta Min",
+            "Delta Max",
+            "Prev Flights w/Tax",
+            "Curr Flights w/Tax",
+        ]
+        for i, h in enumerate(headers):
+            sheet.write(row, i, h, fmt_header)
+        row += 1
+
+        if not changes:
+            sheet.write(row, 0, "No route+airline tax changes detected for selected scrapes.", fmt_note)
+            row += 1
+        else:
+            for rec in sorted(changes, key=lambda x: (str(x["route"]), str(x["airline"]), str(x["flight_date"]))):
+                date_txt = pd.to_datetime(rec["flight_date"], errors="coerce")
+                date_str = date_txt.strftime("%Y-%m-%d") if pd.notna(date_txt) else "--"
+                sheet.write(row, 0, rec["route"], fmt_cell_left)
+                sheet.write(row, 1, rec["airline"], fmt_cell)
+                sheet.write(row, 2, date_str, fmt_cell)
+                sheet.write(row, 3, rec["previous_capture_label"], fmt_cell)
+                sheet.write(row, 4, rec["current_capture_label"], fmt_cell)
+                sheet.write(row, 5, rec["change_type"], fmt_cell)
+                sheet.write(row, 6, rec["prev_range"], fmt_cell_left)
+                sheet.write(row, 7, rec["curr_range"], fmt_cell_left)
+                sheet.write(row, 8, "--" if rec["delta_min"] is None else f"{rec['delta_min']:,.0f}", fmt_cell)
+                sheet.write(row, 9, "--" if rec["delta_max"] is None else f"{rec['delta_max']:,.0f}", fmt_cell)
+                sheet.write(row, 10, int(rec["prev_count"] or 0), fmt_cell)
+                sheet.write(row, 11, int(rec["curr_count"] or 0), fmt_cell)
+                row += 1
+
+        sheet.set_column(0, 0, 14)
+        sheet.set_column(1, 1, 9)
+        sheet.set_column(2, 2, 12)
+        sheet.set_column(3, 4, 19)
+        sheet.set_column(5, 5, 11)
+        sheet.set_column(6, 7, 22)
+        sheet.set_column(8, 9, 11)
+        sheet.set_column(10, 11, 16)
+        sheet.freeze_panes(4, 0)
+
+    def _write_route_filter_view(self, workbook, df: pd.DataFrame):
+        sheet = workbook.add_worksheet("Route Filter View")
+        cfg = self._style_cfg()
+        sheet.set_zoom(cfg["zoom"])
+        sheet.set_default_row(cfg["default_row"])
+
+        fmt_title = workbook.add_format({"bold": True, "font_size": cfg["title"], "font_name": "Segoe UI", "font_color": "#1F4E78"})
+        fmt_note = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "font_color": "#555555"})
+        fmt_header = workbook.add_format({"bold": True, "font_size": cfg["header"], "font_name": "Segoe UI", "bg_color": "#D9E1F2", "border": 1, "align": "center"})
+        fmt_cell = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "center"})
+        fmt_left = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "left"})
+        fmt_chip_label = workbook.add_format({"bold": True, "font_size": cfg["header"], "font_name": "Segoe UI", "bg_color": "#F2F2F2", "border": 1, "align": "center"})
+        fmt_sig_inc = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "center"})
+        fmt_sig_dec = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "center"})
+        fmt_sig_new = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "bold": True, "italic": True, "font_color": "#1F4BD8", "border": 1, "align": "center"})
+        fmt_sig_sold = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "bold": True, "italic": True, "font_color": "#777777", "border": 1, "align": "center"})
+        fmt_sig_unk = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "font_color": "#777777", "border": 1, "align": "center"})
+
+        sheet.write(0, 0, "Route Monitor Filter View", fmt_title)
+        sheet.write(1, 0, "Normalized table for filtering by airline, status, route, date, and deltas.", fmt_note)
+
+        if df is None or df.empty:
+            sheet.write(3, 0, "No rows available.", fmt_note)
+            return
+
+        cols = [
+            "route",
+            "flight_date",
+            "day_name",
+            "current_capture_label",
+            "previous_capture_label",
+            "airline",
+            "flight_number",
+            "departure_time",
+            "status",
+            "signal_primary",
+            "min_fare",
+            "max_fare",
+            "current_tax",
+            "min_seats",
+            "max_seats",
+            "load_pct",
+            "min_fare_delta",
+            "max_fare_delta",
+            "tax_delta",
+            "seat_delta",
+            "load_delta",
+        ]
+        work = df.copy()
+        for col in cols:
+            if col not in work.columns:
+                work[col] = pd.NA
+        work = work[cols].copy()
+        work["flight_date"] = pd.to_datetime(work["flight_date"], errors="coerce").dt.strftime("%Y-%m-%d")
+        work["airline"] = work["airline"].astype(str).str.upper()
+        work["status"] = work["status"].astype(str).str.upper()
+
+        def _signal_primary(rec):
+            status = str(rec.get("status") or "").upper()
+            if status == "NEW":
+                return "NEW"
+            if status == "SOLD OUT":
+                return "SOLD OUT"
+            deltas = []
+            for c in ["min_fare_delta", "max_fare_delta", "tax_delta", "seat_delta", "load_delta"]:
+                v = pd.to_numeric(rec.get(c), errors="coerce")
+                if pd.notna(v):
+                    deltas.append(float(v))
+            has_pos = any(v > 0 for v in deltas)
+            has_neg = any(v < 0 for v in deltas)
+            if has_pos and has_neg:
+                return "MIXED"
+            if has_pos:
+                return "INCREASE"
+            if has_neg:
+                return "DECREASE"
+            measure_cols = ["min_fare", "max_fare", "current_tax", "min_seats", "max_seats", "load_pct"]
+            all_missing = True
+            for c in measure_cols:
+                v = pd.to_numeric(rec.get(c), errors="coerce")
+                if pd.notna(v):
+                    all_missing = False
+                    break
+            return "UNKNOWN" if all_missing else "STABLE"
+
+        work["signal_primary"] = work.apply(_signal_primary, axis=1)
+        work = work.sort_values(["route", "flight_date", "airline", "departure_time"], na_position="last")
+
+        # Visual chips section (airlines + signals) for quick scan before filtering.
+        chip_airlines = sorted([a for a in work["airline"].dropna().unique() if str(a).strip()])
+        airline_theme = self._airline_theme_map(chip_airlines)
+        sheet.write(3, 0, "Airlines", fmt_chip_label)
+        c = 1
+        for code in chip_airlines:
+            t = airline_theme.get(code, airline_theme["DEFAULT"])
+            fmt_chip = workbook.add_format(
+                {
+                    "bold": True,
+                    "font_size": cfg["header"],
+                    "font_name": "Segoe UI",
+                    "bg_color": t["header_bg"],
+                    "font_color": t["header_font"],
+                    "border": 1,
+                    "align": "center",
+                }
+            )
+            sheet.write(3, c, code, fmt_chip)
+            c += 1
+
+        sheet.write(4, 0, "Signals", fmt_chip_label)
+        sheet.write(4, 1, "↑ Increase", fmt_sig_inc)
+        sheet.write(4, 2, "↓ Decrease", fmt_sig_dec)
+        sheet.write(4, 3, "NEW", fmt_sig_new)
+        sheet.write(4, 4, "SOLD OUT", fmt_sig_sold)
+        sheet.write(4, 5, "— Unknown", fmt_sig_unk)
+
+        header_row = 6
+        for idx, col in enumerate(cols):
+            sheet.write(header_row, idx, col, fmt_header)
+
+        row = header_row + 1
+        for rec in work.itertuples(index=False):
+            for idx, val in enumerate(rec):
+                if cols[idx] in {"route", "current_capture_label", "previous_capture_label"}:
+                    sheet.write(row, idx, "" if pd.isna(val) else str(val), fmt_left)
+                else:
+                    sheet.write(row, idx, "" if pd.isna(val) else val, fmt_cell)
+            row += 1
+
+        if row > header_row + 1:
+            sheet.autofilter(header_row, 0, row - 1, len(cols) - 1)
+        widths = [14, 12, 10, 16, 16, 8, 12, 9, 10, 11, 10, 10, 10, 10, 10, 9, 10, 10, 10, 10, 10]
+        for idx, w in enumerate(widths):
+            sheet.set_column(idx, idx, w)
+        sheet.set_column(0, max(6, len(chip_airlines)), 14)
+        sheet.freeze_panes(header_row + 1, 0)
+
+    def _write_route_block_index(self, workbook, blocks):
+        sheet = workbook.add_worksheet("Route Block Index")
+        sheet.hide()
+
+        headers = ["route", "start_row", "end_row", "airlines_csv", "signals_csv"]
+        for c, h in enumerate(headers):
+            sheet.write(0, c, h)
+
+        row = 1
+        for b in blocks or []:
+            sheet.write(row, 0, str(b.get("route") or ""))
+            sheet.write(row, 1, int(b.get("start_row") or 0))
+            sheet.write(row, 2, int(b.get("end_row") or 0))
+            sheet.write(row, 3, str(b.get("airlines_csv") or ""))
+            sheet.write(row, 4, str(b.get("signals_csv") or ""))
+            row += 1
+
+    def _write_execution_plan_status(self, workbook, execution_plan_status):
+        if not isinstance(execution_plan_status, dict) or not execution_plan_status:
+            return
+
+        sheet = workbook.add_worksheet("Execution Plan Status")
+        cfg = self._style_cfg()
+        sheet.set_zoom(cfg["zoom"])
+        sheet.set_default_row(cfg["default_row"])
+
+        fmt_title = workbook.add_format({"bold": True, "font_size": cfg["title"], "font_name": "Segoe UI", "font_color": "#1F4E78"})
+        fmt_note = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "font_color": "#555555"})
+        fmt_section = workbook.add_format({"bold": True, "font_size": cfg["section"], "font_name": "Segoe UI", "font_color": "#1F4E78"})
+        fmt_header = workbook.add_format({"bold": True, "font_size": cfg["header"], "font_name": "Segoe UI", "bg_color": "#D9E1F2", "border": 1, "align": "center"})
+        fmt_cell = workbook.add_format({"font_size": cfg["body"], "font_name": "Segoe UI", "border": 1, "align": "left"})
+
+        coverage = execution_plan_status.get("coverage_summary")
+        if not isinstance(coverage, dict):
+            coverage = {}
+
+        sheet.write(0, 0, "Execution Plan Status", fmt_title)
+        source = str(execution_plan_status.get("_source") or "unknown")
+        sheet.write(1, 0, f"Source: {source}", fmt_note)
+
+        summary_rows = [
+            ("generated_at_utc", execution_plan_status.get("generated_at_utc")),
+            ("ultimate_priority_goal", execution_plan_status.get("ultimate_priority_goal")),
+            ("current_phase", execution_plan_status.get("current_phase")),
+            ("recommended_next_phase", execution_plan_status.get("recommended_next_phase")),
+            ("pipeline_rc", execution_plan_status.get("pipeline_rc")),
+            ("coverage_gate_passed", coverage.get("coverage_gate_passed")),
+            ("coverage_pct", coverage.get("coverage_pct")),
+            ("expected_airlines_count", len(coverage.get("expected_airlines") or [])),
+            ("covered_airlines_count", len(coverage.get("covered_airlines") or [])),
+            ("missing_airlines_count", len(coverage.get("missing_airlines") or [])),
+            ("missing_airlines", ", ".join(coverage.get("missing_airlines") or [])),
+        ]
+
+        row = 3
+        sheet.write(row, 0, "Field", fmt_header)
+        sheet.write(row, 1, "Value", fmt_header)
+        row += 1
+        for k, v in summary_rows:
+            sheet.write(row, 0, str(k), fmt_cell)
+            sheet.write(row, 1, "" if v is None else str(v), fmt_cell)
+            row += 1
+
+        row += 1
+        sheet.write(row, 0, "Phase Sequence", fmt_section)
+        row += 1
+        sheet.write(row, 0, "id", fmt_header)
+        sheet.write(row, 1, "status", fmt_header)
+        sheet.write(row, 2, "description", fmt_header)
+        row += 1
+
+        phases = execution_plan_status.get("phase_sequence")
+        if isinstance(phases, list) and phases:
+            for p in phases:
+                if not isinstance(p, dict):
+                    continue
+                sheet.write(row, 0, str(p.get("id") or ""), fmt_cell)
+                sheet.write(row, 1, str(p.get("status") or ""), fmt_cell)
+                sheet.write(row, 2, str(p.get("description") or ""), fmt_cell)
+                row += 1
+        else:
+            sheet.write(row, 0, "no_phase_sequence_data", fmt_cell)
+            row += 1
+
+        sheet.set_column(0, 0, 28)
+        sheet.set_column(1, 1, 30)
+        sheet.set_column(2, 2, 80)
+        sheet.freeze_panes(4, 0)
+
+    def write_route_flight_fare_monitor(self, writer, df: pd.DataFrame, execution_plan_status=None):
         required_cols = [
             "min_seats",
             "max_seats",
@@ -659,60 +1546,26 @@ class OutputWriter:
         sheet.set_default_row(cfg["default_row"])
         block_border = 2
 
-        airline_theme = {
-            # BG (Biman Bangladesh): bold crimson + white + subtle gray
-            "BG": {
-                "header_bg": "#C8102E",
-                "subheader_bg": "#FFFFFF",
-                "cell_bg": "#F7F7F8",
-                "header_font": "#FFFFFF",
-                "text_font": "#2F2F2F",
-            },
-            # VQ (NOVOAIR): logo-led deep blue + vibrant orange
-            "VQ": {
-                "header_bg": "#003A70",
-                "subheader_bg": "#F58220",
-                "cell_bg": "#FFF3E8",
-                "header_font": "#FFFFFF",
-                "text_font": "#123A6E",
-            },
-            "DEFAULT": {
-                "header_bg": "#EAEAEA",
-                "subheader_bg": "#F5F5F5",
-                "cell_bg": "#FFFFFF",
-                "header_font": "#333333",
-                "text_font": "#333333",
-            },
-        }
+        airline_codes = sorted([a for a in df.get("airline", pd.Series(dtype=str)).dropna().astype(str).str.upper().unique() if str(a).strip()])
+        airline_theme = self._airline_theme_map(airline_codes)
 
         fmt_arrow_up = workbook.add_format({"font_name": "Segoe UI", "font_color": "green", "bold": True, "font_size": cfg["sub"] + 2})
         fmt_arrow_down = workbook.add_format({"font_name": "Segoe UI", "font_color": "red", "bold": True, "font_size": cfg["sub"] + 2})
-
         fmt_sub = workbook.add_format({"font_name": "Segoe UI", "font_script": 2, "font_size": cfg["sub"], "bold": True})
         fmt_sub_soldout = workbook.add_format({"font_name": "Segoe UI", "font_script": 2, "font_size": cfg["sub"], "bold": True, "italic": True, "font_color": "#777777"})
         fmt_sub_new = workbook.add_format({"font_name": "Segoe UI", "font_script": 2, "font_size": cfg["sub"], "bold": True, "italic": True, "font_color": "#1F4BD8"})
 
+        fmt_sheet_title = workbook.add_format({"font_name": "Segoe UI", "bold": True, "font_size": cfg["title"] + 1, "align": "center", "valign": "vcenter", "bg_color": "#F2F2F2", "border": 1})
         fmt_route = workbook.add_format({"font_name": "Segoe UI", "bold": True, "font_size": cfg["title"]})
-        fmt_route_leader_default = workbook.add_format(
-            {"font_name": "Segoe UI", "font_size": cfg["body"], "bold": True, "align": "left", "valign": "vcenter", "text_wrap": True, "bg_color": "#F2F2F2", "border": 1}
-        )
+        fmt_route_leader_default = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "bold": True, "align": "left", "valign": "vcenter", "text_wrap": True, "bg_color": "#F2F2F2", "border": 1})
         fmt_header = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "align": "center", "valign": "vcenter"})
         fmt_cell = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center"})
         fmt_gray = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "font_color": "#777777"})
-        fmt_date_row = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "bg_color": "#FAFAFA"})
+        fmt_date_row = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "valign": "vcenter", "bg_color": "#FAFAFA"})
         fmt_legend_key = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "bg_color": "#F2F2F2", "align": "center"})
         fmt_tag_new = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "bold": True, "italic": True, "font_color": "#1F4BD8", "border": 1, "align": "center"})
         fmt_tag_soldout = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "bold": True, "italic": True, "font_color": "#777777", "border": 1, "align": "center"})
-        fmt_date_row_bottom = workbook.add_format(
-            {
-                "font_name": "Segoe UI",
-                "font_size": cfg["body"],
-                "border": 1,
-                "align": "center",
-                "bg_color": "#FAFAFA",
-                "bottom": block_border,
-            }
-        )
+        fmt_date_row_bottom = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "valign": "vcenter", "bg_color": "#FAFAFA", "bottom": block_border})
 
         fmt_header_airline = {}
         fmt_metric_airline = {}
@@ -732,96 +1585,104 @@ class OutputWriter:
         fmt_gray_airline_right_bottom = {}
         fmt_route_leader_airline = {}
         for code, t in airline_theme.items():
-            fmt_header_airline[code] = workbook.add_format(
-                {
-                    "font_name": "Segoe UI",
-                    "font_size": cfg["header"],
-                    "bold": True,
-                    "border": 1,
-                    "left": block_border,
-                    "right": block_border,
-                    "top": block_border,
-                    "align": "center",
-                    "bg_color": t["header_bg"],
-                    "font_color": t["header_font"],
-                }
-            )
-            fmt_metric_airline[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "align": "center", "bg_color": t["subheader_bg"], "font_color": t["text_font"]}
-            )
-            fmt_metric_airline_left[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "left": block_border, "align": "center", "bg_color": t["subheader_bg"], "font_color": t["text_font"]}
-            )
-            fmt_metric_airline_right[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "right": block_border, "align": "center", "bg_color": t["subheader_bg"], "font_color": t["text_font"]}
-            )
-            fmt_cell_airline[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]}
-            )
-            fmt_cell_airline_left[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]}
-            )
-            fmt_cell_airline_right[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]}
-            )
-            fmt_gray_airline[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"}
-            )
-            fmt_gray_airline_left[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"}
-            )
-            fmt_gray_airline_right[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"}
-            )
-            fmt_cell_airline_bottom[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]}
-            )
-            fmt_cell_airline_left_bottom[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]}
-            )
-            fmt_cell_airline_right_bottom[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]}
-            )
-            fmt_gray_airline_bottom[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"}
-            )
-            fmt_gray_airline_left_bottom[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"}
-            )
-            fmt_gray_airline_right_bottom[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"}
-            )
-            fmt_route_leader_airline[code] = workbook.add_format(
-                {"font_name": "Segoe UI", "font_size": cfg["body"], "bold": True, "align": "left", "valign": "vcenter", "text_wrap": True, "bg_color": t["subheader_bg"], "font_color": t["text_font"], "border": 1}
-            )
+            fmt_header_airline[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "left": block_border, "right": block_border, "top": block_border, "align": "center", "bg_color": t["header_bg"], "font_color": t["header_font"]})
+            fmt_metric_airline[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "align": "center", "bg_color": t["subheader_bg"], "font_color": t["text_font"]})
+            fmt_metric_airline_left[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "left": block_border, "align": "center", "bg_color": t["subheader_bg"], "font_color": t["text_font"]})
+            fmt_metric_airline_right[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["header"], "bold": True, "border": 1, "right": block_border, "align": "center", "bg_color": t["subheader_bg"], "font_color": t["text_font"]})
+            fmt_cell_airline[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]})
+            fmt_cell_airline_left[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]})
+            fmt_cell_airline_right[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]})
+            fmt_gray_airline[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"})
+            fmt_gray_airline_left[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"})
+            fmt_gray_airline_right[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"})
+            fmt_cell_airline_bottom[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]})
+            fmt_cell_airline_left_bottom[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]})
+            fmt_cell_airline_right_bottom[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": t["text_font"]})
+            fmt_gray_airline_bottom[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"})
+            fmt_gray_airline_left_bottom[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "left": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"})
+            fmt_gray_airline_right_bottom[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "border": 1, "right": block_border, "bottom": block_border, "align": "center", "bg_color": t["cell_bg"], "font_color": "#777777"})
+            fmt_route_leader_airline[code] = workbook.add_format({"font_name": "Segoe UI", "font_size": cfg["body"], "bold": True, "align": "left", "valign": "vcenter", "text_wrap": True, "bg_color": t["subheader_bg"], "font_color": t["text_font"], "border": 1})
 
         df = df.sort_values(["route", "flight_date", "departure_time"])
         if "day_name" not in df.columns:
             df["day_name"] = pd.to_datetime(df["flight_date"]).dt.day_name()
 
+        curr_cap = str((df.get("current_capture_label", pd.Series(["Current snapshot"])).iloc[0] if len(df) else "Current snapshot") or "Current snapshot")
+        prev_cap = str((df.get("previous_capture_label", pd.Series(["Previous snapshot"])).iloc[0] if len(df) else "Previous snapshot") or "Previous snapshot")
+
         sheet.set_column(0, 0, 12)
         sheet.set_column(1, 1, 10)
+        sheet.set_column(2, 2, 18)
 
-        sheet.write(0, 0, "Route Flight Fare Monitor", fmt_route)
-        sheet.write(1, 0, "Legend", fmt_legend_key)
-        sheet.write(1, 1, "BG", fmt_header_airline["BG"])
-        sheet.write(1, 2, "VQ", fmt_header_airline["VQ"])
-        sheet.write(1, 3, "↑ Increase", fmt_cell)
-        sheet.write(1, 4, "↓ Decrease", fmt_cell)
-        sheet.write(1, 5, "NEW", fmt_tag_new)
-        sheet.write(1, 6, "SOLD OUT", fmt_tag_soldout)
-        sheet.write(1, 7, "— Unknown", fmt_gray)
+        legend_airlines = [str(a).strip().upper() for a in airline_codes if str(a).strip()]
+        status_tokens = ["↑ Increase", "↓ Decrease", "NEW", "SOLD OUT", "— Unknown"]
+        legend_airline_end_col = len(legend_airlines)
+        legend_status_end_col = len(status_tokens)
+        title_end_col = max(12, 1 + max(legend_airline_end_col, legend_status_end_col))
+        sheet.merge_range(0, 0, 0, title_end_col, "Aero Pulse Intelligence Monitor", fmt_sheet_title)
+
+        sheet.write(1, 0, "Airlines", fmt_legend_key)
+        lc = 1
+        for a in legend_airlines:
+            theme = a if a in fmt_header_airline else "DEFAULT"
+            sheet.write(1, lc, a, fmt_header_airline[theme])
+            lc += 1
+
+        sheet.write(2, 0, "Signals", fmt_legend_key)
+        for idx, token in enumerate(status_tokens):
+            col = 1 + idx
+            if token == "NEW":
+                fmt = fmt_tag_new
+            elif token == "SOLD OUT":
+                fmt = fmt_tag_soldout
+            elif "Unknown" in token:
+                fmt = fmt_gray
+            else:
+                fmt = fmt_cell
+            sheet.write(2, col, token, fmt)
+
+        # Horizontal legend filter controls for quick visual filtering.
+        if legend_airline_end_col >= 1:
+            sheet.autofilter(1, 0, 1, legend_airline_end_col)
+        if legend_status_end_col >= 1:
+            sheet.autofilter(2, 0, 2, legend_status_end_col)
+
         sheet.set_row(1, cfg["legend_row"])
-        max_flights_any_route = int(df.groupby("route")["flight_key"].nunique().max()) if not df.empty else 1
-        max_flight_cols = max(1, max_flights_any_route * 5)
-        note_start_col = max(9, 2 + max_flight_cols + 2)
+        sheet.set_row(2, cfg["legend_row"])
+        max_flight_cols = 1
+        if not df.empty:
+            for _, route_df_for_cols in df.groupby("route", sort=False):
+                route_col_width = 0
+                for _, flight_df_for_cols in route_df_for_cols.groupby("flight_key", sort=False):
+                    route_col_width += 5 if self._has_inventory_signal(flight_df_for_cols) else 3
+                max_flight_cols = max(max_flight_cols, route_col_width)
+        note_start_col = max(10, 3 + max_flight_cols + 2)
         self._write_methodology_note(sheet, 0, note_start_col, workbook)
 
-        row = 3
-        route_sep = "\u2013"
-        leader_sep = "\u2014"
+        def _changed(day_frame: pd.DataFrame) -> bool:
+            if day_frame is None or day_frame.empty:
+                return False
+            for _, rec in day_frame.iterrows():
+                if str(rec.get("status") or "").upper() in {"NEW", "SOLD OUT"}:
+                    return True
+                for dcol in ("min_fare_delta", "max_fare_delta", "seat_delta", "tax_delta", "load_delta"):
+                    v = rec.get(dcol)
+                    if self._is_na(v):
+                        continue
+                    try:
+                        if float(v) != 0.0:
+                            return True
+                    except Exception:
+                        pass
+            return False
+
+        row = 4
+        route_blocks = []
+        route_sep = "–"
+        leader_sep = "—"
 
         for route, route_df in df.groupby("route", sort=False):
+            route_block_start = row
             route_display = str(route).replace("-", route_sep)
             sheet.write(row, 0, route_display, fmt_route)
 
@@ -831,17 +1692,27 @@ class OutputWriter:
                 .first()[["flight_key", "airline", "flight_number", "aircraft", "departure_time"]]
                 .sort_values("departure_time")
             )
+            flight_metrics = {}
+            for _, f in flights.iterrows():
+                flight_slice = route_df[route_df["flight_key"] == f.flight_key]
+                if self._has_inventory_signal(flight_slice):
+                    flight_metrics[f.flight_key] = ["Min Fare", "Max Fare", "Tax Amount", "Open/Cap", "Inv Press"]
+                else:
+                    flight_metrics[f.flight_key] = ["Min Fare", "Max Fare", "Tax Amount"]
 
-            total_flight_cols = max(1, len(flights) * 5)
-            # Keep leader merge width aligned with actual displayed flight columns.
-            leader_end_col = 1 + total_flight_cols
+            total_flight_cols = max(1, sum(len(flight_metrics.get(f.flight_key, [])) for _, f in flights.iterrows()))
+            leader_end_col = 2 + total_flight_cols
             if leader_df.empty:
                 leader_txt = "Route Price Leader (Lowest Fare): —"
                 leader_fmt = fmt_route_leader_default
             else:
                 lr = leader_df.sort_values("min_fare").iloc[0]
                 code = self._flight_code_label(lr.airline, lr.flight_number)
-                leader_txt = f"Route Price Leader (Lowest Fare): {code} {leader_sep} {int(lr.min_fare):,}"
+                leader_dates = leader_df[(leader_df["flight_key"] == lr["flight_key"]) & (pd.to_numeric(leader_df["min_fare"], errors="coerce") == float(lr.min_fare))]["flight_date"].dropna().astype(str).tolist()
+                leader_dates = sorted(set(leader_dates))
+                date_tokens = pd.to_datetime(leader_dates, errors="coerce").strftime("%d %b").tolist() if leader_dates else []
+                date_label = ", ".join(date_tokens)
+                leader_txt = f"Route Price Leader (Lowest Fare): {code} {leader_sep} {int(lr.min_fare):,}" + (f" (Dates: {date_label})" if date_label else "")
                 leader_airline = str(getattr(lr, "airline", "") or "").upper()
                 leader_fmt = fmt_route_leader_airline.get(leader_airline, fmt_route_leader_default)
             sheet.merge_range(row, 1, row, leader_end_col, leader_txt, leader_fmt)
@@ -850,21 +1721,23 @@ class OutputWriter:
 
             sheet.merge_range(row, 0, row + 2, 0, "Date", fmt_header)
             sheet.merge_range(row, 1, row + 2, 1, "Day", fmt_header)
+            sheet.merge_range(row, 2, row + 2, 2, "Capture Date/Time", fmt_header)
             col_map = {}
             col_airline = {}
-            col = 2
+            col = 3
             for _, f in flights.iterrows():
                 aircraft = f.aircraft if pd.notna(f.aircraft) else "Aircraft NA"
                 code = self._flight_code_label(f.airline, f.flight_number)
-                header = f"{code} | {aircraft}"
                 airline_code = str(f.airline or "").upper()
                 theme = airline_code if airline_code in fmt_header_airline else "DEFAULT"
-                sheet.merge_range(row, col, row, col + 4, header, fmt_header_airline[theme])
+                metric_cols = flight_metrics.get(f.flight_key, ["Min Fare", "Max Fare", "Tax Amount"])
+                span = max(1, len(metric_cols))
+                sheet.merge_range(row, col, row, col + span - 1, f"{code} | {aircraft}", fmt_header_airline[theme])
                 col_map[f.flight_key] = col
                 col_airline[f.flight_key] = airline_code
-                for wcol in range(col, col + 5):
+                for wcol in range(col, col + span):
                     sheet.set_column(wcol, wcol, 13)
-                col += 5
+                col += span
             row += 1
 
             for _, f in flights.iterrows():
@@ -872,17 +1745,18 @@ class OutputWriter:
                 dep_txt = str(f.departure_time) if pd.notna(f.departure_time) else ""
                 airline_code = str(f.airline or "").upper()
                 theme = airline_code if airline_code in fmt_header_airline else "DEFAULT"
-                sheet.merge_range(row, start_col, row, start_col + 4, dep_txt, fmt_header_airline[theme])
+                span = len(flight_metrics.get(f.flight_key, ["Min Fare", "Max Fare", "Tax Amount"]))
+                sheet.merge_range(row, start_col, row, start_col + span - 1, dep_txt, fmt_header_airline[theme])
             row += 1
 
-            metrics = ["Min Fare", "Max Fare", "Tax Amount", "Open/Cap", "Inv Press"]
             for fk, start_col in col_map.items():
                 airline_code = col_airline.get(fk, "")
                 theme = airline_code if airline_code in fmt_metric_airline else "DEFAULT"
+                metrics = flight_metrics.get(fk, ["Min Fare", "Max Fare", "Tax Amount"])
                 for i, m in enumerate(metrics):
                     if i == 0:
                         metric_fmt = fmt_metric_airline_left[theme]
-                    elif i == 4:
+                    elif i == len(metrics) - 1:
                         metric_fmt = fmt_metric_airline_right[theme]
                     else:
                         metric_fmt = fmt_metric_airline[theme]
@@ -893,137 +1767,248 @@ class OutputWriter:
             for day_idx, ((date, day), day_df) in enumerate(day_groups):
                 is_last_day = day_idx == (len(day_groups) - 1)
                 date_fmt = fmt_date_row_bottom if is_last_day else fmt_date_row
-                sheet.write(row, 0, str(date), date_fmt)
-                sheet.write(row, 1, day, date_fmt)
+                day_curr_cap = str(
+                    day_df.get("current_capture_label", pd.Series(dtype=object))
+                    .dropna()
+                    .astype(str)
+                    .replace("", pd.NA)
+                    .dropna()
+                    .iloc[0]
+                    if "current_capture_label" in day_df.columns
+                    and not day_df.get("current_capture_label", pd.Series(dtype=object)).dropna().empty
+                    else curr_cap
+                )
+                day_prev_cap = str(
+                    day_df.get("previous_capture_label", pd.Series(dtype=object))
+                    .dropna()
+                    .astype(str)
+                    .replace("", pd.NA)
+                    .dropna()
+                    .iloc[0]
+                    if "previous_capture_label" in day_df.columns
+                    and not day_df.get("previous_capture_label", pd.Series(dtype=object)).dropna().empty
+                    else prev_cap
+                )
+                variants = [("current", day_curr_cap)]
+                if _changed(day_df):
+                    variants = [("previous", day_prev_cap), ("current", day_curr_cap)]
+                span = len(variants)
 
-                # Ensure visible block borders for every flight group even when row has missing values.
-                for fk, start_col in col_map.items():
-                    airline_code = str(col_airline.get(fk, "") or "").upper()
-                    theme = airline_code if airline_code in fmt_cell_airline else "DEFAULT"
-                    n_o_left = fmt_gray_airline_left_bottom[theme] if is_last_day else fmt_gray_airline_left[theme]
-                    n_o_mid = fmt_gray_airline_bottom[theme] if is_last_day else fmt_gray_airline[theme]
-                    n_o_right = fmt_gray_airline_right_bottom[theme] if is_last_day else fmt_gray_airline_right[theme]
-                    sheet.write(row, start_col + 0, "N/O", n_o_left)
-                    sheet.write(row, start_col + 1, "—", n_o_mid)
-                    sheet.write(row, start_col + 2, "—", n_o_mid)
-                    sheet.write(row, start_col + 3, "— / —", n_o_mid)
-                    sheet.write(row, start_col + 4, "—", n_o_right)
+                if span > 1:
+                    sheet.merge_range(row, 0, row + span - 1, 0, str(date), date_fmt)
+                    sheet.merge_range(row, 1, row + span - 1, 1, day, date_fmt)
+                else:
+                    sheet.write(row, 0, str(date), date_fmt)
+                    sheet.write(row, 1, day, date_fmt)
 
-                for _, r in day_df.iterrows():
-                    base = col_map.get(r.flight_key)
-                    if base is None:
-                        continue
-                    airline_code = str(r.airline or col_airline.get(r.flight_key, "")).upper()
-                    theme = airline_code if airline_code in fmt_cell_airline else "DEFAULT"
-                    cell_fmt_left = fmt_cell_airline_left_bottom[theme] if is_last_day else fmt_cell_airline_left[theme]
-                    cell_fmt_mid = fmt_cell_airline_bottom[theme] if is_last_day else fmt_cell_airline[theme]
-                    cell_fmt_right = fmt_cell_airline_right_bottom[theme] if is_last_day else fmt_cell_airline_right[theme]
-                    gray_fmt_left = fmt_gray_airline_left_bottom[theme] if is_last_day else fmt_gray_airline_left[theme]
-                    gray_fmt_mid = fmt_gray_airline_bottom[theme] if is_last_day else fmt_gray_airline[theme]
-                    gray_fmt_right = fmt_gray_airline_right_bottom[theme] if is_last_day else fmt_gray_airline_right[theme]
+                for vidx, (vkey, vlabel) in enumerate(variants):
+                    row_i = row + vidx
+                    sheet.write(row_i, 2, vlabel, date_fmt)
 
-                    min_fare_int = self._to_int(r.min_fare)
-                    min_rbd = str(r.min_rbd)[:1] if pd.notna(r.min_rbd) else ""
-                    min_rbd_seats = self._to_int(r.min_rbd_seats)
-                    sub = f"{min_rbd}-{min_rbd_seats}" if min_rbd and min_rbd_seats is not None else min_rbd
-                    base_price = f"{min_fare_int:,}" if min_fare_int is not None else "—"
+                    for fk, start_col in col_map.items():
+                        airline_code = str(col_airline.get(fk, "") or "").upper()
+                        theme = airline_code if airline_code in fmt_cell_airline else "DEFAULT"
+                        metrics = flight_metrics.get(fk, ["Min Fare", "Max Fare", "Tax Amount"])
+                        use_bottom = is_last_day and vidx == span - 1
+                        n_o_left = fmt_gray_airline_left_bottom[theme] if use_bottom else fmt_gray_airline_left[theme]
+                        n_o_mid = fmt_gray_airline_bottom[theme] if use_bottom else fmt_gray_airline[theme]
+                        n_o_right = fmt_gray_airline_right_bottom[theme] if use_bottom else fmt_gray_airline_right[theme]
+                        for idx, metric_name in enumerate(metrics):
+                            if idx == 0:
+                                metric_fmt = n_o_left
+                            elif idx == len(metrics) - 1:
+                                metric_fmt = n_o_right
+                            else:
+                                metric_fmt = n_o_mid
+                            if metric_name == "Min Fare":
+                                default_text = "N/O"
+                            elif metric_name == "Open/Cap":
+                                default_text = "— / —"
+                            else:
+                                default_text = "—"
+                            sheet.write(row_i, start_col + idx, default_text, metric_fmt)
 
-                    min_sign = self._delta_sign(r.min_fare_delta)
-                    min_arrow = "\u2191" if min_sign > 0 else ("\u2193" if min_sign < 0 else "")
-                    min_arrow_fmt = fmt_arrow_up if min_sign > 0 else (fmt_arrow_down if min_sign < 0 else cell_fmt_left)
+                    for _, r in day_df.iterrows():
+                        base = col_map.get(r.flight_key)
+                        if base is None:
+                            continue
+                        airline_code = str(r.airline or col_airline.get(r.flight_key, "")).upper()
+                        theme = airline_code if airline_code in fmt_cell_airline else "DEFAULT"
+                        use_bottom = is_last_day and vidx == span - 1
+                        cell_fmt_left = fmt_cell_airline_left_bottom[theme] if use_bottom else fmt_cell_airline_left[theme]
+                        cell_fmt_mid = fmt_cell_airline_bottom[theme] if use_bottom else fmt_cell_airline[theme]
+                        cell_fmt_right = fmt_cell_airline_right_bottom[theme] if use_bottom else fmt_cell_airline_right[theme]
+                        gray_fmt_left = fmt_gray_airline_left_bottom[theme] if use_bottom else fmt_gray_airline_left[theme]
+                        gray_fmt_mid = fmt_gray_airline_bottom[theme] if use_bottom else fmt_gray_airline[theme]
+                        gray_fmt_right = fmt_gray_airline_right_bottom[theme] if use_bottom else fmt_gray_airline_right[theme]
+                        metrics = flight_metrics.get(r.flight_key, ["Min Fare", "Max Fare", "Tax Amount"])
+                        metric_index = {name: idx for idx, name in enumerate(metrics)}
 
-                    status_txt = ""
-                    status_fmt = fmt_sub
-                    if r.status == "SOLD OUT":
-                        status_txt = " SOLD OUT"
-                        status_fmt = fmt_sub_soldout
-                    elif r.status == "NEW":
-                        status_txt = " NEW"
-                        status_fmt = fmt_sub_new
+                        def _pick_fmt(idx, left_fmt, mid_fmt, right_fmt):
+                            if idx <= 0:
+                                return left_fmt
+                            if idx >= len(metrics) - 1:
+                                return right_fmt
+                            return mid_fmt
 
-                    rich_parts = [cell_fmt_left, base_price]
-                    if sub:
-                        rich_parts += [fmt_sub, f"({sub})"]
-                    if status_txt:
-                        rich_parts += [status_fmt, status_txt]
-                    if min_arrow:
-                        rich_parts += [min_arrow_fmt, f" {min_arrow}"]
-                    rich_parts += [cell_fmt_left]
-                    if len(rich_parts) <= 3:
-                        sheet.write(row, base, base_price, cell_fmt_left)
-                    else:
-                        sheet.write_rich_string(row, base, *rich_parts)
+                        min_idx = metric_index.get("Min Fare", 0)
+                        max_idx = metric_index.get("Max Fare", 1 if len(metrics) > 1 else 0)
+                        tax_idx = metric_index.get("Tax Amount", len(metrics) - 1)
+                        open_cap_idx = metric_index.get("Open/Cap")
+                        inv_press_idx = metric_index.get("Inv Press")
 
-                    max_fare_int = self._to_int(r.max_fare)
-                    if max_fare_int is not None:
-                        max_rbd = str(r.max_rbd)[:1] if pd.notna(r.max_rbd) else ""
-                        max_rbd_seats = self._to_int(r.max_rbd_seats)
-                        max_sub = f"{max_rbd}-{max_rbd_seats}" if max_rbd and max_rbd_seats is not None else max_rbd
-                        max_sign = self._delta_sign(r.max_fare_delta)
-                        max_arrow = "\u2191" if max_sign > 0 else ("\u2193" if max_sign < 0 else "")
-                        max_arrow_fmt = fmt_arrow_up if max_sign > 0 else (fmt_arrow_down if max_sign < 0 else gray_fmt_mid)
-                        parts = [gray_fmt_mid, f"{max_fare_int:,}"]
-                        if max_sub:
-                            parts += [fmt_sub, f"({max_sub})"]
-                        if max_arrow:
-                            parts += [max_arrow_fmt, f" {max_arrow}"]
-                        parts += [gray_fmt_mid]
-                        if len(parts) <= 3:
-                            sheet.write(row, base + 1, f"{max_fare_int:,}", gray_fmt_mid)
+                        min_cell_fmt = _pick_fmt(min_idx, cell_fmt_left, cell_fmt_mid, cell_fmt_right)
+                        max_gray_fmt = _pick_fmt(max_idx, gray_fmt_left, gray_fmt_mid, gray_fmt_right)
+                        tax_gray_fmt = _pick_fmt(tax_idx, gray_fmt_left, gray_fmt_mid, gray_fmt_right)
+                        seat_cell_fmt = _pick_fmt(open_cap_idx, cell_fmt_left, cell_fmt_mid, cell_fmt_right) if open_cap_idx is not None else None
+                        seat_gray_fmt = _pick_fmt(open_cap_idx, gray_fmt_left, gray_fmt_mid, gray_fmt_right) if open_cap_idx is not None else None
+                        load_gray_fmt = _pick_fmt(inv_press_idx, gray_fmt_left, gray_fmt_mid, gray_fmt_right) if inv_press_idx is not None else None
+
+                        if vkey == "previous":
+                            min_fare_int = self._to_int(r.get("previous_min_fare"))
+                            max_fare_int = self._to_int(r.get("previous_max_fare"))
+                            tax_int = self._to_int(r.get("previous_tax"))
+                            min_seat_int = self._to_int(r.get("previous_min_seats"))
+                            max_seat_int = self._to_int(r.get("previous_max_seats"))
+                            if max_seat_int is None:
+                                max_seat_int = self._to_int(r.get("max_seats"))
+                            load_int = self._to_int(r.get("previous_load_pct"))
+                            min_fmt = min_cell_fmt if min_fare_int is not None else _pick_fmt(min_idx, gray_fmt_left, gray_fmt_mid, gray_fmt_right)
+                            sheet.write(row_i, base + min_idx, f"{min_fare_int:,}" if min_fare_int is not None else "—", min_fmt)
+                            sheet.write(row_i, base + max_idx, f"{max_fare_int:,}" if max_fare_int is not None else "—", max_gray_fmt)
+                            sheet.write(row_i, base + tax_idx, f"{tax_int:,}" if tax_int is not None else "—", tax_gray_fmt)
+                            if open_cap_idx is not None:
+                                if min_seat_int is None and max_seat_int is None:
+                                    sheet.write(row_i, base + open_cap_idx, "— / —", seat_gray_fmt)
+                                elif min_seat_int is None:
+                                    sheet.write(row_i, base + open_cap_idx, f"— / {max_seat_int}", seat_gray_fmt)
+                                elif max_seat_int is None:
+                                    sheet.write(row_i, base + open_cap_idx, f"{min_seat_int} / —", seat_gray_fmt)
+                                else:
+                                    sheet.write(row_i, base + open_cap_idx, f"{min_seat_int} / {max_seat_int}", seat_cell_fmt)
+                            if inv_press_idx is not None:
+                                sheet.write(row_i, base + inv_press_idx, f"{load_int}%" if load_int is not None else "—", load_gray_fmt)
+                            continue
+
+                        min_fare_int = self._to_int(r.min_fare)
+                        min_rbd = str(r.min_rbd)[:1] if pd.notna(r.min_rbd) else ""
+                        min_rbd_seats = self._to_int(r.min_rbd_seats)
+                        sub = f"{min_rbd}-{min_rbd_seats}" if min_rbd and min_rbd_seats is not None else min_rbd
+                        base_price = f"{min_fare_int:,}" if min_fare_int is not None else "—"
+
+                        min_sign = self._delta_sign(r.min_fare_delta)
+                        min_arrow = "↑" if min_sign > 0 else ("↓" if min_sign < 0 else "")
+                        min_arrow_fmt = fmt_arrow_up if min_sign > 0 else (fmt_arrow_down if min_sign < 0 else min_cell_fmt)
+
+                        status_txt = ""
+                        status_fmt = fmt_sub
+                        if r.status == "SOLD OUT":
+                            status_txt = " SOLD OUT"
+                            status_fmt = fmt_sub_soldout
+                        elif r.status == "NEW":
+                            status_txt = " NEW"
+                            status_fmt = fmt_sub_new
+
+                        rich_parts = [min_cell_fmt, base_price]
+                        if sub:
+                            rich_parts += [fmt_sub, f"({sub})"]
+                        if status_txt:
+                            rich_parts += [status_fmt, status_txt]
+                        if min_arrow:
+                            rich_parts += [min_arrow_fmt, f" {min_arrow}"]
+                        rich_parts += [min_cell_fmt]
+                        if len(rich_parts) <= 3:
+                            sheet.write(row_i, base + min_idx, base_price, min_cell_fmt)
                         else:
-                            sheet.write_rich_string(row, base + 1, *parts)
-                    else:
-                        sheet.write(row, base + 1, "—", gray_fmt_mid)
+                            sheet.write_rich_string(row_i, base + min_idx, *rich_parts)
 
-                    tax_int = self._to_int(r.current_tax)
-                    tax_sign = self._delta_sign(r.tax_delta)
-                    tax_arrow = "\u2191" if tax_sign > 0 else ("\u2193" if tax_sign < 0 else "")
-                    tax_arrow_fmt = fmt_arrow_up if tax_sign > 0 else (fmt_arrow_down if tax_sign < 0 else gray_fmt_mid)
-                    if tax_int is None:
-                        sheet.write(row, base + 2, "—", gray_fmt_mid)
-                    elif tax_arrow:
-                        sheet.write_rich_string(row, base + 2, gray_fmt_mid, f"{tax_int:,}", tax_arrow_fmt, f" {tax_arrow}", gray_fmt_mid)
-                    else:
-                        sheet.write(row, base + 2, f"{tax_int:,}", gray_fmt_mid)
+                        max_fare_int = self._to_int(r.max_fare)
+                        if max_fare_int is not None:
+                            max_rbd = str(r.max_rbd)[:1] if pd.notna(r.max_rbd) else ""
+                            max_rbd_seats = self._to_int(r.max_rbd_seats)
+                            max_sub = f"{max_rbd}-{max_rbd_seats}" if max_rbd and max_rbd_seats is not None else max_rbd
+                            max_sign = self._delta_sign(r.max_fare_delta)
+                            max_arrow = "↑" if max_sign > 0 else ("↓" if max_sign < 0 else "")
+                            max_arrow_fmt = fmt_arrow_up if max_sign > 0 else (fmt_arrow_down if max_sign < 0 else max_gray_fmt)
+                            parts = [max_gray_fmt, f"{max_fare_int:,}"]
+                            if max_sub:
+                                parts += [fmt_sub, f"({max_sub})"]
+                            if max_arrow:
+                                parts += [max_arrow_fmt, f" {max_arrow}"]
+                            parts += [max_gray_fmt]
+                            if len(parts) <= 3:
+                                sheet.write(row_i, base + max_idx, f"{max_fare_int:,}", max_gray_fmt)
+                            else:
+                                sheet.write_rich_string(row_i, base + max_idx, *parts)
+                        else:
+                            sheet.write(row_i, base + max_idx, "—", max_gray_fmt)
 
-                    min_seat_int = self._to_int(r.min_seats)
-                    max_seat_int = self._to_int(r.max_seats)
-                    seat_sign = self._delta_sign(r.seat_delta)
-                    seat_arrow = "\u2191" if seat_sign > 0 else ("\u2193" if seat_sign < 0 else "")
-                    seat_arrow_fmt = fmt_arrow_up if seat_sign > 0 else (fmt_arrow_down if seat_sign < 0 else cell_fmt_mid)
-                    if min_seat_int is None and max_seat_int is None:
-                        sheet.write(row, base + 3, "— / —", gray_fmt_mid)
-                    elif min_seat_int is None:
-                        sheet.write(row, base + 3, f"— / {max_seat_int}", gray_fmt_mid)
-                    elif max_seat_int is None:
-                        sheet.write(row, base + 3, f"{min_seat_int} / —", gray_fmt_mid)
-                    elif seat_arrow:
-                        sheet.write_rich_string(
-                            row,
-                            base + 3,
-                            cell_fmt_mid,
-                            f"{min_seat_int} / {max_seat_int}",
-                            seat_arrow_fmt,
-                            f" {seat_arrow}",
-                            cell_fmt_mid,
-                        )
-                    else:
-                        sheet.write(row, base + 3, f"{min_seat_int} / {max_seat_int}", cell_fmt_mid)
+                        tax_int = self._to_int(r.current_tax)
+                        tax_sign = self._delta_sign(r.tax_delta)
+                        tax_arrow = "↑" if tax_sign > 0 else ("↓" if tax_sign < 0 else "")
+                        tax_arrow_fmt = fmt_arrow_up if tax_sign > 0 else (fmt_arrow_down if tax_sign < 0 else tax_gray_fmt)
+                        if tax_int is None:
+                            sheet.write(row_i, base + tax_idx, "—", tax_gray_fmt)
+                        elif tax_arrow:
+                            sheet.write_rich_string(row_i, base + tax_idx, tax_gray_fmt, f"{tax_int:,}", tax_arrow_fmt, f" {tax_arrow}", tax_gray_fmt)
+                        else:
+                            sheet.write(row_i, base + tax_idx, f"{tax_int:,}", tax_gray_fmt)
 
-                    load_int = self._to_int(r.load_pct)
-                    load_sign = self._delta_sign(r.load_delta)
-                    load_arrow = "\u2191" if load_sign > 0 else ("\u2193" if load_sign < 0 else "")
-                    load_arrow_fmt = fmt_arrow_up if load_sign > 0 else (fmt_arrow_down if load_sign < 0 else gray_fmt_right)
-                    if load_int is None:
-                        sheet.write(row, base + 4, "—", gray_fmt_right)
-                    elif load_arrow:
-                        sheet.write_rich_string(row, base + 4, gray_fmt_right, f"{load_int}%", load_arrow_fmt, f" {load_arrow}", gray_fmt_right)
-                    else:
-                        sheet.write(row, base + 4, f"{load_int}%", gray_fmt_right)
+                        if open_cap_idx is not None:
+                            min_seat_int = self._to_int(r.min_seats)
+                            max_seat_int = self._to_int(r.max_seats)
+                            seat_sign = self._delta_sign(r.seat_delta)
+                            seat_arrow = "↑" if seat_sign > 0 else ("↓" if seat_sign < 0 else "")
+                            seat_arrow_fmt = fmt_arrow_up if seat_sign > 0 else (fmt_arrow_down if seat_sign < 0 else seat_cell_fmt)
+                            if min_seat_int is None and max_seat_int is None:
+                                sheet.write(row_i, base + open_cap_idx, "— / —", seat_gray_fmt)
+                            elif min_seat_int is None:
+                                sheet.write(row_i, base + open_cap_idx, f"— / {max_seat_int}", seat_gray_fmt)
+                            elif max_seat_int is None:
+                                sheet.write(row_i, base + open_cap_idx, f"{min_seat_int} / —", seat_gray_fmt)
+                            elif seat_arrow:
+                                sheet.write_rich_string(row_i, base + open_cap_idx, seat_cell_fmt, f"{min_seat_int} / {max_seat_int}", seat_arrow_fmt, f" {seat_arrow}", seat_cell_fmt)
+                            else:
+                                sheet.write(row_i, base + open_cap_idx, f"{min_seat_int} / {max_seat_int}", seat_cell_fmt)
 
-                row += 1
+                        if inv_press_idx is not None:
+                            load_int = self._to_int(r.load_pct)
+                            load_sign = self._delta_sign(r.load_delta)
+                            load_arrow = "↑" if load_sign > 0 else ("↓" if load_sign < 0 else "")
+                            load_arrow_fmt = fmt_arrow_up if load_sign > 0 else (fmt_arrow_down if load_sign < 0 else load_gray_fmt)
+                            if load_int is None:
+                                sheet.write(row_i, base + inv_press_idx, "—", load_gray_fmt)
+                            elif load_arrow:
+                                sheet.write_rich_string(row_i, base + inv_press_idx, load_gray_fmt, f"{load_int}%", load_arrow_fmt, f" {load_arrow}", load_gray_fmt)
+                            else:
+                                sheet.write(row_i, base + inv_press_idx, f"{load_int}%", load_gray_fmt)
 
-        sheet.freeze_panes(3, 2)
+                row += span
+
+            route_airlines = sorted(
+                {
+                    str(a).strip().upper()
+                    for a in route_df.get("airline", pd.Series(dtype=str)).dropna().astype(str).tolist()
+                    if str(a).strip()
+                }
+            )
+            route_signals = self._collect_route_signals(route_df)
+            route_blocks.append(
+                {
+                    "route": str(route),
+                    "start_row": int(route_block_start + 1),
+                    "end_row": int(max(route_block_start + 1, row)),
+                    "airlines_csv": ",".join(route_airlines),
+                    "signals_csv": ",".join(route_signals),
+                }
+            )
+
+        sheet.freeze_panes(4, 3)
         self._write_airline_ops_compare(workbook, df)
         self._write_changes_summary(workbook, df)
         self._write_fare_trend_sparklines(workbook, df)
+        self._write_penalty_comparison(workbook, df)
+        self._write_tax_comparison(workbook, df)
+        self._write_route_filter_view(workbook, df)
+        self._write_route_block_index(workbook, route_blocks)
+        self._write_execution_plan_status(workbook, execution_plan_status)

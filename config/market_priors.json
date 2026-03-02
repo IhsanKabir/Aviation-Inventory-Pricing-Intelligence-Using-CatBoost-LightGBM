@@ -1,0 +1,21 @@
+{
+  "schema_version": "2026-03-02",
+  "labor_flow_origin_countries": ["BD", "IN", "PK", "NP"],
+  "middle_east_destination_countries": ["SA", "AE", "QA", "OM", "KW", "BH"],
+  "ksa_airports": ["JED", "RUH", "MED", "DMM"],
+  "thailand_tourism_airports": ["BKK", "DMK", "HKT", "CNX", "KBV"],
+  "hub_spoke_airlines": ["SQ", "EK", "QR", "MH", "TG", "WY", "SV", "UL", "CZ"],
+  "lcc_airlines": ["6E", "G9", "3L", "8D", "FZ", "AK", "OD", "BS", "2A", "VQ", "F8"],
+  "return_oriented_airlines": ["BG", "BS"],
+  "yield_route_overrides": {
+    "high": ["DAC-JED", "DAC-RUH", "DAC-DOH", "DAC-DXB"],
+    "tourism": ["DAC-BKK", "DAC-MLE"],
+    "balanced": ["DAC-SIN", "DAC-KUL"]
+  },
+  "horizon_windows": {
+    "visa_window_max_days": 7,
+    "short_max_days": 30,
+    "mid_max_days": 90,
+    "long_max_days": 180
+  }
+}

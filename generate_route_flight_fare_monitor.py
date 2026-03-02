@@ -1,6 +1,8 @@
 import argparse
+import json
 import logging
 import math
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 import re
@@ -224,6 +226,118 @@ def _build_run_stamp(timestamp_tz: str):
     return ts, tz_token
 
 
+def _format_capture_label(ts_value):
+    if ts_value is None:
+        return ""
+    try:
+        ts = pd.to_datetime(ts_value, utc=True, errors="coerce")
+        if pd.isna(ts):
+            return str(ts_value)
+        local_tz = datetime.now().astimezone().tzinfo
+        return ts.tz_convert(local_tz).strftime("%d %b, %H:%M")
+    except Exception:
+        return str(ts_value)
+
+
+def _load_execution_plan_payload(output_dir: Path, run_dir: Path):
+    """
+    Prefer latest computed execution-plan status artifact; fallback to static
+    execution_plan in config/schedule.json so the workbook still reflects
+    current strategic order when runtime status file is absent.
+    """
+    candidates = [
+        run_dir / "pipeline_execution_plan_latest.json",
+        output_dir / "pipeline_execution_plan_latest.json",
+        Path("output/reports/pipeline_execution_plan_latest.json"),
+    ]
+    for p in candidates:
+        if not p.exists():
+            continue
+        try:
+            obj = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(obj, dict) and obj:
+            payload = dict(obj)
+            payload.setdefault("_source", str(p))
+            return payload
+
+    schedule_path = Path("config/schedule.json")
+    if not schedule_path.exists():
+        return None
+    try:
+        schedule_obj = json.loads(schedule_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(schedule_obj, dict):
+        return None
+    plan = schedule_obj.get("execution_plan")
+    if not isinstance(plan, dict) or not plan:
+        return None
+
+    payload = {
+        "generated_at_utc": None,
+        "ultimate_priority_goal": plan.get("ultimate_priority_goal"),
+        "current_phase": plan.get("current_phase"),
+        "phase_sequence": plan.get("phase_sequence"),
+        "coverage_summary": {},
+        "pipeline_rc": None,
+        "recommended_next_phase": plan.get("current_phase"),
+        "_source": str(schedule_path),
+    }
+    return payload
+
+
+def export_macro_xlsm(input_xlsx: Path, output_xlsm: Path | None = None) -> Path:
+    script_path = Path(__file__).resolve().parent / "tools" / "export_route_monitor_xlsm.ps1"
+    if not script_path.exists():
+        raise RuntimeError(f"Macro export script not found: {script_path}")
+
+    cmd = [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(script_path),
+        "-InputXlsx",
+        str(input_xlsx),
+    ]
+    if output_xlsm:
+        cmd.extend(["-OutputXlsm", str(output_xlsm)])
+
+    proc = subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        stderr_tail = (proc.stderr or "").strip()[-1000:]
+        stdout_tail = (proc.stdout or "").strip()[-1000:]
+        raise RuntimeError(
+            "Macro export failed. "
+            "If VBA injection is blocked, enable: Excel Trust Center > Macro Settings > "
+            "Trust access to the VBA project object model.\n"
+            f"stdout_tail:\n{stdout_tail}\n"
+            f"stderr_tail:\n{stderr_tail}"
+        )
+
+    exported_path = None
+    for line in (proc.stdout or "").splitlines():
+        if line.strip().lower().startswith("xlsm_exported="):
+            exported_path = line.split("=", 1)[1].strip()
+            break
+    if exported_path:
+        out = Path(exported_path)
+    else:
+        out = output_xlsm if output_xlsm else input_xlsx.with_suffix(".xlsm")
+
+    if not out.exists():
+        raise RuntimeError(f"Macro export reported success but output file not found: {out}")
+    return out
+
+
 def _filter_df(
     df: pd.DataFrame,
     airline=None,
@@ -369,6 +483,9 @@ def generate_route_flight_fare_monitor(
         current_scrape=current_scrape,
         previous_scrape=previous_scrape,
     )
+    scrape_time_map = scrape_ctx.get_scrape_time_map([current_scrape, previous_scrape])
+    current_capture_label = _format_capture_label(scrape_time_map.get(current_scrape))
+    previous_capture_label = _format_capture_label(scrape_time_map.get(previous_scrape))
     final_df = adapt_comparison_for_excel(comparison_df)
     final_df = _filter_df(
         final_df,
@@ -380,6 +497,8 @@ def generate_route_flight_fare_monitor(
         market_country=market_country,
     )
     final_df = _prepare_for_writer(final_df)
+    final_df["current_capture_label"] = current_capture_label or "Current snapshot"
+    final_df["previous_capture_label"] = previous_capture_label or "Previous snapshot"
 
     if final_df.empty:
         raise RuntimeError("No rows available for route_flight_fare_monitor after filters.")
@@ -398,10 +517,15 @@ def generate_route_flight_fare_monitor(
         target_dir = base_output / f"run_{ts}_{tz_token}"
 
     target_dir.mkdir(parents=True, exist_ok=True)
+    execution_plan_payload = _load_execution_plan_payload(base_output, target_dir)
 
     output_path = target_dir / f"route_flight_fare_monitor_{ts}_{tz_token}.xlsx"
     with pd.ExcelWriter(output_path, engine="xlsxwriter") as writer:
-        OutputWriter(style=style).write_route_flight_fare_monitor(writer, final_df)
+        OutputWriter(style=style).write_route_flight_fare_monitor(
+            writer,
+            final_df,
+            execution_plan_status=execution_plan_payload,
+        )
 
     return output_path, len(final_df), current_scrape, previous_scrape
 
@@ -444,6 +568,15 @@ def parse_args():
         default=0.30,
         help="Adaptive full threshold ratio vs max rows in lookback (default: 0.30).",
     )
+    parser.add_argument(
+        "--export-macro-xlsm",
+        action="store_true",
+        help="Also export a macro-enabled .xlsm workbook with airline/signal filter controls.",
+    )
+    parser.add_argument(
+        "--macro-xlsm-path",
+        help="Optional explicit output path for the macro-enabled workbook.",
+    )
     return parser.parse_args()
 
 
@@ -468,7 +601,17 @@ def main():
         min_full_scrape_rows=args.min_full_scrape_rows,
         min_full_ratio=args.min_full_ratio,
     )
-    print(f"route_flight_fare_monitor: rows={row_count} current_scrape={current_scrape} previous_scrape={previous_scrape} -> {output_path}")
+    msg = (
+        "route_flight_fare_monitor: "
+        f"rows={row_count} current_scrape={current_scrape} previous_scrape={previous_scrape} -> {output_path}"
+    )
+    if args.export_macro_xlsm:
+        macro_path = export_macro_xlsm(
+            output_path,
+            Path(args.macro_xlsm_path) if args.macro_xlsm_path else None,
+        )
+        msg = f"{msg}\nroute_flight_fare_monitor_macro: {macro_path}"
+    print(msg)
 
 
 if __name__ == "__main__":
