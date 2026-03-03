@@ -1457,6 +1457,42 @@ class OutputWriter:
             sheet.write(row, 4, str(b.get("signals_csv") or ""))
             row += 1
 
+    def _write_route_row_index(self, workbook, rows):
+        sheet = workbook.add_worksheet("Route Row Index")
+        sheet.hide()
+
+        headers = ["route", "row_number", "variant_key", "airlines_csv", "signals_csv", "airline_signals_csv"]
+        for c, h in enumerate(headers):
+            sheet.write(0, c, h)
+
+        row = 1
+        for rec in rows or []:
+            sheet.write(row, 0, str(rec.get("route") or ""))
+            sheet.write(row, 1, int(rec.get("row_number") or 0))
+            sheet.write(row, 2, str(rec.get("variant_key") or ""))
+            sheet.write(row, 3, str(rec.get("airlines_csv") or ""))
+            sheet.write(row, 4, str(rec.get("signals_csv") or ""))
+            sheet.write(row, 5, str(rec.get("airline_signals_csv") or ""))
+            row += 1
+
+    def _write_route_column_index(self, workbook, cols):
+        sheet = workbook.add_worksheet("Route Column Index")
+        sheet.hide()
+
+        headers = ["route", "start_row", "end_row", "airline", "start_col", "end_col"]
+        for c, h in enumerate(headers):
+            sheet.write(0, c, h)
+
+        row = 1
+        for rec in cols or []:
+            sheet.write(row, 0, str(rec.get("route") or ""))
+            sheet.write(row, 1, int(rec.get("start_row") or 0))
+            sheet.write(row, 2, int(rec.get("end_row") or 0))
+            sheet.write(row, 3, str(rec.get("airline") or ""))
+            sheet.write(row, 4, int(rec.get("start_col") or 0))
+            sheet.write(row, 5, int(rec.get("end_col") or 0))
+            row += 1
+
     def _write_execution_plan_status(self, workbook, execution_plan_status):
         if not isinstance(execution_plan_status, dict) or not execution_plan_status:
             return
@@ -1689,6 +1725,8 @@ class OutputWriter:
 
         row = 4
         route_blocks = []
+        route_row_entries = []
+        route_col_entries = []
         route_sep = "–"
         leader_sep = "—"
 
@@ -1735,6 +1773,7 @@ class OutputWriter:
             sheet.merge_range(row, 2, row + 2, 2, "Capture Date/Time", fmt_header)
             col_map = {}
             col_airline = {}
+            route_col_groups = []
             col = 3
             for _, f in flights.iterrows():
                 aircraft = f.aircraft if pd.notna(f.aircraft) else "Aircraft NA"
@@ -1748,6 +1787,13 @@ class OutputWriter:
                 col_airline[f.flight_key] = airline_code
                 for wcol in range(col, col + span):
                     sheet.set_column(wcol, wcol, 13)
+                route_col_groups.append(
+                    {
+                        "airline": airline_code,
+                        "start_col": int(col + 1),
+                        "end_col": int(col + span),
+                    }
+                )
                 col += span
             row += 1
 
@@ -1815,6 +1861,70 @@ class OutputWriter:
                 for vidx, (vkey, vlabel) in enumerate(variants):
                     row_i = row + vidx
                     sheet.write(row_i, 2, vlabel, date_fmt)
+
+                    row_airline_signals = {}
+                    if str(vkey).lower() == "previous":
+                        row_airlines = sorted(
+                            {
+                                str(a).strip().upper()
+                                for a in day_df.get("airline", pd.Series(dtype=str)).dropna().astype(str).tolist()
+                                if str(a).strip()
+                            }
+                        )
+                        for ac in row_airlines:
+                            row_airline_signals[ac] = {"PREVIOUS"}
+                    else:
+                        for _, rr in day_df.iterrows():
+                            ac = str(rr.get("airline") or "").strip().upper()
+                            if not ac:
+                                continue
+                            sigs = set()
+                            status_up = str(rr.get("status") or "").upper()
+                            if status_up == "NEW":
+                                sigs.add("NEW")
+                            elif status_up == "SOLD OUT":
+                                sigs.add("SOLD OUT")
+                            for dc in ("min_fare_delta", "max_fare_delta", "tax_delta", "seat_delta", "load_delta"):
+                                vv = rr.get(dc)
+                                if self._is_na(vv):
+                                    continue
+                                try:
+                                    fv = float(vv)
+                                except Exception:
+                                    continue
+                                if fv > 0:
+                                    sigs.add("INCREASE")
+                                elif fv < 0:
+                                    sigs.add("DECREASE")
+                            if not sigs:
+                                sigs.add("UNKNOWN")
+                            row_airline_signals.setdefault(ac, set()).update(sigs)
+                        if not row_airline_signals:
+                            row_airlines = sorted(
+                                {
+                                    str(a).strip().upper()
+                                    for a in day_df.get("airline", pd.Series(dtype=str)).dropna().astype(str).tolist()
+                                    if str(a).strip()
+                                }
+                            )
+                            for ac in row_airlines:
+                                row_airline_signals[ac] = {"UNKNOWN"}
+                    row_airlines = sorted(row_airline_signals.keys())
+                    row_signals = sorted({sig for sigs in row_airline_signals.values() for sig in sigs})
+                    airline_signals_csv = ";".join(
+                        f"{ac}:{'|'.join(sorted(row_airline_signals.get(ac, set())))}"
+                        for ac in sorted(row_airline_signals.keys())
+                    )
+                    route_row_entries.append(
+                        {
+                            "route": str(route),
+                            "row_number": int(row_i + 1),
+                            "variant_key": str(vkey),
+                            "airlines_csv": ",".join(row_airlines),
+                            "signals_csv": ",".join(row_signals),
+                            "airline_signals_csv": airline_signals_csv,
+                        }
+                    )
 
                     for fk, start_col in col_map.items():
                         airline_code = str(col_airline.get(fk, "") or "").upper()
@@ -2013,6 +2123,18 @@ class OutputWriter:
                     "signals_csv": ",".join(route_signals),
                 }
             )
+            route_end_row_excel = int(max(route_block_start + 1, row))
+            for grp in route_col_groups:
+                route_col_entries.append(
+                    {
+                        "route": str(route),
+                        "start_row": int(route_block_start + 1),
+                        "end_row": route_end_row_excel,
+                        "airline": str(grp.get("airline") or ""),
+                        "start_col": int(grp.get("start_col") or 0),
+                        "end_col": int(grp.get("end_col") or 0),
+                    }
+                )
 
         sheet.freeze_panes(4, 3)
         self._write_airline_ops_compare(workbook, df)
@@ -2022,4 +2144,6 @@ class OutputWriter:
         self._write_tax_comparison(workbook, df)
         self._write_route_filter_view(workbook, df)
         self._write_route_block_index(workbook, route_blocks)
+        self._write_route_row_index(workbook, route_row_entries)
+        self._write_route_column_index(workbook, route_col_entries)
         self._write_execution_plan_status(workbook, execution_plan_status)
