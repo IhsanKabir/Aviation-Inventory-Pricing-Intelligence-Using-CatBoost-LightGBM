@@ -17,6 +17,8 @@ export default async function ForecastingPage() {
   const payload = await getForecastingPayload();
   const latestPrediction = payload.data?.latest_prediction_bundle ?? null;
   const latestBacktest = payload.data?.latest_backtest_bundle ?? null;
+  const source = payload.data?.source ?? "unknown";
+  const sourceWarning = payload.data?.warning ?? null;
 
   const bestPredictionMae = pickMetric(latestPrediction, "mae");
   const bestBacktestMae = pickMetric(latestBacktest, "mae");
@@ -27,16 +29,17 @@ export default async function ForecastingPage() {
     <>
       <h1 className="page-title">Forecasting Console</h1>
       <p className="page-copy">
-        ML/DL forecast and backtest results from the latest prediction artifacts.
+        ML/DL forecast and backtest results from the latest warehouse-backed prediction bundle.
         This page surfaces bundle freshness, model ranking, route-level evaluation,
-        and next-day output without opening CSV files manually.
+        and next-day output without opening raw artifacts manually.
       </p>
+      {sourceWarning ? <div className="status-banner warn">{sourceWarning}</div> : null}
 
       <div className="grid cards">
         <MetricCard
           label="Latest prediction target"
           value={latestPrediction?.target ?? "None"}
-          footnote={latestPrediction?.modified_at_utc ? formatDhakaDateTime(latestPrediction.modified_at_utc) : "No prediction bundle found"}
+          footnote={latestPrediction?.modified_at_utc ? `${formatDhakaDateTime(latestPrediction.modified_at_utc)} · ${source}` : "No prediction bundle found"}
         />
         <MetricCard
           label="Prediction models"
@@ -58,7 +61,7 @@ export default async function ForecastingPage() {
       <div className="section-grid">
         <DataPanel
           title="Prediction bundle"
-          copy="Most recent operational prediction output available in the reports directory."
+          copy="Most recent operational prediction bundle available from the analytics warehouse."
         >
           {!latestPrediction ? (
             <div className="empty-state">No prediction bundle found.</div>
@@ -86,7 +89,7 @@ export default async function ForecastingPage() {
 
         <DataPanel
           title="Backtest bundle"
-          copy="Latest bundle that includes rolling backtest metadata and evaluation."
+          copy="Latest bundle that includes rolling backtest metadata and evaluation from the warehouse."
         >
           {!latestBacktest ? (
             <div className="empty-state">No backtest-enabled bundle found.</div>

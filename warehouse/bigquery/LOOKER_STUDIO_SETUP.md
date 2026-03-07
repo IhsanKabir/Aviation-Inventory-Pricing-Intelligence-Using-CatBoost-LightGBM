@@ -49,8 +49,26 @@ Use Looker Studio as the dashboard layer on top of the curated `aviation_intel` 
    - predicted vs actual movement
    - route-level error trend
    - model performance summary
+   - backtest split review and model ranking
 
 Detailed layout spec:
+
+- [warehouse/bigquery/FORECASTING_BACKTEST_DASHBOARD_SPEC.md](FORECASTING_BACKTEST_DASHBOARD_SPEC.md)
+
+## Exact Forecast Report Build
+
+Use these views for the forecast report pages:
+
+1. `vw_forecast_model_latest`
+   - page name: `Forecast Health`
+2. `vw_forecast_route_latest`
+   - page name: `Route Performance`
+3. `vw_forecast_next_day_latest`
+   - page name: `Next-Day Outlook`
+4. `vw_backtest_eval_latest`
+   - page name: `Backtest Review`
+
+Build the page visuals exactly as specified in:
 
 - [warehouse/bigquery/FORECASTING_BACKTEST_DASHBOARD_SPEC.md](FORECASTING_BACKTEST_DASHBOARD_SPEC.md)
 

@@ -13,10 +13,10 @@ Purpose:
 
 Current status:
 
-- forecast artifacts originate from file-based outputs under `output/reports`
-- they are exposed operationally through the web page:
+- forecast and backtest outputs are promoted into BigQuery curated tables
+- the operational web page now reads through the API contract that is intended to be warehouse-backed
   - [apps/web/app/forecasting/page.tsx](../../apps/web/app/forecasting/page.tsx)
-- they are now promoted into BigQuery curated tables and can back the Looker dashboard directly
+- Looker Studio should be built directly on the forecast views listed below
 
 ## Recommended Dashboard Name
 
@@ -202,3 +202,105 @@ For day-to-day use:
 1. use the operational forecasting web page for quick review
 2. use BigQuery + Looker Studio for presentation-grade historical forecast analysis
 3. add more forecast warehouse fields only after the forecast schema stabilizes further
+
+## Exact Looker Build Sequence
+
+Page 1: `Forecast Health`
+
+1. Data source: `vw_forecast_model_latest`
+2. Add scorecards:
+   - `target`
+   - `bundle_created_at_utc`
+   - `COUNT_DISTINCT(model)`
+   - `MIN(mae)`
+   - `MIN(rmse)`
+3. Add table with:
+   - dimension: `model`
+   - metrics:
+     - `n`
+     - `mae`
+     - `rmse`
+     - `mape_pct`
+     - `smape_pct`
+     - `directional_accuracy_pct`
+     - `f1_macro`
+4. Sort by `mae` ascending
+
+Page 2: `Route Performance`
+
+1. Data source: `vw_forecast_route_latest`
+2. Add filter controls:
+   - `airline`
+   - `route_key`
+   - `cabin`
+   - `model`
+3. Add pivot table:
+   - rows: `airline`
+   - columns: `route_key`
+   - metric: `mae`
+4. Add detail table:
+   - dimensions:
+     - `airline`
+     - `origin`
+     - `destination`
+     - `cabin`
+     - `model`
+   - metrics:
+     - `n`
+     - `mae`
+     - `rmse`
+     - `directional_accuracy_pct`
+
+Page 3: `Next-Day Outlook`
+
+1. Data source: `vw_forecast_next_day_latest`
+2. Add filter controls:
+   - `predicted_for_day`
+   - `airline`
+   - `route_key`
+   - `cabin`
+3. Add detail table:
+   - dimensions:
+     - `predicted_for_day`
+     - `airline`
+     - `origin`
+     - `destination`
+     - `cabin`
+   - metrics:
+     - `latest_actual_value`
+     - `pred_last_value`
+     - `pred_rolling_mean_3`
+     - `pred_ewm_alpha_0_30`
+     - `pred_dl_mlp_q50`
+     - `pred_ml_catboost_q50`
+     - `pred_ml_lightgbm_q50`
+4. Add bar chart:
+   - dimension: `route_key`
+   - metric: `pred_dl_mlp_q50`
+
+Page 4: `Backtest Review`
+
+1. Data source: `vw_backtest_eval_latest`
+2. Add scorecards:
+   - `backtest_status`
+   - `backtest_split_count`
+   - `MIN(mae)`
+   - `AVG(directional_accuracy_pct)`
+3. Add filter controls:
+   - `dataset`
+   - `model`
+   - `split_id`
+4. Add table:
+   - dimensions:
+     - `split_id`
+     - `dataset`
+     - `model`
+   - metrics:
+     - `selected_on_val`
+     - `n`
+     - `mae`
+     - `rmse`
+     - `mape_pct`
+     - `smape_pct`
+     - `directional_accuracy_pct`
+     - `f1_macro`

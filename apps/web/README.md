@@ -50,7 +50,7 @@ See:
   Change-event browser plan surface.
 
 - `/forecasting`
-  Forecast view placeholder.
+  Warehouse-backed ML/DL forecast and backtest review surface.
 
 ## Why Vercel May Help
 

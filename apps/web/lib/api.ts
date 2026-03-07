@@ -194,6 +194,8 @@ export type ForecastingPayload = {
   latest_prediction_bundle: ForecastBundle | null;
   latest_backtest_bundle: ForecastBundle | null;
   bundle_count: number;
+  source?: string | null;
+  warning?: string | null;
 };
 
 export type SnapshotQuery = {

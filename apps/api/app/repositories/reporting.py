@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from functools import lru_cache
 from collections.abc import Sequence
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -9,8 +10,12 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+from google.api_core.exceptions import GoogleAPIError
+from google.cloud import bigquery
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+
+from ..config import settings
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 ROUTES_CONFIG_PATH = REPO_ROOT / "config" / "routes.json"
@@ -293,7 +298,268 @@ def _find_prediction_bundles() -> list[dict[str, Any]]:
     )
 
 
-def get_forecasting_payload(limit_routes: int = 25, limit_next_day: int = 40) -> dict[str, Any]:
+@lru_cache(maxsize=1)
+def _get_bigquery_client() -> bigquery.Client | None:
+    if not settings.bigquery_project_id:
+        return None
+    try:
+        return bigquery.Client(project=settings.bigquery_project_id)
+    except Exception:
+        return None
+
+
+def _bigquery_ready() -> bool:
+    return bool(settings.bigquery_project_id and settings.bigquery_dataset and _get_bigquery_client())
+
+
+def _run_bigquery_query(query: str, parameters: Sequence[bigquery.ScalarQueryParameter] | None = None) -> list[dict[str, Any]]:
+    client = _get_bigquery_client()
+    if client is None:
+        raise RuntimeError("BigQuery client is not configured")
+
+    job_config = bigquery.QueryJobConfig(query_parameters=list(parameters or ()))
+    rows = client.query(query, job_config=job_config).result()
+    return [dict(row.items()) for row in rows]
+
+
+def _bq_table(table_name: str) -> str:
+    return f"`{settings.bigquery_project_id}.{settings.bigquery_dataset}.{table_name}`"
+
+
+def _serialize_warehouse_value(value: Any) -> Any:
+    if isinstance(value, Decimal):
+        return float(value)
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    return value
+
+
+def _serialize_warehouse_rows(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+    clean_rows: list[dict[str, Any]] = []
+    for row in rows:
+        clean: dict[str, Any] = {}
+        for key, value in row.items():
+            normalized_key = "pred_ewm_alpha_0.30" if key == "pred_ewm_alpha_0_30" else key
+            clean[normalized_key] = _serialize_warehouse_value(value)
+        clean_rows.append(clean)
+    return clean_rows
+
+
+def _get_latest_bundle_row(backtest_only: bool = False) -> dict[str, Any] | None:
+    where_clause = "WHERE has_backtest_eval" if backtest_only else ""
+    rows = _run_bigquery_query(
+        f"""
+        SELECT
+          bundle_id,
+          bundle_name,
+          target,
+          stamp,
+          bundle_created_at_utc,
+          has_backtest_eval,
+          has_backtest_splits,
+          has_backtest_meta,
+          backtest_status,
+          backtest_split_count,
+          backtest_selection_metric
+        FROM {_bq_table("fact_forecast_bundle")}
+        {where_clause}
+        QUALIFY ROW_NUMBER() OVER (
+          ORDER BY bundle_created_at_utc DESC, stamp DESC, bundle_name DESC
+        ) = 1
+        """
+    )
+    return _serialize_warehouse_rows(rows)[0] if rows else None
+
+
+def _get_bundle_count() -> int:
+    rows = _run_bigquery_query(
+        f"""
+        SELECT COUNT(*) AS bundle_count
+        FROM {_bq_table("fact_forecast_bundle")}
+        """
+    )
+    if not rows:
+        return 0
+    return int(rows[0]["bundle_count"])
+
+
+def _get_bundle_model_eval(bundle_id: str) -> list[dict[str, Any]]:
+    rows = _run_bigquery_query(
+        f"""
+        SELECT
+          model,
+          n,
+          mae,
+          rmse,
+          mape_pct,
+          smape_pct,
+          directional_accuracy_pct,
+          f1_macro
+        FROM {_bq_table("fact_forecast_model_eval")}
+        WHERE bundle_id = @bundle_id
+        ORDER BY mae ASC NULLS LAST, rmse ASC NULLS LAST, model
+        LIMIT 50
+        """,
+        [bigquery.ScalarQueryParameter("bundle_id", "STRING", bundle_id)],
+    )
+    return _serialize_warehouse_rows(rows)
+
+
+def _get_bundle_route_eval(bundle_id: str, limit_routes: int) -> list[dict[str, Any]]:
+    rows = _run_bigquery_query(
+        f"""
+        SELECT
+          airline,
+          origin,
+          destination,
+          route_key,
+          cabin,
+          model,
+          n,
+          mae,
+          rmse,
+          mape_pct,
+          smape_pct,
+          directional_accuracy_pct,
+          f1_macro
+        FROM {_bq_table("fact_forecast_route_eval")}
+        WHERE bundle_id = @bundle_id
+        ORDER BY mae ASC NULLS LAST, airline, route_key, model
+        LIMIT @row_limit
+        """,
+        [
+            bigquery.ScalarQueryParameter("bundle_id", "STRING", bundle_id),
+            bigquery.ScalarQueryParameter("row_limit", "INT64", limit_routes),
+        ],
+    )
+    return _serialize_warehouse_rows(rows)
+
+
+def _get_bundle_next_day(bundle_id: str, limit_next_day: int) -> list[dict[str, Any]]:
+    rows = _run_bigquery_query(
+        f"""
+        SELECT
+          latest_report_day,
+          predicted_for_day,
+          history_days,
+          airline,
+          origin,
+          destination,
+          route_key,
+          cabin,
+          latest_actual_value,
+          pred_last_value,
+          pred_rolling_mean_3,
+          pred_rolling_mean_7,
+          pred_seasonal_naive_7,
+          pred_ewm_alpha_0_30,
+          pred_dl_mlp_q10,
+          pred_dl_mlp_q50,
+          pred_dl_mlp_q90,
+          pred_ml_catboost_q10,
+          pred_ml_catboost_q50,
+          pred_ml_catboost_q90,
+          pred_ml_lightgbm_q10,
+          pred_ml_lightgbm_q50,
+          pred_ml_lightgbm_q90
+        FROM {_bq_table("fact_forecast_next_day")}
+        WHERE bundle_id = @bundle_id
+        ORDER BY predicted_for_day, airline, route_key
+        LIMIT @row_limit
+        """,
+        [
+            bigquery.ScalarQueryParameter("bundle_id", "STRING", bundle_id),
+            bigquery.ScalarQueryParameter("row_limit", "INT64", limit_next_day),
+        ],
+    )
+    return _serialize_warehouse_rows(rows)
+
+
+def _get_bundle_backtest_eval(bundle_id: str) -> list[dict[str, Any]]:
+    rows = _run_bigquery_query(
+        f"""
+        SELECT
+          split_id,
+          dataset,
+          model,
+          selected_on_val,
+          n,
+          mae,
+          rmse,
+          mape_pct,
+          smape_pct,
+          directional_accuracy_pct,
+          f1_macro,
+          train_start,
+          train_end,
+          val_start,
+          val_end,
+          test_start,
+          test_end
+        FROM {_bq_table("fact_backtest_eval")}
+        WHERE bundle_id = @bundle_id
+        ORDER BY split_id DESC, dataset, mae ASC NULLS LAST, model
+        LIMIT 40
+        """,
+        [bigquery.ScalarQueryParameter("bundle_id", "STRING", bundle_id)],
+    )
+    return _serialize_warehouse_rows(rows)
+
+
+def _build_backtest_meta(bundle: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "target_column": bundle.get("target"),
+        "backtest_selection_metric": bundle.get("backtest_selection_metric"),
+        "backtest": {
+            "status": bundle.get("backtest_status"),
+            "split_count": bundle.get("backtest_split_count"),
+        },
+    }
+
+
+def _materialize_bigquery_bundle(
+    bundle: dict[str, Any] | None,
+    *,
+    limit_routes: int,
+    limit_next_day: int,
+) -> dict[str, Any] | None:
+    if not bundle:
+        return None
+    bundle_id = str(bundle["bundle_id"])
+    return {
+        "bundle_dir": f"bigquery://{settings.bigquery_project_id}.{settings.bigquery_dataset}.fact_forecast_bundle/{bundle_id}",
+        "bundle_name": bundle["bundle_name"],
+        "target": bundle["target"],
+        "stamp": bundle["stamp"],
+        "modified_at_utc": bundle.get("bundle_created_at_utc"),
+        "overall_eval": _get_bundle_model_eval(bundle_id),
+        "route_eval": _get_bundle_route_eval(bundle_id, limit_routes),
+        "next_day": _get_bundle_next_day(bundle_id, limit_next_day),
+        "backtest_eval": _get_bundle_backtest_eval(bundle_id) if bundle.get("has_backtest_eval") else [],
+        "backtest_meta": _build_backtest_meta(bundle) if bundle.get("has_backtest_eval") else None,
+    }
+
+
+def _get_forecasting_payload_from_bigquery(limit_routes: int = 25, limit_next_day: int = 40) -> dict[str, Any]:
+    latest_bundle = _get_latest_bundle_row(backtest_only=False)
+    latest_backtest_bundle = _get_latest_bundle_row(backtest_only=True)
+    return {
+        "latest_prediction_bundle": _materialize_bigquery_bundle(
+            latest_bundle,
+            limit_routes=limit_routes,
+            limit_next_day=limit_next_day,
+        ),
+        "latest_backtest_bundle": _materialize_bigquery_bundle(
+            latest_backtest_bundle,
+            limit_routes=limit_routes,
+            limit_next_day=limit_next_day,
+        ),
+        "bundle_count": _get_bundle_count(),
+        "source": "bigquery",
+    }
+
+
+def _get_forecasting_payload_from_files(limit_routes: int = 25, limit_next_day: int = 40) -> dict[str, Any]:
     bundles = _find_prediction_bundles()
     latest_bundle = bundles[0] if bundles else None
     latest_backtest_bundle = next(
@@ -326,7 +592,39 @@ def get_forecasting_payload(limit_routes: int = 25, limit_next_day: int = 40) ->
         "latest_prediction_bundle": materialize(latest_bundle),
         "latest_backtest_bundle": materialize(latest_backtest_bundle),
         "bundle_count": len(bundles),
+        "source": "filesystem",
     }
+
+
+def get_forecasting_payload(limit_routes: int = 25, limit_next_day: int = 40) -> dict[str, Any]:
+    source = settings.forecasting_source
+    if source in {"bigquery", "warehouse"}:
+        if not _bigquery_ready():
+            return {
+                "latest_prediction_bundle": None,
+                "latest_backtest_bundle": None,
+                "bundle_count": 0,
+                "source": "bigquery",
+                "warning": "BigQuery forecasting source is configured but unavailable.",
+            }
+        try:
+            return _get_forecasting_payload_from_bigquery(limit_routes=limit_routes, limit_next_day=limit_next_day)
+        except (GoogleAPIError, RuntimeError, ValueError) as exc:
+            return {
+                "latest_prediction_bundle": None,
+                "latest_backtest_bundle": None,
+                "bundle_count": 0,
+                "source": "bigquery",
+                "warning": f"BigQuery forecasting query failed: {exc}",
+            }
+    if source in {"auto", "hybrid"}:
+        if _bigquery_ready():
+            try:
+                return _get_forecasting_payload_from_bigquery(limit_routes=limit_routes, limit_next_day=limit_next_day)
+            except (GoogleAPIError, RuntimeError, ValueError):
+                pass
+        return _get_forecasting_payload_from_files(limit_routes=limit_routes, limit_next_day=limit_next_day)
+    return _get_forecasting_payload_from_files(limit_routes=limit_routes, limit_next_day=limit_next_day)
 
 
 def list_airlines(session: Session) -> list[dict[str, Any]]:

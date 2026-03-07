@@ -17,6 +17,9 @@ class Settings:
     cors_origins: tuple[str, ...]
     default_limit: int
     max_limit: int
+    bigquery_project_id: str | None
+    bigquery_dataset: str | None
+    forecasting_source: str
 
 
 def load_settings() -> Settings:
@@ -38,6 +41,9 @@ def load_settings() -> Settings:
         ),
         default_limit=default_limit,
         max_limit=max_limit,
+        bigquery_project_id=(os.getenv("BIGQUERY_PROJECT_ID", "").strip() or None),
+        bigquery_dataset=(os.getenv("BIGQUERY_DATASET", "").strip() or None),
+        forecasting_source=os.getenv("API_FORECASTING_SOURCE", "bigquery").strip().lower() or "bigquery",
     )
 
 
