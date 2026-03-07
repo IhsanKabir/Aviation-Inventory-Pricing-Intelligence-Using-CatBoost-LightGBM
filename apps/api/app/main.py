@@ -113,6 +113,29 @@ def current_snapshot(
     )
 
 
+@app.get("/api/v1/reporting/route-monitor-matrix")
+def route_monitor_matrix(
+    cycle_id: str | None = None,
+    airline: list[str] | None = Query(default=None),
+    origin: list[str] | None = Query(default=None),
+    destination: list[str] | None = Query(default=None),
+    cabin: list[str] | None = Query(default=None),
+    route_limit: int = Query(default=8, ge=1, le=24),
+    history_limit: int = Query(default=12, ge=1, le=48),
+    db: Session = Depends(get_db),
+) -> dict:
+    return reporting.get_route_monitor_matrix(
+        db,
+        cycle_id=cycle_id,
+        airlines=airline,
+        origins=origin,
+        destinations=destination,
+        cabins=cabin,
+        route_limit=route_limit,
+        history_limit=history_limit,
+    )
+
+
 @app.get("/api/v1/reporting/route-summary")
 def route_summary(
     start_date: date | None = None,

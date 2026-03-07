@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 from functools import lru_cache
+from collections import defaultdict
 from collections.abc import Sequence
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -734,6 +735,352 @@ def get_current_snapshot(
     ).mappings().all()
 
     return {"cycle_id": resolved_cycle_id, "rows": _rows_to_dicts([dict(row) for row in rows])}
+
+
+def _departure_day_label(value: date | datetime | str | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, datetime):
+        return value.strftime("%A")
+    if isinstance(value, date):
+        return value.strftime("%A")
+    try:
+        return datetime.fromisoformat(str(value)).strftime("%A")
+    except Exception:
+        return ""
+
+
+def _matrix_flight_group_id(row: dict[str, Any]) -> str:
+    departure_time = str(row.get("departure_time") or "").strip()
+    aircraft = str(row.get("aircraft") or "").strip().upper()
+    cabin = str(row.get("cabin") or "").strip()
+    return "|".join(
+        [
+            str(row.get("route_key") or ""),
+            str(row.get("airline") or ""),
+            str(row.get("flight_number") or ""),
+            departure_time,
+            cabin,
+            aircraft,
+        ]
+    )
+
+
+def _cell_signal(previous: dict[str, Any] | None, current: dict[str, Any]) -> str:
+    if current.get("soldout"):
+        return "sold_out"
+    if not previous:
+        return "new"
+
+    current_price = current.get("min_total_price_bdt")
+    previous_price = previous.get("min_total_price_bdt")
+    if current_price is None or previous_price is None:
+        return "unknown"
+
+    try:
+        if float(current_price) > float(previous_price):
+            return "increase"
+        if float(current_price) < float(previous_price):
+            return "decrease"
+    except Exception:
+        return "unknown"
+    return "unknown"
+
+
+def _signal_sort_key(value: str) -> tuple[int, str]:
+    order = {
+        "increase": 0,
+        "decrease": 1,
+        "new": 2,
+        "sold_out": 3,
+        "unknown": 4,
+    }
+    return (order.get(value, 99), value)
+
+
+def get_route_monitor_matrix(
+    session: Session,
+    cycle_id: str | None = None,
+    airlines: Sequence[str] | None = None,
+    origins: Sequence[str] | None = None,
+    destinations: Sequence[str] | None = None,
+    cabins: Sequence[str] | None = None,
+    route_limit: int = 8,
+    history_limit: int = 12,
+) -> dict[str, Any]:
+    resolved_cycle_id = _resolve_cycle_id(session, cycle_id)
+    if not resolved_cycle_id:
+        return {"cycle_id": None, "routes": []}
+
+    route_clauses = ["fo.scrape_id = CAST(:cycle_id AS uuid)"]
+    route_params: dict[str, Any] = {"cycle_id": resolved_cycle_id, "route_limit": route_limit}
+    _apply_in_filter(route_clauses, route_params, "fo.airline", airlines, "route_airline")
+    _apply_in_filter(route_clauses, route_params, "fo.origin", origins, "route_origin")
+    _apply_in_filter(route_clauses, route_params, "fo.destination", destinations, "route_destination")
+    _apply_in_filter(route_clauses, route_params, "fo.cabin", cabins, "route_cabin", uppercase=False)
+
+    route_rows = session.execute(
+        text(
+            f"""
+            SELECT
+                fo.origin,
+                fo.destination,
+                (fo.origin || '-' || fo.destination) AS route_key,
+                COUNT(*) AS row_count
+            FROM flight_offers fo
+            WHERE {' AND '.join(route_clauses)}
+            GROUP BY fo.origin, fo.destination
+            ORDER BY row_count DESC, route_key
+            LIMIT :route_limit
+            """
+        ),
+        route_params,
+    ).mappings().all()
+    selected_routes = [dict(row) for row in route_rows]
+    if not selected_routes:
+        return {"cycle_id": resolved_cycle_id, "routes": []}
+
+    route_keys = [str(row["route_key"]) for row in selected_routes]
+    min_date: date | None = None
+    max_date: date | None = None
+
+    current_clauses = ["fo.scrape_id = CAST(:cycle_id AS uuid)"]
+    current_params: dict[str, Any] = {"cycle_id": resolved_cycle_id}
+    _apply_in_filter(current_clauses, current_params, "(fo.origin || '-' || fo.destination)", route_keys, "matrix_route", uppercase=True)
+    _apply_in_filter(current_clauses, current_params, "fo.airline", airlines, "matrix_airline")
+    _apply_in_filter(current_clauses, current_params, "fo.cabin", cabins, "matrix_cabin", uppercase=False)
+
+    current_rows = session.execute(
+        text(
+            f"""
+            SELECT
+                fo.scrape_id::text AS cycle_id,
+                fo.scraped_at AS captured_at_utc,
+                fo.airline,
+                fo.origin,
+                fo.destination,
+                (fo.origin || '-' || fo.destination) AS route_key,
+                fo.flight_number,
+                fo.departure AS departure_utc,
+                fo.departure::date AS departure_date,
+                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time,
+                fo.cabin,
+                COALESCE(frm.aircraft, '') AS aircraft,
+                CAST(MIN(fo.price_total_bdt) AS NUMERIC(12, 2)) AS min_total_price_bdt,
+                CAST(MAX(fo.price_total_bdt) AS NUMERIC(12, 2)) AS max_total_price_bdt,
+                CAST(MAX(frm.tax_amount) AS NUMERIC(12, 2)) AS tax_amount,
+                MIN(fo.seat_available) AS seat_available,
+                MAX(fo.seat_capacity) AS seat_capacity,
+                CAST(MAX(frm.estimated_load_factor_pct) AS NUMERIC(6, 2)) AS load_factor_pct,
+                BOOL_OR(COALESCE(frm.soldout, FALSE)) AS soldout
+            FROM flight_offers fo
+            LEFT JOIN flight_offer_raw_meta frm
+              ON frm.flight_offer_id = fo.id
+            WHERE {' AND '.join(current_clauses)}
+            GROUP BY
+                fo.scrape_id,
+                fo.scraped_at,
+                fo.airline,
+                fo.origin,
+                fo.destination,
+                fo.flight_number,
+                fo.departure,
+                fo.cabin,
+                COALESCE(frm.aircraft, '')
+            ORDER BY route_key, departure_date, departure_time, fo.airline, fo.flight_number
+            """
+        ),
+        current_params,
+    ).mappings().all()
+    current_dicts = _rows_to_dicts([dict(row) for row in current_rows])
+    if not current_dicts:
+        return {"cycle_id": resolved_cycle_id, "routes": []}
+
+    route_date_map: dict[str, set[str]] = defaultdict(set)
+    flight_groups_by_route: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    for row in current_dicts:
+        route_key = str(row["route_key"])
+        dep_date = row.get("departure_date")
+        if isinstance(dep_date, date):
+            route_date_map[route_key].add(dep_date.isoformat())
+            min_date = dep_date if min_date is None or dep_date < min_date else min_date
+            max_date = dep_date if max_date is None or dep_date > max_date else max_date
+        flight_group_id = _matrix_flight_group_id(row)
+        if flight_group_id not in flight_groups_by_route[route_key]:
+            flight_groups_by_route[route_key][flight_group_id] = {
+                "flight_group_id": flight_group_id,
+                "airline": row.get("airline"),
+                "flight_number": row.get("flight_number"),
+                "departure_time": row.get("departure_time"),
+                "cabin": row.get("cabin"),
+                "aircraft": row.get("aircraft"),
+            }
+
+    if min_date is None or max_date is None:
+        return {"cycle_id": resolved_cycle_id, "routes": []}
+
+    history_clauses = [
+        "fo.departure::date >= :min_date",
+        "fo.departure::date <= :max_date",
+    ]
+    history_params: dict[str, Any] = {"min_date": min_date, "max_date": max_date}
+    _apply_in_filter(history_clauses, history_params, "(fo.origin || '-' || fo.destination)", route_keys, "history_route", uppercase=True)
+    _apply_in_filter(history_clauses, history_params, "fo.airline", airlines, "history_airline")
+    _apply_in_filter(history_clauses, history_params, "fo.cabin", cabins, "history_cabin", uppercase=False)
+
+    history_rows = session.execute(
+        text(
+            f"""
+            SELECT
+                fo.scrape_id::text AS cycle_id,
+                fo.scraped_at AS captured_at_utc,
+                fo.airline,
+                fo.origin,
+                fo.destination,
+                (fo.origin || '-' || fo.destination) AS route_key,
+                fo.flight_number,
+                fo.departure AS departure_utc,
+                fo.departure::date AS departure_date,
+                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time,
+                fo.cabin,
+                COALESCE(frm.aircraft, '') AS aircraft,
+                CAST(MIN(fo.price_total_bdt) AS NUMERIC(12, 2)) AS min_total_price_bdt,
+                CAST(MAX(fo.price_total_bdt) AS NUMERIC(12, 2)) AS max_total_price_bdt,
+                CAST(MAX(frm.tax_amount) AS NUMERIC(12, 2)) AS tax_amount,
+                MIN(fo.seat_available) AS seat_available,
+                MAX(fo.seat_capacity) AS seat_capacity,
+                CAST(MAX(frm.estimated_load_factor_pct) AS NUMERIC(6, 2)) AS load_factor_pct,
+                BOOL_OR(COALESCE(frm.soldout, FALSE)) AS soldout
+            FROM flight_offers fo
+            LEFT JOIN flight_offer_raw_meta frm
+              ON frm.flight_offer_id = fo.id
+            WHERE {' AND '.join(history_clauses)}
+            GROUP BY
+                fo.scrape_id,
+                fo.scraped_at,
+                fo.airline,
+                fo.origin,
+                fo.destination,
+                fo.flight_number,
+                fo.departure,
+                fo.cabin,
+                COALESCE(frm.aircraft, '')
+            ORDER BY fo.scraped_at DESC, route_key, departure_date, departure_time, fo.airline, fo.flight_number
+            """
+        ),
+        history_params,
+    ).mappings().all()
+    history_dicts = _rows_to_dicts([dict(row) for row in history_rows])
+
+    grouped_cell_history: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    captures_by_route_date: dict[tuple[str, str], set[str]] = defaultdict(set)
+
+    for row in history_dicts:
+        route_key = str(row["route_key"])
+        dep_date = row.get("departure_date")
+        if isinstance(dep_date, date):
+            dep_date_iso = dep_date.isoformat()
+        else:
+            dep_date_iso = str(dep_date)
+        if dep_date_iso not in route_date_map.get(route_key, set()):
+            continue
+        flight_group_id = _matrix_flight_group_id(row)
+        if flight_group_id not in flight_groups_by_route.get(route_key, {}):
+            continue
+        row["flight_group_id"] = flight_group_id
+        row["departure_date"] = dep_date_iso
+        captured_at = row.get("captured_at_utc")
+        captured_at_iso = captured_at.isoformat() if isinstance(captured_at, datetime) else str(captured_at)
+        row["captured_at_utc"] = captured_at_iso
+        captures_by_route_date[(route_key, dep_date_iso)].add(captured_at_iso)
+        grouped_cell_history[(route_key, dep_date_iso, flight_group_id)].append(row)
+
+    route_payloads: list[dict[str, Any]] = []
+    signal_counts: dict[str, int] = defaultdict(int)
+
+    for route_row in selected_routes:
+        route_key = str(route_row["route_key"])
+        flight_groups = sorted(
+            flight_groups_by_route.get(route_key, {}).values(),
+            key=lambda item: (
+                str(item.get("airline") or ""),
+                str(item.get("departure_time") or ""),
+                str(item.get("flight_number") or ""),
+            ),
+        )
+        date_groups: list[dict[str, Any]] = []
+        for dep_date in sorted(route_date_map.get(route_key, set())):
+            capture_times = sorted(captures_by_route_date.get((route_key, dep_date), set()), reverse=True)
+            if history_limit > 0:
+                capture_times = capture_times[:history_limit]
+            captures: list[dict[str, Any]] = []
+            for captured_at_iso in capture_times:
+                cells: list[dict[str, Any]] = []
+                for fg in flight_groups:
+                    fgid = fg["flight_group_id"]
+                    cell_history = sorted(
+                        grouped_cell_history.get((route_key, dep_date, fgid), []),
+                        key=lambda item: item.get("captured_at_utc") or "",
+                    )
+                    current_cell: dict[str, Any] | None = None
+                    previous_cell: dict[str, Any] | None = None
+                    for idx, candidate in enumerate(cell_history):
+                        if candidate.get("captured_at_utc") == captured_at_iso:
+                            current_cell = candidate
+                            previous_cell = cell_history[idx - 1] if idx > 0 else None
+                            break
+                    if not current_cell:
+                        continue
+                    signal = _cell_signal(previous_cell, current_cell)
+                    if captured_at_iso == capture_times[0]:
+                        signal_counts[signal] += 1
+                    cells.append(
+                        {
+                            "flight_group_id": fgid,
+                            "airline": current_cell.get("airline"),
+                            "min_total_price_bdt": current_cell.get("min_total_price_bdt"),
+                            "max_total_price_bdt": current_cell.get("max_total_price_bdt"),
+                            "tax_amount": current_cell.get("tax_amount"),
+                            "seat_available": current_cell.get("seat_available"),
+                            "seat_capacity": current_cell.get("seat_capacity"),
+                            "load_factor_pct": current_cell.get("load_factor_pct"),
+                            "soldout": current_cell.get("soldout"),
+                            "signal": signal,
+                        }
+                    )
+                captures.append(
+                    {
+                        "captured_at_utc": captured_at_iso,
+                        "is_latest": captured_at_iso == capture_times[0] if capture_times else False,
+                        "cells": cells,
+                    }
+                )
+            date_groups.append(
+                {
+                    "departure_date": dep_date,
+                    "day_label": _departure_day_label(dep_date),
+                    "captures": captures,
+                }
+            )
+
+        route_payloads.append(
+            {
+                "route_key": route_key,
+                "origin": route_row.get("origin"),
+                "destination": route_row.get("destination"),
+                "flight_groups": flight_groups,
+                "date_groups": date_groups,
+            }
+        )
+
+    return {
+        "cycle_id": resolved_cycle_id,
+        "routes": route_payloads,
+        "signal_counts": {
+            key: signal_counts.get(key, 0)
+            for key in [signal for signal, _ in sorted(signal_counts.items(), key=lambda item: _signal_sort_key(item[0]))]
+        },
+    }
 
 
 def get_route_summary(

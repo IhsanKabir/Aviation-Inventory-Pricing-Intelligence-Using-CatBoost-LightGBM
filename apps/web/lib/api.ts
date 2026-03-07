@@ -86,6 +86,54 @@ export type SnapshotPayload = {
   rows: SnapshotRow[];
 };
 
+export type RouteMonitorMatrixCell = {
+  flight_group_id: string;
+  airline: string;
+  min_total_price_bdt?: number | null;
+  max_total_price_bdt?: number | null;
+  tax_amount?: number | null;
+  seat_available?: number | null;
+  seat_capacity?: number | null;
+  load_factor_pct?: number | null;
+  soldout?: boolean | null;
+  signal: "increase" | "decrease" | "new" | "sold_out" | "unknown";
+};
+
+export type RouteMonitorMatrixCapture = {
+  captured_at_utc: string;
+  is_latest: boolean;
+  cells: RouteMonitorMatrixCell[];
+};
+
+export type RouteMonitorFlightGroup = {
+  flight_group_id: string;
+  airline: string;
+  flight_number: string;
+  departure_time?: string | null;
+  cabin?: string | null;
+  aircraft?: string | null;
+};
+
+export type RouteMonitorMatrixDateGroup = {
+  departure_date: string;
+  day_label: string;
+  captures: RouteMonitorMatrixCapture[];
+};
+
+export type RouteMonitorMatrixRoute = {
+  route_key: string;
+  origin: string;
+  destination: string;
+  flight_groups: RouteMonitorFlightGroup[];
+  date_groups: RouteMonitorMatrixDateGroup[];
+};
+
+export type RouteMonitorMatrixPayload = {
+  cycle_id: string | null;
+  routes: RouteMonitorMatrixRoute[];
+  signal_counts?: Record<string, number>;
+};
+
 export type PenaltyRow = {
   cycle_id: string;
   captured_at_utc?: string;
@@ -317,6 +365,20 @@ export async function getCurrentSnapshotPayload(query: SnapshotQuery) {
       destination: query.destinations,
       cabin: query.cabins,
       limit: query.limit
+    })
+  );
+}
+
+export async function getRouteMonitorMatrixPayload(query: SnapshotQuery & { routeLimit?: number; historyLimit?: number }) {
+  return fetchJson<RouteMonitorMatrixPayload>(
+    buildPath("/api/v1/reporting/route-monitor-matrix", {
+      cycle_id: query.cycleId,
+      airline: query.airlines,
+      origin: query.origins,
+      destination: query.destinations,
+      cabin: query.cabins,
+      route_limit: query.routeLimit,
+      history_limit: query.historyLimit
     })
   );
 }

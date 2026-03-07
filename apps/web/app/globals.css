@@ -563,6 +563,244 @@ a {
   color: var(--muted);
 }
 
+.route-scope-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.route-hint-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.route-hint-chip {
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.report-monitor {
+  display: grid;
+  gap: 18px;
+}
+
+.report-toolbar {
+  padding: 18px 20px;
+  display: grid;
+  gap: 14px;
+}
+
+.report-toolbar-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.report-toolbar-meta {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.report-label {
+  color: var(--ink);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.report-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.report-airline-chip,
+.report-signal-chip {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(16, 35, 59, 0.15);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 140ms ease;
+}
+
+.report-airline-chip {
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  opacity: 0.42;
+}
+
+.report-airline-chip[data-active="true"] {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.report-signal-chip[data-active="true"] {
+  border-color: #0f3758;
+  background: #0f3758;
+  color: white;
+}
+
+.report-mode-switch {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.report-mode-switch .button-link.ghost[data-active="true"] {
+  border-color: #0f3758;
+  background: #0f3758;
+  color: white;
+}
+
+.route-report-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.route-report-block {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: var(--shadow);
+}
+
+.route-report-title-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: stretch;
+  border-bottom: 1px solid rgba(16, 35, 59, 0.12);
+}
+
+.route-report-title {
+  padding: 14px 10px;
+  font-size: 2rem;
+  font-weight: 900;
+  background: #ffffff;
+  border-right: 1px solid rgba(16, 35, 59, 0.12);
+}
+
+.route-report-leader {
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f3758;
+  background: #dcebf6;
+}
+
+.route-report-scroll {
+  overflow: auto;
+}
+
+.route-report-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  background: #fafafa;
+}
+
+.route-report-table th,
+.route-report-table td {
+  min-width: 94px;
+  padding: 10px 10px;
+  border: 1px solid rgba(16, 35, 59, 0.12);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.sticky-col {
+  position: sticky;
+  z-index: 3;
+  background: #f8f8f8;
+}
+
+.sticky-route-meta {
+  left: 0;
+  min-width: 110px;
+  background: #f5f5f5;
+  font-weight: 700;
+}
+
+.sticky-route-meta.second {
+  left: 110px;
+}
+
+.sticky-route-meta.third {
+  left: 220px;
+  min-width: 130px;
+}
+
+.route-value {
+  font-weight: 500;
+  background: #fbfbfb;
+}
+
+.flight-band {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.flight-subband {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.metric-head {
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.report-cell {
+  font-variant-numeric: tabular-nums;
+}
+
+.latest-capture-row .route-value {
+  background: #ffffff;
+}
+
+.history-capture-row .route-value {
+  background: #f4f4f4;
+}
+
+.signal-increase {
+  box-shadow: inset 0 0 0 999px rgba(29, 138, 99, 0.06);
+}
+
+.signal-decrease {
+  box-shadow: inset 0 0 0 999px rgba(183, 54, 50, 0.06);
+}
+
+.signal-new {
+  box-shadow: inset 0 0 0 999px rgba(31, 75, 216, 0.06);
+}
+
+.signal-sold_out {
+  box-shadow: inset 0 0 0 999px rgba(100, 100, 100, 0.08);
+}
+
+.history-toggle {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
 @media (max-width: 1100px) {
   .grid.cards,
   .section-grid {
@@ -579,6 +817,17 @@ a {
   .grid.cards,
   .section-grid {
     grid-template-columns: 1fr;
+  }
+
+  .route-report-title-row,
+  .report-toolbar-row,
+  .report-toolbar-meta,
+  .route-scope-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .route-report-title {
+    font-size: 1.3rem;
   }
 
   .hero {

@@ -1,25 +1,17 @@
-import { LiveFilterControls } from "@/components/live-filter-controls";
 import { DataPanel } from "@/components/data-panel";
 import { MetricCard } from "@/components/metric-card";
+import { RouteMonitorMatrix } from "@/components/route-monitor-matrix";
 import {
-  getAirlines,
-  getCurrentSnapshotPayload,
   getLatestCycle,
+  getRouteMonitorMatrixPayload,
   getRoutes
 } from "@/lib/api";
-import { formatDhakaDateTime, formatMoney, formatPercent, formatPublicBrand, shortCycle } from "@/lib/format";
+import { formatDhakaDateTime, shortCycle } from "@/lib/format";
 import { firstParam, manyParams, parseLimit, type RawSearchParams } from "@/lib/query";
 
 type PageProps = {
   searchParams?: Promise<RawSearchParams>;
 };
-
-function selectedRouteKey(origin?: string, destination?: string) {
-  if (!origin || !destination) {
-    return undefined;
-  }
-  return `${origin}-${destination}`;
-}
 
 export default async function RoutesPage({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
@@ -27,151 +19,126 @@ export default async function RoutesPage({ searchParams }: PageProps) {
   const origin = firstParam(params, "origin");
   const destination = firstParam(params, "destination");
   const cabin = firstParam(params, "cabin");
-  const limit = parseLimit(firstParam(params, "limit"), 120);
+  const routeLimit = parseLimit(firstParam(params, "route_limit"), 8);
+  const historyLimit = parseLimit(firstParam(params, "history_limit"), 12);
 
-  const [latestCycle, airlines, routes] = await Promise.all([
+  const [latestCycle, routes] = await Promise.all([
     getLatestCycle(),
-    getAirlines(),
     getRoutes()
   ]);
 
   const cycleId = firstParam(params, "cycle_id") ?? latestCycle.data?.cycle_id ?? undefined;
-  const snapshot = await getCurrentSnapshotPayload({
+  const matrix = await getRouteMonitorMatrixPayload({
     cycleId,
-    airlines: selectedAirlines,
     origins: origin ? [origin] : undefined,
     destinations: destination ? [destination] : undefined,
     cabins: cabin ? [cabin] : undefined,
-    limit
+    routeLimit,
+    historyLimit
   });
 
-  const rows = snapshot.data?.rows ?? [];
-  const routeKey = selectedRouteKey(origin, destination);
-  const airlineOptions = [...(airlines.data?.items ?? [])]
-    .sort((left, right) => (right.offer_rows ?? 0) - (left.offer_rows ?? 0) || left.airline.localeCompare(right.airline))
-    .slice(0, 20)
-    .map((item) => item.airline);
+  const routeBlocks = matrix.data?.routes ?? [];
   const routeOptions = [...(routes.data?.items ?? [])]
     .sort((left, right) => (right.offer_rows ?? 0) - (left.offer_rows ?? 0) || left.route_key.localeCompare(right.route_key))
     .slice(0, 16)
     .map((item) => ({ routeKey: item.route_key, origin: item.origin, destination: item.destination }));
 
-  const filteredAirlineCount = new Set(rows.map((row) => row.airline)).size;
-  const filteredRouteCount = new Set(rows.map((row) => row.route_key)).size;
-  const soldOutCount = rows.filter((row) => row.soldout).length;
+  const availableAirlineCount = new Set(
+    routeBlocks.flatMap((route) => route.flight_groups.map((flight) => flight.airline))
+  ).size;
+  const flightGroupCount = routeBlocks.reduce((sum, route) => sum + route.flight_groups.length, 0);
+  const datedRowCount = routeBlocks.reduce((sum, route) => sum + route.date_groups.length, 0);
 
   return (
     <>
       <h1 className="page-title">Route Monitor</h1>
       <p className="page-copy">
-        Live operational view against the reporting API. Route, airline, and cabin
-        filters now drive PostgreSQL-backed results directly instead of masking a
-        large workbook.
+        Report-style route matrix against the reporting API. Route and cabin scope are
+        server-backed; airline, signal, and capture-history interaction are handled
+        directly in the page for workbook-like review without Excel.
       </p>
 
       <div className="grid cards">
         <MetricCard
           label="Cycle"
-          value={shortCycle(snapshot.data?.cycle_id ?? cycleId ?? null)}
+          value={shortCycle(matrix.data?.cycle_id ?? cycleId ?? null)}
           footnote={latestCycle.data?.cycle_completed_at_utc ? formatDhakaDateTime(latestCycle.data.cycle_completed_at_utc) : "No cycle loaded"}
         />
-        <MetricCard label="Filtered rows" value={rows.length.toLocaleString()} footnote={`Limit ${limit.toLocaleString()}`} />
+        <MetricCard label="Route blocks" value={routeBlocks.length.toLocaleString()} footnote={`Limit ${routeLimit.toLocaleString()}`} />
         <MetricCard
-          label="Airlines in view"
-          value={filteredAirlineCount.toLocaleString()}
-          footnote={selectedAirlines.length ? `${selectedAirlines.length} carrier filters active` : "All carriers"}
+          label="Flight groups"
+          value={flightGroupCount.toLocaleString()}
+          footnote={`${availableAirlineCount.toLocaleString()} airlines in scope`}
         />
         <MetricCard
-          label="Routes in view"
-          value={filteredRouteCount.toLocaleString()}
-          footnote={soldOutCount ? `${soldOutCount.toLocaleString()} sold out rows` : "No sold out rows in view"}
+          label="Departure rows"
+          value={datedRowCount.toLocaleString()}
+          footnote={`History depth ${historyLimit.toLocaleString()}`}
         />
       </div>
 
       <div className="stack">
         <DataPanel
-          title="Live filters"
-          copy="Click chips for immediate filter changes. The exact field controls below let you pin a specific route, cabin, and row limit."
+          title="Matrix scope"
+          copy="Use route scope controls to load a tighter matrix from the API. Inside the matrix itself, airline and signal toggles behave like the workbook."
         >
-          <LiveFilterControls
-            airlineOptions={airlineOptions}
-            clearKeys={["airline", "origin", "destination", "cabin", "limit"]}
-            initialValues={{
-              origin: origin ?? "",
-              destination: destination ?? "",
-              cabin: cabin ?? "",
-              limit: String(limit)
-            }}
-            manualFields={[
-              { name: "origin", label: "Origin", placeholder: "DAC" },
-              { name: "destination", label: "Destination", placeholder: "CXB" },
-              { name: "cabin", label: "Cabin", placeholder: "Economy" },
-              { name: "limit", label: "Row limit", inputMode: "numeric", pattern: "[0-9]*" }
-            ]}
-            routeOptions={routeOptions}
-            selectedAirlines={selectedAirlines}
-            selectedRouteKey={routeKey}
-          />
+          <form className="filter-form" action="/routes">
+            <div className="field-grid route-scope-grid">
+              <label className="field">
+                <span>Origin</span>
+                <input defaultValue={origin ?? ""} name="origin" placeholder="DAC" type="text" />
+              </label>
+              <label className="field">
+                <span>Destination</span>
+                <input defaultValue={destination ?? ""} name="destination" placeholder="CXB" type="text" />
+              </label>
+              <label className="field">
+                <span>Cabin</span>
+                <input defaultValue={cabin ?? ""} name="cabin" placeholder="Economy" type="text" />
+              </label>
+              <label className="field">
+                <span>Route blocks</span>
+                <input defaultValue={String(routeLimit)} inputMode="numeric" name="route_limit" pattern="[0-9]*" type="text" />
+              </label>
+              <label className="field">
+                <span>History depth</span>
+                <input defaultValue={String(historyLimit)} inputMode="numeric" name="history_limit" pattern="[0-9]*" type="text" />
+              </label>
+            </div>
+            <div className="button-row">
+              <button className="button-link" type="submit">
+                Reload matrix
+              </button>
+              <a className="button-link ghost" href="/routes">
+                Reset scope
+              </a>
+            </div>
+            {routeOptions.length ? (
+              <div className="route-hint-row">
+                {routeOptions.map((item) => (
+                  <a
+                    className="route-hint-chip"
+                    href={`/routes?origin=${encodeURIComponent(item.origin)}&destination=${encodeURIComponent(item.destination)}&route_limit=${routeLimit}&history_limit=${historyLimit}${cabin ? `&cabin=${encodeURIComponent(cabin)}` : ""}`}
+                    key={item.routeKey}
+                  >
+                    {item.routeKey}
+                  </a>
+                ))}
+              </div>
+            ) : null}
+          </form>
         </DataPanel>
 
         <DataPanel
-          title="Current snapshot"
-          copy={
-            routeKey
-              ? `Showing current cycle rows for ${routeKey}${cabin ? ` / ${cabin}` : ""}.`
-              : "Showing current cycle rows across all available routes in the selected scope."
-          }
+          title="Route flight fare monitor"
+          copy="Latest captures are shown first. Use the capture column to expand older observations for the same departure date."
         >
-          {!snapshot.ok ? (
-            <div className="empty-state error-state">API error: {snapshot.error ?? "Unable to load current snapshot."}</div>
-          ) : rows.length === 0 ? (
-            <div className="empty-state">No rows matched the current filter set.</div>
+          {!matrix.ok ? (
+            <div className="empty-state error-state">API error: {matrix.error ?? "Unable to load route monitor matrix."}</div>
+          ) : routeBlocks.length === 0 ? (
+            <div className="empty-state">No route blocks matched the current scope.</div>
           ) : (
-            <div className="data-table-wrap">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Route</th>
-                    <th>Airline</th>
-                    <th>Flight</th>
-                    <th>Departure</th>
-                    <th>Cabin</th>
-                    <th>Total</th>
-                    <th>Tax</th>
-                    <th>Seats</th>
-                    <th>Load</th>
-                    <th>Brand / basis</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row, index) => (
-                    <tr
-                      key={`${row.route_key}-${row.airline}-${row.flight_number}-${row.departure_utc}-${row.fare_basis ?? ""}-${row.captured_at_utc ?? ""}-${index}`}
-                    >
-                      <td>{row.route_key}</td>
-                      <td>{row.airline}</td>
-                      <td>{row.flight_number}</td>
-                      <td>{formatDhakaDateTime(row.departure_utc)}</td>
-                      <td>{row.cabin ?? "-"}</td>
-                      <td>{formatMoney(row.total_price_bdt, row.currency ?? "BDT")}</td>
-                      <td>{formatMoney(row.tax_amount, row.currency ?? "BDT")}</td>
-                      <td>
-                        {row.seat_available !== null && row.seat_available !== undefined
-                          ? `${row.seat_available}/${row.seat_capacity ?? "-"}`
-                          : "-"}
-                      </td>
-                      <td>{formatPercent(row.load_factor_pct)}</td>
-                      <td>
-                        <div className="table-cell-stack">
-                          <strong>{formatPublicBrand(row.brand)}</strong>
-                          <span>{row.fare_basis ?? "-"}</span>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <RouteMonitorMatrix initialAirlines={selectedAirlines} payload={matrix.data!} />
           )}
         </DataPanel>
       </div>
