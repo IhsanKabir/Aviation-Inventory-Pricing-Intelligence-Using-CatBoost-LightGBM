@@ -25,6 +25,12 @@ This is the strongest free-to-start combination for:
 - `fact_change_event`
 - `fact_penalty_snapshot`
 - `fact_tax_snapshot`
+- `fact_forecast_bundle`
+- `fact_forecast_model_eval`
+- `fact_forecast_route_eval`
+- `fact_forecast_next_day`
+- `fact_backtest_eval`
+- `fact_backtest_split`
 
 ## Export Contract
 

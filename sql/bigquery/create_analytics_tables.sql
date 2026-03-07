@@ -135,3 +135,155 @@ CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_tax_snapshot` (
 )
 PARTITION BY DATE(captured_at_utc)
 CLUSTER BY airline, origin, destination;
+
+CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_forecast_bundle` (
+  bundle_id STRING NOT NULL,
+  bundle_name STRING NOT NULL,
+  bundle_dir STRING NOT NULL,
+  target STRING NOT NULL,
+  stamp STRING NOT NULL,
+  bundle_created_at_utc TIMESTAMP,
+  has_overall_eval BOOL,
+  has_route_eval BOOL,
+  has_next_day BOOL,
+  has_backtest_eval BOOL,
+  has_backtest_splits BOOL,
+  has_backtest_meta BOOL,
+  target_column STRING,
+  backtest_status STRING,
+  backtest_split_count INT64,
+  backtest_selection_metric STRING
+)
+PARTITION BY DATE(bundle_created_at_utc)
+CLUSTER BY target, bundle_name;
+
+CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_forecast_model_eval` (
+  bundle_id STRING NOT NULL,
+  bundle_name STRING NOT NULL,
+  target STRING NOT NULL,
+  stamp STRING NOT NULL,
+  bundle_created_at_utc TIMESTAMP,
+  model STRING NOT NULL,
+  n INT64,
+  mae NUMERIC,
+  rmse NUMERIC,
+  mape_pct NUMERIC,
+  smape_pct NUMERIC,
+  n_directional INT64,
+  directional_accuracy_pct NUMERIC,
+  f1_up NUMERIC,
+  f1_down NUMERIC,
+  f1_macro NUMERIC
+)
+PARTITION BY DATE(bundle_created_at_utc)
+CLUSTER BY target, model;
+
+CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_forecast_route_eval` (
+  bundle_id STRING NOT NULL,
+  bundle_name STRING NOT NULL,
+  target STRING NOT NULL,
+  stamp STRING NOT NULL,
+  bundle_created_at_utc TIMESTAMP,
+  airline STRING,
+  origin STRING,
+  destination STRING,
+  route_key STRING,
+  cabin STRING,
+  model STRING NOT NULL,
+  n INT64,
+  mae NUMERIC,
+  rmse NUMERIC,
+  mape_pct NUMERIC,
+  smape_pct NUMERIC,
+  n_directional INT64,
+  directional_accuracy_pct NUMERIC,
+  f1_up NUMERIC,
+  f1_down NUMERIC,
+  f1_macro NUMERIC
+)
+PARTITION BY DATE(bundle_created_at_utc)
+CLUSTER BY target, airline, route_key, model;
+
+CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_forecast_next_day` (
+  bundle_id STRING NOT NULL,
+  bundle_name STRING NOT NULL,
+  target STRING NOT NULL,
+  stamp STRING NOT NULL,
+  bundle_created_at_utc TIMESTAMP,
+  latest_report_day DATE,
+  predicted_for_day DATE,
+  history_days INT64,
+  airline STRING,
+  origin STRING,
+  destination STRING,
+  route_key STRING,
+  cabin STRING,
+  latest_actual_value NUMERIC,
+  pred_last_value NUMERIC,
+  pred_rolling_mean_3 NUMERIC,
+  pred_rolling_mean_7 NUMERIC,
+  pred_seasonal_naive_7 NUMERIC,
+  pred_ewm_alpha_0_30 NUMERIC,
+  pred_dl_mlp_q10 NUMERIC,
+  pred_dl_mlp_q50 NUMERIC,
+  pred_dl_mlp_q90 NUMERIC,
+  pred_ml_catboost_q10 NUMERIC,
+  pred_ml_catboost_q50 NUMERIC,
+  pred_ml_catboost_q90 NUMERIC,
+  pred_ml_lightgbm_q10 NUMERIC,
+  pred_ml_lightgbm_q50 NUMERIC,
+  pred_ml_lightgbm_q90 NUMERIC
+)
+PARTITION BY predicted_for_day
+CLUSTER BY target, airline, route_key;
+
+CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_backtest_eval` (
+  bundle_id STRING NOT NULL,
+  bundle_name STRING NOT NULL,
+  target STRING NOT NULL,
+  stamp STRING NOT NULL,
+  bundle_created_at_utc TIMESTAMP,
+  split_id INT64,
+  dataset STRING,
+  model STRING NOT NULL,
+  selected_on_val BOOL,
+  n INT64,
+  mae NUMERIC,
+  rmse NUMERIC,
+  mape_pct NUMERIC,
+  smape_pct NUMERIC,
+  n_directional INT64,
+  directional_accuracy_pct NUMERIC,
+  f1_up NUMERIC,
+  f1_down NUMERIC,
+  f1_macro NUMERIC,
+  train_start DATE,
+  train_end DATE,
+  val_start DATE,
+  val_end DATE,
+  test_start DATE,
+  test_end DATE
+)
+PARTITION BY DATE(bundle_created_at_utc)
+CLUSTER BY target, dataset, model;
+
+CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_backtest_split` (
+  bundle_id STRING NOT NULL,
+  bundle_name STRING NOT NULL,
+  target STRING NOT NULL,
+  stamp STRING NOT NULL,
+  bundle_created_at_utc TIMESTAMP,
+  split_id INT64,
+  train_start DATE,
+  train_end DATE,
+  val_start DATE,
+  val_end DATE,
+  test_start DATE,
+  test_end DATE,
+  train_rows INT64,
+  val_rows INT64,
+  test_rows INT64,
+  selected_model STRING
+)
+PARTITION BY DATE(bundle_created_at_utc)
+CLUSTER BY target, split_id;

@@ -21,6 +21,10 @@ Use Looker Studio as the dashboard layer on top of the curated `aviation_intel` 
    - `vw_change_activity_daily`
    - `vw_penalty_reference`
    - `vw_tax_reference`
+   - `vw_forecast_model_latest`
+   - `vw_forecast_route_latest`
+   - `vw_forecast_next_day_latest`
+   - `vw_backtest_eval_latest`
 
 ## First dashboards to build
 

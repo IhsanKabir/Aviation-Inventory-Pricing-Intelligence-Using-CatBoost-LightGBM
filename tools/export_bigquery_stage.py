@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import date, datetime, time, timezone
 from pathlib import Path
@@ -10,12 +11,22 @@ from typing import Any
 
 import pandas as pd
 from sqlalchemy import create_engine, text
+from pandas.errors import EmptyDataError
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from core.runtime_config import get_database_url
+
+
+REPORTS_ROOT = REPO_ROOT / "output" / "reports"
+PREDICTION_EVAL_RE = re.compile(r"^prediction_eval_(?P<target>.+)_(?P<stamp>\d{8}_\d{6})\.csv$")
+PREDICTION_NEXT_RE = re.compile(r"^prediction_next_day_(?P<target>.+)_(?P<stamp>\d{8}_\d{6})\.csv$")
+PREDICTION_ROUTE_EVAL_RE = re.compile(r"^prediction_eval_by_route_(?P<target>.+)_(?P<stamp>\d{8}_\d{6})\.csv$")
+PREDICTION_BACKTEST_META_RE = re.compile(r"^prediction_backtest_meta_(?P<target>.+)_(?P<stamp>\d{8}_\d{6})\.json$")
+PREDICTION_BACKTEST_EVAL_RE = re.compile(r"^prediction_backtest_eval_(?P<target>.+)_(?P<stamp>\d{8}_\d{6})\.csv$")
+PREDICTION_BACKTEST_SPLITS_RE = re.compile(r"^prediction_backtest_splits_(?P<target>.+)_(?P<stamp>\d{8}_\d{6})\.csv$")
 
 
 def _utc_stamp() -> str:
@@ -38,6 +49,12 @@ def _parse_tables(raw: str) -> list[str]:
             "fact_change_event",
             "fact_penalty_snapshot",
             "fact_tax_snapshot",
+            "fact_forecast_bundle",
+            "fact_forecast_model_eval",
+            "fact_forecast_route_eval",
+            "fact_forecast_next_day",
+            "fact_backtest_eval",
+            "fact_backtest_split",
         ]
     return [part.strip() for part in raw.split(",") if part.strip()]
 
@@ -228,6 +245,203 @@ EXPORT_QUERIES = {
 }
 
 
+def _stamp_to_dt_utc(stamp: str) -> datetime:
+    return datetime.strptime(stamp, "%Y%m%d_%H%M%S").replace(tzinfo=timezone.utc)
+
+
+def _bundle_id(bundle_name: str, target: str, stamp: str) -> str:
+    return f"{bundle_name}|{target}|{stamp}"
+
+
+def _find_prediction_bundles(start_dt: datetime, end_dt: datetime) -> list[dict[str, Any]]:
+    bundles: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for path in REPORTS_ROOT.rglob("prediction_*"):
+        if not path.is_file():
+            continue
+
+        file_name = path.name
+        match = (
+            PREDICTION_ROUTE_EVAL_RE.match(file_name)
+            or PREDICTION_BACKTEST_META_RE.match(file_name)
+            or PREDICTION_BACKTEST_EVAL_RE.match(file_name)
+            or PREDICTION_BACKTEST_SPLITS_RE.match(file_name)
+            or PREDICTION_NEXT_RE.match(file_name)
+            or PREDICTION_EVAL_RE.match(file_name)
+        )
+        if not match:
+            continue
+
+        target = match.group("target")
+        stamp = match.group("stamp")
+        bundle_created_at_utc = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
+        if not (start_dt <= bundle_created_at_utc < end_dt):
+            continue
+
+        bundle_name = path.parent.name
+        key = (bundle_name, target, stamp)
+        bundle = bundles.setdefault(
+            key,
+            {
+                "bundle_id": _bundle_id(bundle_name, target, stamp),
+                "bundle_name": bundle_name,
+                "bundle_dir": str(path.parent),
+                "target": target,
+                "stamp": stamp,
+                "bundle_created_at_utc": bundle_created_at_utc.isoformat(),
+                "eval_path": None,
+                "route_eval_path": None,
+                "next_day_path": None,
+                "backtest_eval_path": None,
+                "backtest_splits_path": None,
+                "backtest_meta_path": None,
+            },
+        )
+        latest_mtime = max(
+            datetime.fromisoformat(bundle["bundle_created_at_utc"]),
+            bundle_created_at_utc,
+        )
+        bundle["bundle_created_at_utc"] = latest_mtime.isoformat()
+
+        if file_name.startswith("prediction_eval_by_route_"):
+            bundle["route_eval_path"] = str(path)
+        elif file_name.startswith("prediction_eval_"):
+            bundle["eval_path"] = str(path)
+        elif file_name.startswith("prediction_next_day_"):
+            bundle["next_day_path"] = str(path)
+        elif file_name.startswith("prediction_backtest_eval_"):
+            bundle["backtest_eval_path"] = str(path)
+        elif file_name.startswith("prediction_backtest_splits_"):
+            bundle["backtest_splits_path"] = str(path)
+        elif file_name.startswith("prediction_backtest_meta_"):
+            bundle["backtest_meta_path"] = str(path)
+
+    return sorted(
+        bundles.values(),
+        key=lambda item: (item["bundle_created_at_utc"], item["bundle_name"], item["target"], item["stamp"]),
+    )
+
+
+def _read_csv_if_exists(path_value: str | None) -> pd.DataFrame:
+    if not path_value:
+        return pd.DataFrame()
+    path = Path(path_value)
+    if not path.exists():
+        return pd.DataFrame()
+    try:
+        return pd.read_csv(path)
+    except EmptyDataError:
+        return pd.DataFrame()
+
+
+def _read_json_if_exists(path_value: str | None) -> dict[str, Any] | None:
+    if not path_value:
+        return None
+    path = Path(path_value)
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _bundle_base_record(bundle: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "bundle_id": bundle["bundle_id"],
+        "bundle_name": bundle["bundle_name"],
+        "target": bundle["target"],
+        "stamp": bundle["stamp"],
+        "bundle_created_at_utc": bundle["bundle_created_at_utc"],
+    }
+
+
+def _export_fact_forecast_bundle(start_dt: datetime, end_dt: datetime) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for bundle in _find_prediction_bundles(start_dt, end_dt):
+        meta = _read_json_if_exists(bundle.get("backtest_meta_path")) or {}
+        backtest = meta.get("backtest") if isinstance(meta.get("backtest"), dict) else {}
+        rows.append(
+            {
+                **_bundle_base_record(bundle),
+                "bundle_dir": bundle["bundle_dir"],
+                "has_overall_eval": bool(bundle.get("eval_path")),
+                "has_route_eval": bool(bundle.get("route_eval_path")),
+                "has_next_day": bool(bundle.get("next_day_path")),
+                "has_backtest_eval": bool(bundle.get("backtest_eval_path")),
+                "has_backtest_splits": bool(bundle.get("backtest_splits_path")),
+                "has_backtest_meta": bool(bundle.get("backtest_meta_path")),
+                "target_column": meta.get("target_column"),
+                "backtest_status": backtest.get("status"),
+                "backtest_split_count": backtest.get("split_count"),
+                "backtest_selection_metric": meta.get("backtest_selection_metric"),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _export_fact_forecast_model_eval(start_dt: datetime, end_dt: datetime) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for bundle in _find_prediction_bundles(start_dt, end_dt):
+        df = _read_csv_if_exists(bundle.get("eval_path"))
+        if df.empty:
+            continue
+        for record in df.where(pd.notnull(df), None).to_dict(orient="records"):
+            rows.append({**_bundle_base_record(bundle), **record})
+    return pd.DataFrame(rows)
+
+
+def _export_fact_forecast_route_eval(start_dt: datetime, end_dt: datetime) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for bundle in _find_prediction_bundles(start_dt, end_dt):
+        df = _read_csv_if_exists(bundle.get("route_eval_path"))
+        if df.empty:
+            continue
+        df = df.where(pd.notnull(df), None)
+        if {"origin", "destination"}.issubset(df.columns):
+            df["route_key"] = df["origin"].astype(str) + "-" + df["destination"].astype(str)
+        for record in df.to_dict(orient="records"):
+            rows.append({**_bundle_base_record(bundle), **record})
+    return pd.DataFrame(rows)
+
+
+def _export_fact_forecast_next_day(start_dt: datetime, end_dt: datetime) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for bundle in _find_prediction_bundles(start_dt, end_dt):
+        df = _read_csv_if_exists(bundle.get("next_day_path"))
+        if df.empty:
+            continue
+        df = df.where(pd.notnull(df), None)
+        if {"origin", "destination"}.issubset(df.columns):
+            df["route_key"] = df["origin"].astype(str) + "-" + df["destination"].astype(str)
+        if "pred_ewm_alpha_0.30" in df.columns:
+            df = df.rename(columns={"pred_ewm_alpha_0.30": "pred_ewm_alpha_0_30"})
+        for record in df.to_dict(orient="records"):
+            rows.append({**_bundle_base_record(bundle), **record})
+    return pd.DataFrame(rows)
+
+
+def _export_fact_backtest_eval(start_dt: datetime, end_dt: datetime) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for bundle in _find_prediction_bundles(start_dt, end_dt):
+        df = _read_csv_if_exists(bundle.get("backtest_eval_path"))
+        if df.empty:
+            continue
+        for record in df.where(pd.notnull(df), None).to_dict(orient="records"):
+            rows.append({**_bundle_base_record(bundle), **record})
+    return pd.DataFrame(rows)
+
+
+def _export_fact_backtest_split(start_dt: datetime, end_dt: datetime) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for bundle in _find_prediction_bundles(start_dt, end_dt):
+        df = _read_csv_if_exists(bundle.get("backtest_splits_path"))
+        if df.empty:
+            continue
+        for record in df.where(pd.notnull(df), None).to_dict(orient="records"):
+            rows.append({**_bundle_base_record(bundle), **record})
+    return pd.DataFrame(rows)
+
+
 def _read_query(engine, sql: str, params: dict[str, Any]) -> pd.DataFrame:
     with engine.begin() as conn:
         return pd.read_sql_query(text(sql), conn, params=params)
@@ -275,6 +489,203 @@ def _normalize_for_parquet(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+FILE_EXPORTERS = {
+    "fact_forecast_bundle": _export_fact_forecast_bundle,
+    "fact_forecast_model_eval": _export_fact_forecast_model_eval,
+    "fact_forecast_route_eval": _export_fact_forecast_route_eval,
+    "fact_forecast_next_day": _export_fact_forecast_next_day,
+    "fact_backtest_eval": _export_fact_backtest_eval,
+    "fact_backtest_split": _export_fact_backtest_split,
+}
+
+
+FORECAST_TIMESTAMP_COLUMNS = {"bundle_created_at_utc"}
+FORECAST_DATE_COLUMNS = {
+    "latest_report_day",
+    "predicted_for_day",
+    "train_start",
+    "train_end",
+    "val_start",
+    "val_end",
+    "test_start",
+    "test_end",
+}
+FORECAST_BOOL_COLUMNS = {
+    "has_overall_eval",
+    "has_route_eval",
+    "has_next_day",
+    "has_backtest_eval",
+    "has_backtest_splits",
+    "has_backtest_meta",
+    "selected_on_val",
+}
+
+FORECAST_EXPORT_COLUMNS: dict[str, list[str]] = {
+    "fact_forecast_bundle": [
+        "bundle_id",
+        "bundle_name",
+        "bundle_dir",
+        "target",
+        "stamp",
+        "bundle_created_at_utc",
+        "has_overall_eval",
+        "has_route_eval",
+        "has_next_day",
+        "has_backtest_eval",
+        "has_backtest_splits",
+        "has_backtest_meta",
+        "target_column",
+        "backtest_status",
+        "backtest_split_count",
+        "backtest_selection_metric",
+    ],
+    "fact_forecast_model_eval": [
+        "bundle_id",
+        "bundle_name",
+        "target",
+        "stamp",
+        "bundle_created_at_utc",
+        "model",
+        "n",
+        "mae",
+        "rmse",
+        "mape_pct",
+        "smape_pct",
+        "n_directional",
+        "directional_accuracy_pct",
+        "f1_up",
+        "f1_down",
+        "f1_macro",
+    ],
+    "fact_forecast_route_eval": [
+        "bundle_id",
+        "bundle_name",
+        "target",
+        "stamp",
+        "bundle_created_at_utc",
+        "airline",
+        "origin",
+        "destination",
+        "route_key",
+        "cabin",
+        "model",
+        "n",
+        "mae",
+        "rmse",
+        "mape_pct",
+        "smape_pct",
+        "n_directional",
+        "directional_accuracy_pct",
+        "f1_up",
+        "f1_down",
+        "f1_macro",
+    ],
+    "fact_forecast_next_day": [
+        "bundle_id",
+        "bundle_name",
+        "target",
+        "stamp",
+        "bundle_created_at_utc",
+        "latest_report_day",
+        "predicted_for_day",
+        "history_days",
+        "airline",
+        "origin",
+        "destination",
+        "route_key",
+        "cabin",
+        "latest_actual_value",
+        "pred_last_value",
+        "pred_rolling_mean_3",
+        "pred_rolling_mean_7",
+        "pred_seasonal_naive_7",
+        "pred_ewm_alpha_0_30",
+        "pred_dl_mlp_q10",
+        "pred_dl_mlp_q50",
+        "pred_dl_mlp_q90",
+        "pred_ml_catboost_q10",
+        "pred_ml_catboost_q50",
+        "pred_ml_catboost_q90",
+        "pred_ml_lightgbm_q10",
+        "pred_ml_lightgbm_q50",
+        "pred_ml_lightgbm_q90",
+    ],
+    "fact_backtest_eval": [
+        "bundle_id",
+        "bundle_name",
+        "target",
+        "stamp",
+        "bundle_created_at_utc",
+        "split_id",
+        "dataset",
+        "model",
+        "selected_on_val",
+        "n",
+        "mae",
+        "rmse",
+        "mape_pct",
+        "smape_pct",
+        "n_directional",
+        "directional_accuracy_pct",
+        "f1_up",
+        "f1_down",
+        "f1_macro",
+        "train_start",
+        "train_end",
+        "val_start",
+        "val_end",
+        "test_start",
+        "test_end",
+    ],
+    "fact_backtest_split": [
+        "bundle_id",
+        "bundle_name",
+        "target",
+        "stamp",
+        "bundle_created_at_utc",
+        "split_id",
+        "train_start",
+        "train_end",
+        "val_start",
+        "val_end",
+        "test_start",
+        "test_end",
+        "train_rows",
+        "val_rows",
+        "test_rows",
+        "selected_model",
+    ],
+}
+
+
+def _select_export_columns(table_name: str, df: pd.DataFrame) -> pd.DataFrame:
+    desired = FORECAST_EXPORT_COLUMNS.get(table_name)
+    if not desired:
+        return df
+    out = df.copy()
+    for column in desired:
+        if column not in out.columns:
+            out[column] = None
+    return out[desired]
+
+
+def _normalize_forecast_table_types(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return df
+
+    out = df.copy()
+    for column in FORECAST_TIMESTAMP_COLUMNS:
+        if column in out.columns:
+            out[column] = pd.to_datetime(out[column], errors="coerce", utc=True)
+    for column in FORECAST_DATE_COLUMNS:
+        if column in out.columns:
+            out[column] = pd.to_datetime(out[column], errors="coerce").dt.date
+    for column in FORECAST_BOOL_COLUMNS:
+        if column in out.columns:
+            out[column] = out[column].astype("boolean")
+    return out
+
+
 def _load_bigquery(file_path: Path, table_name: str, project_id: str, dataset: str, replace: bool) -> dict[str, Any]:
     from google.cloud import bigquery
 
@@ -319,16 +730,24 @@ def main() -> int:
     start_ts = f"{args.start_date}T00:00:00+00:00"
     end_ts = f"{args.end_date}T00:00:00+00:00"
     params = {"start_ts": start_ts, "end_ts": end_ts}
+    start_dt = datetime.fromisoformat(start_ts)
+    end_dt = datetime.fromisoformat(end_ts)
 
     exports: list[dict[str, Any]] = []
     bq_results: list[dict[str, Any]] = []
 
     for table_name in tables:
-        sql = EXPORT_QUERIES.get(table_name)
-        if not sql:
-            raise SystemExit(f"Unknown table export: {table_name}")
-
-        df = _normalize_for_parquet(_read_query(engine, sql, params=params))
+        if table_name in FILE_EXPORTERS:
+            df = _normalize_for_parquet(
+                _normalize_forecast_table_types(
+                    _select_export_columns(table_name, FILE_EXPORTERS[table_name](start_dt, end_dt))
+                )
+            )
+        else:
+            sql = EXPORT_QUERIES.get(table_name)
+            if not sql:
+                raise SystemExit(f"Unknown table export: {table_name}")
+            df = _normalize_for_parquet(_read_query(engine, sql, params=params))
         file_path = stage_root / f"{table_name}.parquet"
         df.to_parquet(file_path, index=False)
         exports.append({"table": table_name, "rows": int(len(df)), "file": str(file_path)})

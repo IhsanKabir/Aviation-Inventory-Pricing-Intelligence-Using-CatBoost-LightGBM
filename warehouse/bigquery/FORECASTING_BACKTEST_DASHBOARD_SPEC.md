@@ -11,14 +11,12 @@ Purpose:
 - inspect next-day directional expectations
 - support thesis presentation with a stable dashboard layout
 
-Important constraint:
+Current status:
 
-- current forecast artifacts are file-based outputs under `output/reports`
+- forecast artifacts originate from file-based outputs under `output/reports`
 - they are exposed operationally through the web page:
   - [apps/web/app/forecasting/page.tsx](../../apps/web/app/forecasting/page.tsx)
-- they are not yet loaded into BigQuery curated tables
-
-So this spec is the correct dashboard layout to build next, but the BigQuery data source for it should be added only after forecast artifacts are promoted into warehouse tables.
+- they are now promoted into BigQuery curated tables and can back the Looker dashboard directly
 
 ## Recommended Dashboard Name
 
@@ -179,25 +177,28 @@ Use these labels:
 - `Directional Accuracy %`: percent of correct movement direction
 - `F1 Macro`: classification balance across movement classes
 
-## Warehouse Promotion Plan
+## Warehouse Tables
 
-To make this dashboard fully BigQuery-backed, add these future curated tables:
+Use these curated tables:
 
 1. `fact_forecast_bundle`
 2. `fact_forecast_model_eval`
 3. `fact_forecast_route_eval`
 4. `fact_forecast_next_day`
 5. `fact_backtest_eval`
+6. `fact_backtest_split`
 
-Suggested source:
+Use these Looker-facing views first:
 
-- parse the latest forecast bundle outputs already surfaced by:
-  - [apps/api/app/repositories/reporting.py](../../apps/api/app/repositories/reporting.py)
+1. `vw_forecast_model_latest`
+2. `vw_forecast_route_latest`
+3. `vw_forecast_next_day_latest`
+4. `vw_backtest_eval_latest`
 
 ## Immediate Practical Recommendation
 
-For now:
+For day-to-day use:
 
-1. use the operational forecasting web page for daily review
-2. use BigQuery + Looker Studio first for cycle, route, penalty, tax, and change analysis
-3. promote forecast artifacts into warehouse tables only after the forecast schema is stabilized
+1. use the operational forecasting web page for quick review
+2. use BigQuery + Looker Studio for presentation-grade historical forecast analysis
+3. add more forecast warehouse fields only after the forecast schema stabilizes further

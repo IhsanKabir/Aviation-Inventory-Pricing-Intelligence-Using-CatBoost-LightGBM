@@ -102,12 +102,23 @@ Minimum checks:
 2. `fact_offer_snapshot` row counts roughly track PostgreSQL cycle exports
 3. `fact_change_event` contains route and field-level changes
 4. `fact_penalty_snapshot` and `fact_tax_snapshot` contain non-empty rows where expected
-5. Looker-facing views resolve without errors:
+5. forecast/backtest tables contain rows where expected:
+   - `fact_forecast_bundle`
+   - `fact_forecast_model_eval`
+   - `fact_forecast_route_eval`
+   - `fact_forecast_next_day`
+   - `fact_backtest_eval`
+   - `fact_backtest_split`
+6. Looker-facing views resolve without errors:
    - `vw_cycle_health`
    - `vw_route_daily_fare`
    - `vw_change_activity_daily`
    - `vw_penalty_reference`
    - `vw_tax_reference`
+   - `vw_forecast_model_latest`
+   - `vw_forecast_route_latest`
+   - `vw_forecast_next_day_latest`
+   - `vw_backtest_eval_latest`
 
 ## Step 10: Connect Looker Studio
 
