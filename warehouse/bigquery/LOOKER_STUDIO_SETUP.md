@@ -54,6 +54,7 @@ Use Looker Studio as the dashboard layer on top of the curated `aviation_intel` 
 Detailed layout spec:
 
 - [warehouse/bigquery/FORECASTING_BACKTEST_DASHBOARD_SPEC.md](FORECASTING_BACKTEST_DASHBOARD_SPEC.md)
+- [warehouse/bigquery/LOOKER_CLICK_CHECKLIST.md](LOOKER_CLICK_CHECKLIST.md)
 
 ## Exact Forecast Report Build
 
@@ -71,6 +72,52 @@ Use these views for the forecast report pages:
 Build the page visuals exactly as specified in:
 
 - [warehouse/bigquery/FORECASTING_BACKTEST_DASHBOARD_SPEC.md](FORECASTING_BACKTEST_DASHBOARD_SPEC.md)
+
+Live report in workspace:
+
+- `Aero Pulse Forecast Review`
+- `https://lookerstudio.google.com/reporting/896e47f1-6d52-45ae-b1d7-d9034a2db69f`
+
+Current live status:
+
+1. `Forecast Health`
+   - live and warehouse-backed
+   - core visuals present:
+     - MAE scorecard
+     - model ranking table
+     - model vs `mae` bar chart
+     - model vs `directional_accuracy_pct` bar chart
+   - remaining polish:
+     - add more summary scorecards if presentation density is needed
+     - add target/model quick filters if manual canvas work is preferred
+
+2. `Route Performance`
+   - live and warehouse-backed
+   - core visuals present:
+     - route performance chart
+     - route-model detail table
+     - scatter plot
+   - report-level `airline` quick filter is present
+   - remaining polish:
+     - add `route_key`, `cabin`, and `model` quick filters manually if needed
+     - tighten visual alignment
+
+3. `Next-Day Outlook`
+   - live and warehouse-backed
+   - core visuals present:
+     - route-level next-day bar chart
+     - `route_key` dropdown filter
+   - remaining polish:
+     - add the larger detail table and extra summary scorecards if needed
+
+4. `Backtest Review`
+   - live and warehouse-backed
+   - core visuals present:
+     - record count scorecard
+     - bundle table
+     - `dataset` dropdown filter
+   - remaining polish:
+     - add additional summary scorecards and a fuller comparison table if needed
 
 ## Recommended dimensions and metrics
 

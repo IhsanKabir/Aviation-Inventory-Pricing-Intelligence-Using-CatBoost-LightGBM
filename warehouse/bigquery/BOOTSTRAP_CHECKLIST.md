@@ -134,6 +134,11 @@ Detailed setup:
 
 - [warehouse/bigquery/LOOKER_STUDIO_SETUP.md](LOOKER_STUDIO_SETUP.md)
 
+Live forecast review report already created:
+
+- `Aero Pulse Forecast Review`
+- `https://lookerstudio.google.com/reporting/896e47f1-6d52-45ae-b1d7-d9034a2db69f`
+
 ## Recommended order after bootstrap
 
 1. keep loading parquet from local first

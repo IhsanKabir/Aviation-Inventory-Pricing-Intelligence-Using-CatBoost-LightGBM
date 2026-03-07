@@ -24,7 +24,7 @@ Current status:
 
 ## Page Structure
 
-Build this as a 3-page Looker Studio dashboard.
+Build this as a 4-page Looker Studio dashboard.
 
 ### Page 1: Forecast Health
 
@@ -258,6 +258,59 @@ Page 3: `Next-Day Outlook`
    - `predicted_for_day`
    - `airline`
    - `route_key`
+
+Page 4: `Backtest Review`
+
+1. Data source: `vw_backtest_eval_latest`
+2. Add scorecards:
+   - `COUNT(*)`
+   - `MIN(mae)`
+   - `MIN(rmse)`
+3. Add table:
+   - dimensions:
+     - `dataset`
+     - `target`
+     - `model`
+   - metrics:
+     - `n`
+     - `mae`
+     - `rmse`
+     - `mape_pct`
+     - `smape_pct`
+     - `directional_accuracy_pct`
+     - `f1_macro`
+4. Add filter controls:
+   - `dataset`
+   - `target`
+   - `model`
+
+## Live Report Status
+
+Live report currently deployed in the signed-in workspace:
+
+- `Aero Pulse Forecast Review`
+- `https://lookerstudio.google.com/reporting/896e47f1-6d52-45ae-b1d7-d9034a2db69f`
+
+Current completion snapshot:
+
+1. `Forecast Health`
+   - materially complete
+   - live visuals present for model table, `mae`, and directional accuracy
+
+2. `Route Performance`
+   - materially complete
+   - detail table and scatter are live
+   - report-level `airline` quick filter exists
+
+3. `Next-Day Outlook`
+   - materially usable
+   - route chart and `route_key` dropdown are live
+
+4. `Backtest Review`
+   - materially usable
+   - bundle table and `dataset` dropdown are live
+
+Remaining work is presentation polish, not warehouse wiring.
    - `cabin`
 3. Add detail table:
    - dimensions:
