@@ -303,9 +303,13 @@ export function getApiBaseUrl(): string {
 }
 
 async function fetchJson<T>(path: string): Promise<FetchResult<T>> {
+  return fetchJsonWithRevalidate<T>(path, 60);
+}
+
+async function fetchJsonWithRevalidate<T>(path: string, revalidateSeconds: number): Promise<FetchResult<T>> {
   try {
     const response = await fetch(`${getApiBaseUrl()}${path}`, {
-      cache: "no-store"
+      next: { revalidate: revalidateSeconds }
     });
 
     if (!response.ok) {
@@ -353,15 +357,15 @@ function buildPath(path: string, params?: Record<string, QueryValue>): string {
 }
 
 export async function getLatestCycle() {
-  return fetchJson<CycleSummary>("/api/v1/reporting/cycles/latest");
+  return fetchJsonWithRevalidate<CycleSummary>("/api/v1/reporting/cycles/latest", 30);
 }
 
 export async function getAirlines() {
-  return fetchJson<{ items: AirlineItem[] }>("/api/v1/meta/airlines");
+  return fetchJsonWithRevalidate<{ items: AirlineItem[] }>("/api/v1/meta/airlines", 300);
 }
 
 export async function getRoutes() {
-  return fetchJson<{ items: RouteItem[] }>("/api/v1/meta/routes");
+  return fetchJsonWithRevalidate<{ items: RouteItem[] }>("/api/v1/meta/routes", 300);
 }
 
 export async function getDashboardPayload() {
@@ -377,11 +381,11 @@ export async function getDashboardPayload() {
 }
 
 export async function getCycleHealth() {
-  return fetchJson<CycleHealthPayload>("/api/v1/reporting/cycle-health");
+  return fetchJsonWithRevalidate<CycleHealthPayload>("/api/v1/reporting/cycle-health", 30);
 }
 
 export async function getCurrentSnapshotPayload(query: SnapshotQuery) {
-  return fetchJson<SnapshotPayload>(
+  return fetchJsonWithRevalidate<SnapshotPayload>(
     buildPath("/api/v1/reporting/current-snapshot", {
       cycle_id: query.cycleId,
       airline: query.airlines,
@@ -389,12 +393,13 @@ export async function getCurrentSnapshotPayload(query: SnapshotQuery) {
       destination: query.destinations,
       cabin: query.cabins,
       limit: query.limit
-    })
+    }),
+    60
   );
 }
 
 export async function getRouteMonitorMatrixPayload(query: SnapshotQuery & { routeLimit?: number; historyLimit?: number }) {
-  return fetchJson<RouteMonitorMatrixPayload>(
+  return fetchJsonWithRevalidate<RouteMonitorMatrixPayload>(
     buildPath("/api/v1/reporting/route-monitor-matrix", {
       cycle_id: query.cycleId,
       airline: query.airlines,
@@ -403,31 +408,34 @@ export async function getRouteMonitorMatrixPayload(query: SnapshotQuery & { rout
       cabin: query.cabins,
       route_limit: query.routeLimit,
       history_limit: query.historyLimit
-    })
+    }),
+    60
   );
 }
 
 export async function getPenaltyPayload(query: SnapshotQuery) {
-  return fetchJson<PenaltyPayload>(
+  return fetchJsonWithRevalidate<PenaltyPayload>(
     buildPath("/api/v1/reporting/penalties", {
       cycle_id: query.cycleId,
       airline: query.airlines,
       origin: query.origins,
       destination: query.destinations,
       limit: query.limit
-    })
+    }),
+    60
   );
 }
 
 export async function getTaxPayload(query: SnapshotQuery) {
-  return fetchJson<TaxPayload>(
+  return fetchJsonWithRevalidate<TaxPayload>(
     buildPath("/api/v1/reporting/taxes", {
       cycle_id: query.cycleId,
       airline: query.airlines,
       origin: query.origins,
       destination: query.destinations,
       limit: query.limit
-    })
+    }),
+    60
   );
 }
 
@@ -442,7 +450,7 @@ export async function getChangeEventsPayload(query: {
   endDate?: string;
   limit?: number;
 }) {
-  return fetchJson<ChangeEventsPayload>(
+  return fetchJsonWithRevalidate<ChangeEventsPayload>(
     buildPath("/api/v1/reporting/change-events", {
       airline: query.airlines,
       origin: query.origins,
@@ -453,10 +461,11 @@ export async function getChangeEventsPayload(query: {
       start_date: query.startDate,
       end_date: query.endDate,
       limit: query.limit
-    })
+    }),
+    60
   );
 }
 
 export async function getForecastingPayload() {
-  return fetchJson<ForecastingPayload>("/api/v1/reporting/forecasting/latest");
+  return fetchJsonWithRevalidate<ForecastingPayload>("/api/v1/reporting/forecasting/latest", 300);
 }

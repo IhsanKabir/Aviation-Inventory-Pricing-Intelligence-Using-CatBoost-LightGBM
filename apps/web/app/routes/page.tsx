@@ -19,8 +19,8 @@ export default async function RoutesPage({ searchParams }: PageProps) {
   const origin = firstParam(params, "origin");
   const destination = firstParam(params, "destination");
   const cabin = firstParam(params, "cabin");
-  const routeLimit = parseLimit(firstParam(params, "route_limit"), 8);
-  const historyLimit = parseLimit(firstParam(params, "history_limit"), 12);
+  const routeLimit = parseLimit(firstParam(params, "route_limit"), 5);
+  const historyLimit = parseLimit(firstParam(params, "history_limit"), 6);
 
   const [latestCycle, routes] = await Promise.all([
     getLatestCycle(),
