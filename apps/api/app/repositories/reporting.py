@@ -1611,7 +1611,25 @@ def _get_route_monitor_matrix_from_bigquery(
               co.itinerary_leg_count,
               MIN(co.total_price_bdt) AS min_total_price_bdt,
               MAX(co.total_price_bdt) AS max_total_price_bdt,
-              MAX(COALESCE(co.tax_amount, tl.tax_amount, GREATEST(co.total_price_bdt - co.base_fare_amount, 0))) AS tax_amount,
+              MAX(
+                COALESCE(
+                  CASE
+                    WHEN co.tax_amount IS NOT NULL AND co.tax_amount > 0 THEN co.tax_amount
+                  END,
+                  CASE
+                    WHEN tl.tax_amount IS NOT NULL AND tl.tax_amount > 0 THEN tl.tax_amount
+                  END,
+                  CASE
+                    WHEN co.base_fare_amount IS NOT NULL
+                      AND co.total_price_bdt IS NOT NULL
+                      AND co.total_price_bdt > co.base_fare_amount
+                    THEN co.total_price_bdt - co.base_fare_amount
+                  END,
+                  co.tax_amount,
+                  tl.tax_amount,
+                  GREATEST(co.total_price_bdt - co.base_fare_amount, 0)
+                )
+              ) AS tax_amount,
               ARRAY_AGG(COALESCE(co.booking_class, co.fare_basis) IGNORE NULLS ORDER BY co.total_price_bdt ASC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
               ARRAY_AGG(COALESCE(co.booking_class, co.fare_basis) IGNORE NULLS ORDER BY co.total_price_bdt ASC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_booking_class,
               ARRAY_AGG(COALESCE(co.booking_class, co.fare_basis) IGNORE NULLS ORDER BY co.total_price_bdt DESC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_booking_class,
@@ -1727,7 +1745,25 @@ def _get_route_monitor_matrix_from_bigquery(
               ho.itinerary_leg_count,
               MIN(ho.total_price_bdt) AS min_total_price_bdt,
               MAX(ho.total_price_bdt) AS max_total_price_bdt,
-              MAX(COALESCE(ho.tax_amount, tl.tax_amount, GREATEST(ho.total_price_bdt - ho.base_fare_amount, 0))) AS tax_amount,
+              MAX(
+                COALESCE(
+                  CASE
+                    WHEN ho.tax_amount IS NOT NULL AND ho.tax_amount > 0 THEN ho.tax_amount
+                  END,
+                  CASE
+                    WHEN tl.tax_amount IS NOT NULL AND tl.tax_amount > 0 THEN tl.tax_amount
+                  END,
+                  CASE
+                    WHEN ho.base_fare_amount IS NOT NULL
+                      AND ho.total_price_bdt IS NOT NULL
+                      AND ho.total_price_bdt > ho.base_fare_amount
+                    THEN ho.total_price_bdt - ho.base_fare_amount
+                  END,
+                  ho.tax_amount,
+                  tl.tax_amount,
+                  GREATEST(ho.total_price_bdt - ho.base_fare_amount, 0)
+                )
+              ) AS tax_amount,
               ARRAY_AGG(COALESCE(ho.booking_class, ho.fare_basis) IGNORE NULLS ORDER BY ho.total_price_bdt ASC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
               ARRAY_AGG(COALESCE(ho.booking_class, ho.fare_basis) IGNORE NULLS ORDER BY ho.total_price_bdt ASC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_booking_class,
               ARRAY_AGG(COALESCE(ho.booking_class, ho.fare_basis) IGNORE NULLS ORDER BY ho.total_price_bdt DESC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_booking_class,
