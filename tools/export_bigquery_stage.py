@@ -81,7 +81,7 @@ def _query_fact_offer_snapshot() -> str:
             fo.fare_basis,
             CAST(fo.price_total_bdt AS NUMERIC(12, 2)) AS total_price_bdt,
             CAST(frm.fare_amount AS NUMERIC(12, 2)) AS base_fare_amount,
-            CAST(frm.tax_amount AS NUMERIC(12, 2)) AS tax_amount,
+            CAST(COALESCE(frm.tax_amount, GREATEST(fo.price_total_bdt - frm.fare_amount, 0)) AS NUMERIC(12, 2)) AS tax_amount,
             frm.currency,
             fo.seat_available,
             fo.seat_capacity,

@@ -1560,51 +1560,84 @@ def _get_route_monitor_matrix_from_bigquery(
     current_rows = _serialize_warehouse_rows(
         _run_bigquery_query(
             f"""
+            WITH current_offers AS (
+              SELECT *
+              FROM {_bq_table("fact_offer_snapshot")}
+              WHERE {' AND '.join(current_filters)}
+            ),
+            tax_lookup AS (
+              SELECT
+                cycle_id,
+                captured_at_utc,
+                airline,
+                origin,
+                destination,
+                flight_number,
+                departure_utc,
+                cabin,
+                MAX(tax_amount) AS tax_amount
+              FROM {_bq_table("fact_tax_snapshot")}
+              WHERE cycle_id = @cycle_id
+                AND route_key IN UNNEST(@route_keys)
+                {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                {"AND cabin IN UNNEST(@cabins)" if cabins else ""}
+              GROUP BY
+                cycle_id, captured_at_utc, airline, origin, destination,
+                flight_number, departure_utc, cabin
+            )
             SELECT
-              cycle_id,
-              captured_at_utc,
-              airline,
-              origin,
-              destination,
-              route_key,
-              flight_number,
-              departure_utc,
-              departure_date,
-              FORMAT_TIMESTAMP('%H:%M', departure_utc) AS departure_time,
-              cabin,
-              COALESCE(aircraft, '') AS aircraft,
-              search_trip_type,
-              trip_request_id,
-              requested_outbound_date,
-              requested_return_date,
-              trip_duration_days,
-              trip_origin,
-              trip_destination,
-              trip_pair_key,
-              leg_direction,
-              leg_sequence,
-              itinerary_leg_count,
-              MIN(total_price_bdt) AS min_total_price_bdt,
-              MAX(total_price_bdt) AS max_total_price_bdt,
-              MAX(COALESCE(tax_amount, GREATEST(total_price_bdt - base_fare_amount, 0))) AS tax_amount,
-              ARRAY_AGG(COALESCE(booking_class, fare_basis) IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
-              ARRAY_AGG(COALESCE(booking_class, fare_basis) IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_booking_class,
-              ARRAY_AGG(COALESCE(booking_class, fare_basis) IGNORE NULLS ORDER BY total_price_bdt DESC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_booking_class,
-              ARRAY_AGG(seat_available IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS seat_available,
-              ARRAY_AGG(seat_available IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_seat_available,
-              ARRAY_AGG(seat_available IGNORE NULLS ORDER BY total_price_bdt DESC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_seat_available,
-              MAX(seat_capacity) AS seat_capacity,
-              MAX(load_factor_pct) AS load_factor_pct,
-              LOGICAL_OR(IFNULL(soldout, FALSE)) AS soldout
-            FROM {_bq_table("fact_offer_snapshot")}
-            WHERE {' AND '.join(current_filters)}
+              co.cycle_id,
+              co.captured_at_utc,
+              co.airline,
+              co.origin,
+              co.destination,
+              co.route_key,
+              co.flight_number,
+              co.departure_utc,
+              co.departure_date,
+              FORMAT_TIMESTAMP('%H:%M', co.departure_utc) AS departure_time,
+              co.cabin,
+              COALESCE(co.aircraft, '') AS aircraft,
+              co.search_trip_type,
+              co.trip_request_id,
+              co.requested_outbound_date,
+              co.requested_return_date,
+              co.trip_duration_days,
+              co.trip_origin,
+              co.trip_destination,
+              co.trip_pair_key,
+              co.leg_direction,
+              co.leg_sequence,
+              co.itinerary_leg_count,
+              MIN(co.total_price_bdt) AS min_total_price_bdt,
+              MAX(co.total_price_bdt) AS max_total_price_bdt,
+              MAX(COALESCE(co.tax_amount, tl.tax_amount, GREATEST(co.total_price_bdt - co.base_fare_amount, 0))) AS tax_amount,
+              ARRAY_AGG(COALESCE(co.booking_class, co.fare_basis) IGNORE NULLS ORDER BY co.total_price_bdt ASC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
+              ARRAY_AGG(COALESCE(co.booking_class, co.fare_basis) IGNORE NULLS ORDER BY co.total_price_bdt ASC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_booking_class,
+              ARRAY_AGG(COALESCE(co.booking_class, co.fare_basis) IGNORE NULLS ORDER BY co.total_price_bdt DESC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_booking_class,
+              ARRAY_AGG(co.seat_available IGNORE NULLS ORDER BY co.total_price_bdt ASC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS seat_available,
+              ARRAY_AGG(co.seat_available IGNORE NULLS ORDER BY co.total_price_bdt ASC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_seat_available,
+              ARRAY_AGG(co.seat_available IGNORE NULLS ORDER BY co.total_price_bdt DESC, co.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_seat_available,
+              MAX(co.seat_capacity) AS seat_capacity,
+              MAX(co.load_factor_pct) AS load_factor_pct,
+              LOGICAL_OR(IFNULL(co.soldout, FALSE)) AS soldout
+            FROM current_offers co
+            LEFT JOIN tax_lookup tl
+              ON tl.cycle_id = co.cycle_id
+             AND tl.captured_at_utc = co.captured_at_utc
+             AND tl.airline = co.airline
+             AND tl.origin = co.origin
+             AND tl.destination = co.destination
+             AND tl.flight_number = co.flight_number
+             AND tl.departure_utc = co.departure_utc
+             AND tl.cabin = co.cabin
             GROUP BY
-              cycle_id, captured_at_utc, airline, origin, destination, route_key,
-              flight_number, departure_utc, departure_date, departure_time, cabin, aircraft,
-              search_trip_type, trip_request_id, requested_outbound_date, requested_return_date,
-              trip_duration_days, trip_origin, trip_destination, trip_pair_key, leg_direction,
-              leg_sequence, itinerary_leg_count
-            ORDER BY route_key, departure_date, departure_time, airline, flight_number
+              co.cycle_id, co.captured_at_utc, co.airline, co.origin, co.destination, co.route_key,
+              co.flight_number, co.departure_utc, co.departure_date, departure_time, co.cabin, aircraft,
+              co.search_trip_type, co.trip_request_id, co.requested_outbound_date, co.requested_return_date,
+              co.trip_duration_days, co.trip_origin, co.trip_destination, co.trip_pair_key, co.leg_direction,
+              co.leg_sequence, co.itinerary_leg_count
+            ORDER BY co.route_key, co.departure_date, departure_time, co.airline, co.flight_number
             """,
             current_params,
         )
@@ -1642,51 +1675,85 @@ def _get_route_monitor_matrix_from_bigquery(
     history_rows = _serialize_warehouse_rows(
         _run_bigquery_query(
             f"""
+            WITH history_offers AS (
+              SELECT *
+              FROM {_bq_table("fact_offer_snapshot")}
+              WHERE {' AND '.join(history_filters)}
+            ),
+            tax_lookup AS (
+              SELECT
+                cycle_id,
+                captured_at_utc,
+                airline,
+                origin,
+                destination,
+                flight_number,
+                departure_utc,
+                cabin,
+                MAX(tax_amount) AS tax_amount
+              FROM {_bq_table("fact_tax_snapshot")}
+              WHERE route_key IN UNNEST(@route_keys)
+                AND DATE(departure_utc) >= @min_date
+                AND DATE(departure_utc) <= @max_date
+                {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                {"AND cabin IN UNNEST(@cabins)" if cabins else ""}
+              GROUP BY
+                cycle_id, captured_at_utc, airline, origin, destination,
+                flight_number, departure_utc, cabin
+            )
             SELECT
-              cycle_id,
-              captured_at_utc,
-              airline,
-              origin,
-              destination,
-              route_key,
-              flight_number,
-              departure_utc,
-              departure_date,
-              FORMAT_TIMESTAMP('%H:%M', departure_utc) AS departure_time,
-              cabin,
-              COALESCE(aircraft, '') AS aircraft,
-              search_trip_type,
-              trip_request_id,
-              requested_outbound_date,
-              requested_return_date,
-              trip_duration_days,
-              trip_origin,
-              trip_destination,
-              trip_pair_key,
-              leg_direction,
-              leg_sequence,
-              itinerary_leg_count,
-              MIN(total_price_bdt) AS min_total_price_bdt,
-              MAX(total_price_bdt) AS max_total_price_bdt,
-              MAX(COALESCE(tax_amount, GREATEST(total_price_bdt - base_fare_amount, 0))) AS tax_amount,
-              ARRAY_AGG(COALESCE(booking_class, fare_basis) IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
-              ARRAY_AGG(COALESCE(booking_class, fare_basis) IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_booking_class,
-              ARRAY_AGG(COALESCE(booking_class, fare_basis) IGNORE NULLS ORDER BY total_price_bdt DESC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_booking_class,
-              ARRAY_AGG(seat_available IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS seat_available,
-              ARRAY_AGG(seat_available IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_seat_available,
-              ARRAY_AGG(seat_available IGNORE NULLS ORDER BY total_price_bdt DESC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_seat_available,
-              MAX(seat_capacity) AS seat_capacity,
-              MAX(load_factor_pct) AS load_factor_pct,
-              LOGICAL_OR(IFNULL(soldout, FALSE)) AS soldout
-            FROM {_bq_table("fact_offer_snapshot")}
-            WHERE {' AND '.join(history_filters)}
+              ho.cycle_id,
+              ho.captured_at_utc,
+              ho.airline,
+              ho.origin,
+              ho.destination,
+              ho.route_key,
+              ho.flight_number,
+              ho.departure_utc,
+              ho.departure_date,
+              FORMAT_TIMESTAMP('%H:%M', ho.departure_utc) AS departure_time,
+              ho.cabin,
+              COALESCE(ho.aircraft, '') AS aircraft,
+              ho.search_trip_type,
+              ho.trip_request_id,
+              ho.requested_outbound_date,
+              ho.requested_return_date,
+              ho.trip_duration_days,
+              ho.trip_origin,
+              ho.trip_destination,
+              ho.trip_pair_key,
+              ho.leg_direction,
+              ho.leg_sequence,
+              ho.itinerary_leg_count,
+              MIN(ho.total_price_bdt) AS min_total_price_bdt,
+              MAX(ho.total_price_bdt) AS max_total_price_bdt,
+              MAX(COALESCE(ho.tax_amount, tl.tax_amount, GREATEST(ho.total_price_bdt - ho.base_fare_amount, 0))) AS tax_amount,
+              ARRAY_AGG(COALESCE(ho.booking_class, ho.fare_basis) IGNORE NULLS ORDER BY ho.total_price_bdt ASC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
+              ARRAY_AGG(COALESCE(ho.booking_class, ho.fare_basis) IGNORE NULLS ORDER BY ho.total_price_bdt ASC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_booking_class,
+              ARRAY_AGG(COALESCE(ho.booking_class, ho.fare_basis) IGNORE NULLS ORDER BY ho.total_price_bdt DESC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_booking_class,
+              ARRAY_AGG(ho.seat_available IGNORE NULLS ORDER BY ho.total_price_bdt ASC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS seat_available,
+              ARRAY_AGG(ho.seat_available IGNORE NULLS ORDER BY ho.total_price_bdt ASC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS min_seat_available,
+              ARRAY_AGG(ho.seat_available IGNORE NULLS ORDER BY ho.total_price_bdt DESC, ho.seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS max_seat_available,
+              MAX(ho.seat_capacity) AS seat_capacity,
+              MAX(ho.load_factor_pct) AS load_factor_pct,
+              LOGICAL_OR(IFNULL(ho.soldout, FALSE)) AS soldout
+            FROM history_offers ho
+            LEFT JOIN tax_lookup tl
+              ON tl.cycle_id = ho.cycle_id
+             AND tl.captured_at_utc = ho.captured_at_utc
+             AND tl.airline = ho.airline
+             AND tl.origin = ho.origin
+             AND tl.destination = ho.destination
+             AND tl.flight_number = ho.flight_number
+             AND tl.departure_utc = ho.departure_utc
+             AND tl.cabin = ho.cabin
             GROUP BY
-              cycle_id, captured_at_utc, airline, origin, destination, route_key,
-              flight_number, departure_utc, departure_date, departure_time, cabin, aircraft,
-              search_trip_type, trip_request_id, requested_outbound_date, requested_return_date,
-              trip_duration_days, trip_origin, trip_destination, trip_pair_key, leg_direction,
-              leg_sequence, itinerary_leg_count
-            ORDER BY captured_at_utc DESC, route_key, departure_date, departure_time, airline, flight_number
+              ho.cycle_id, ho.captured_at_utc, ho.airline, ho.origin, ho.destination, ho.route_key,
+              ho.flight_number, ho.departure_utc, ho.departure_date, departure_time, ho.cabin, aircraft,
+              ho.search_trip_type, ho.trip_request_id, ho.requested_outbound_date, ho.requested_return_date,
+              ho.trip_duration_days, ho.trip_origin, ho.trip_destination, ho.trip_pair_key, ho.leg_direction,
+              ho.leg_sequence, ho.itinerary_leg_count
+            ORDER BY ho.captured_at_utc DESC, ho.route_key, ho.departure_date, departure_time, ho.airline, ho.flight_number
             """,
             history_params,
         )
@@ -3578,6 +3645,23 @@ def get_taxes(
             route_summary_rows = _serialize_warehouse_rows(
                 _run_bigquery_query(
                     f"""
+                    WITH deduped_tax AS (
+                      SELECT DISTINCT
+                        cycle_id,
+                        captured_at_utc,
+                        airline,
+                        origin,
+                        destination,
+                        route_key,
+                        flight_number,
+                        departure_utc,
+                        cabin,
+                        fare_basis,
+                        tax_amount,
+                        currency
+                      FROM {_bq_table("fact_tax_snapshot")}
+                      WHERE {' AND '.join(route_filters)}
+                    )
                     SELECT
                       origin,
                       destination,
@@ -3589,8 +3673,7 @@ def get_taxes(
                       AVG(tax_amount) AS avg_tax_amount,
                       MAX(tax_amount) - MIN(tax_amount) AS spread_amount,
                       MAX(captured_at_utc) AS latest_captured_at_utc
-                    FROM {_bq_table("fact_tax_snapshot")}
-                    WHERE {' AND '.join(route_filters)}
+                    FROM deduped_tax
                     GROUP BY origin, destination, route_key
                     ORDER BY route_key
                     """,
@@ -3615,6 +3698,23 @@ def get_taxes(
             rows = _serialize_warehouse_rows(
                 _run_bigquery_query(
                     f"""
+                    WITH deduped_tax AS (
+                      SELECT DISTINCT
+                        cycle_id,
+                        captured_at_utc,
+                        airline,
+                        origin,
+                        destination,
+                        route_key,
+                        flight_number,
+                        departure_utc,
+                        cabin,
+                        fare_basis,
+                        tax_amount,
+                        currency
+                      FROM {_bq_table("fact_tax_snapshot")}
+                      WHERE {' AND '.join(detail_filters)}
+                    )
                     SELECT
                       cycle_id,
                       captured_at_utc,
@@ -3628,8 +3728,7 @@ def get_taxes(
                       fare_basis,
                       tax_amount,
                       currency
-                    FROM {_bq_table("fact_tax_snapshot")}
-                    WHERE {' AND '.join(detail_filters)}
+                    FROM deduped_tax
                     ORDER BY origin, destination, departure_utc, airline, flight_number
                     LIMIT @row_limit
                     """,
@@ -3640,6 +3739,26 @@ def get_taxes(
             airline_summary_rows = _serialize_warehouse_rows(
                 _run_bigquery_query(
                     f"""
+                    WITH deduped_tax AS (
+                      SELECT DISTINCT
+                        cycle_id,
+                        captured_at_utc,
+                        airline,
+                        origin,
+                        destination,
+                        route_key,
+                        flight_number,
+                        departure_utc,
+                        cabin,
+                        fare_basis,
+                        tax_amount,
+                        currency
+                      FROM {_bq_table("fact_tax_snapshot")}
+                      WHERE cycle_id = @cycle_id
+                        AND tax_amount IS NOT NULL
+                        AND route_key IN UNNEST(@route_keys)
+                        {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                    )
                     SELECT
                       origin,
                       destination,
@@ -3651,11 +3770,7 @@ def get_taxes(
                       AVG(tax_amount) AS avg_tax_amount,
                       MAX(tax_amount) - MIN(tax_amount) AS spread_amount,
                       MAX(captured_at_utc) AS latest_captured_at_utc
-                    FROM {_bq_table("fact_tax_snapshot")}
-                    WHERE cycle_id = @cycle_id
-                      AND tax_amount IS NOT NULL
-                      AND route_key IN UNNEST(@route_keys)
-                      {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                    FROM deduped_tax
                     GROUP BY origin, destination, route_key, airline
                     ORDER BY route_key, airline
                     """,
@@ -3687,6 +3802,26 @@ def get_taxes(
                 route_trend_rows = _serialize_warehouse_rows(
                     _run_bigquery_query(
                         f"""
+                        WITH deduped_tax AS (
+                          SELECT DISTINCT
+                            cycle_id,
+                            captured_at_utc,
+                            airline,
+                            origin,
+                            destination,
+                            route_key,
+                            flight_number,
+                            departure_utc,
+                            cabin,
+                            fare_basis,
+                            tax_amount,
+                            currency
+                          FROM {_bq_table("fact_tax_snapshot")}
+                          WHERE cycle_id IN UNNEST(@cycle_ids)
+                            AND route_key IN UNNEST(@route_keys)
+                            AND tax_amount IS NOT NULL
+                            {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                        )
                         SELECT
                           cycle_id,
                           origin,
@@ -3698,11 +3833,7 @@ def get_taxes(
                           MAX(tax_amount) AS max_tax_amount,
                           AVG(tax_amount) AS avg_tax_amount,
                           MAX(tax_amount) - MIN(tax_amount) AS spread_amount
-                        FROM {_bq_table("fact_tax_snapshot")}
-                        WHERE cycle_id IN UNNEST(@cycle_ids)
-                          AND route_key IN UNNEST(@route_keys)
-                          AND tax_amount IS NOT NULL
-                          {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                        FROM deduped_tax
                         GROUP BY cycle_id, origin, destination, route_key
                         ORDER BY route_key, cycle_id
                         """,
@@ -3712,6 +3843,26 @@ def get_taxes(
                 airline_trend_rows = _serialize_warehouse_rows(
                     _run_bigquery_query(
                         f"""
+                        WITH deduped_tax AS (
+                          SELECT DISTINCT
+                            cycle_id,
+                            captured_at_utc,
+                            airline,
+                            origin,
+                            destination,
+                            route_key,
+                            flight_number,
+                            departure_utc,
+                            cabin,
+                            fare_basis,
+                            tax_amount,
+                            currency
+                          FROM {_bq_table("fact_tax_snapshot")}
+                          WHERE cycle_id IN UNNEST(@cycle_ids)
+                            AND route_key IN UNNEST(@route_keys)
+                            AND tax_amount IS NOT NULL
+                            {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                        )
                         SELECT
                           cycle_id,
                           origin,
@@ -3723,11 +3874,7 @@ def get_taxes(
                           MAX(tax_amount) AS max_tax_amount,
                           AVG(tax_amount) AS avg_tax_amount,
                           MAX(tax_amount) - MIN(tax_amount) AS spread_amount
-                        FROM {_bq_table("fact_tax_snapshot")}
-                        WHERE cycle_id IN UNNEST(@cycle_ids)
-                          AND route_key IN UNNEST(@route_keys)
-                          AND tax_amount IS NOT NULL
-                          {"AND airline IN UNNEST(@airlines)" if airlines else ""}
+                        FROM deduped_tax
                         GROUP BY cycle_id, origin, destination, route_key, airline
                         ORDER BY route_key, cycle_id, airline
                         """,
