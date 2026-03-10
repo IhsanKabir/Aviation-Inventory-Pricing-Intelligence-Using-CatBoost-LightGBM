@@ -1326,6 +1326,41 @@ a {
   font-size: 0.82rem;
 }
 
+.operations-airline-meta {
+  display: block;
+  margin-top: 2px;
+}
+
+.operations-airport-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.operations-airport-chip,
+.operations-direct-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.operations-airport-chip {
+  border: 1px solid rgba(16, 35, 59, 0.16);
+  background: rgba(16, 35, 59, 0.06);
+  color: var(--ink);
+}
+
+.operations-direct-chip {
+  border: 1px dashed rgba(16, 35, 59, 0.18);
+  background: rgba(255, 255, 255, 0.56);
+  color: var(--muted);
+}
+
 .operations-grid {
   margin-top: 0;
   margin-bottom: 18px;

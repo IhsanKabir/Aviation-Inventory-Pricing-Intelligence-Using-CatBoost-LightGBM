@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `aeropulseintelligence.aviation_intel.fact_offer_snap
   aircraft STRING,
   duration_min INT64,
   stops INT64,
+  via_airports STRING,
   soldout BOOL,
   penalty_source STRING,
   search_trip_type STRING,

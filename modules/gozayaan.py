@@ -684,6 +684,14 @@ def _normalize_fare_row(
         penalty_fields["fare_refundable"] = bool(adt_rule.get("refundable"))
     if not penalty_fields.get("penalty_currency") and adt_rule.get("currency"):
         penalty_fields["penalty_currency"] = str(adt_rule.get("currency"))
+    via_airports = list(
+        dict.fromkeys(
+            str(seg.get("destination") or "").upper().strip()
+            for seg in segments[:-1]
+            if str(seg.get("destination") or "").upper().strip()
+            and str(seg.get("destination") or "").upper().strip() not in {origin, destination}
+        )
+    )
 
     row: Dict[str, Any] = {
         "airline": str(airline_code).upper(),
@@ -702,6 +710,7 @@ def _normalize_fare_row(
         "currency": currency,
         "duration_min": duration_min,
         "stops": max(0, len(segments) - 1),
+        "via_airports": "|".join(via_airports) if via_airports else None,
         "booking_class": adt_rule.get("booking_code"),
         "baggage": _baggage_text(adt_rule),
         "equipment_code": equipment,
@@ -747,6 +756,7 @@ def _dedupe_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             r.get("cabin"),
             r.get("fare_basis"),
             r.get("brand"),
+            r.get("via_airports"),
         )
         if key in seen:
             continue

@@ -171,6 +171,122 @@ class GozayaanConnectorTests(unittest.TestCase):
         self.assertEqual(3500.0, row["fare_cancel_fee_no_show"])
 
     @patch("modules.gozayaan.Requester")
+    def test_populates_via_airports_from_multisegment_journey(self, mock_requester_cls):
+        requester = MagicMock()
+        requester.timeout = 30
+        requester.session = MagicMock()
+        mock_requester_cls.return_value = requester
+
+        search_body = {"status": True, "result": {"search_id": "s-via"}}
+        legs_body = {
+            "status": True,
+            "result": {
+                "status": "DONE",
+                "progress": 1,
+                "expected_progress": 1,
+                "fares": [
+                    {
+                        "id": "f-via",
+                        "hash": "leg-h-via",
+                        "leg_hashes": ["leg-h-via"],
+                        "hash_str": "BS|DAC-DXB-2026-04-13-BS-341-AT7",
+                        "currency": "BDT",
+                        "total_base_amount": 20000,
+                        "total_tax_amount": 5000,
+                        "total_fare_amount": 25000,
+                    }
+                ],
+                "legs": [
+                    {
+                        "hash": "leg-h-via",
+                        "segment_hashes": ["seg-a", "seg-b"],
+                        "travel_time": 600,
+                        "departure_date_time": "2026-04-13T07:00:00",
+                        "arrival_date_time": "2026-04-13T17:00:00",
+                    }
+                ],
+                "segments": [
+                    {
+                        "hash": "seg-a",
+                        "origin": "DAC",
+                        "destination": "AUH",
+                        "departure_date_time": "2026-04-13T07:00:00",
+                        "arrival_date_time": "2026-04-13T11:00:00",
+                        "flight_number": "341",
+                        "marketing_carrier": "BS",
+                        "operating_carrier": "BS",
+                        "equipment": "AT7",
+                    },
+                    {
+                        "hash": "seg-b",
+                        "origin": "AUH",
+                        "destination": "DXB",
+                        "departure_date_time": "2026-04-13T13:00:00",
+                        "arrival_date_time": "2026-04-13T17:00:00",
+                        "flight_number": "341",
+                        "marketing_carrier": "BS",
+                        "operating_carrier": "BS",
+                        "equipment": "AT7",
+                    },
+                ],
+            },
+        }
+        leg_fares_body = {
+            "status": True,
+            "result": {
+                "fares": [
+                    {
+                        "id": "f-via",
+                        "hash": "leg-h-via",
+                        "leg_hashes": ["leg-h-via"],
+                        "hash_str": "BS|DAC-DXB-2026-04-13-BS-341-AT7",
+                        "currency": "BDT",
+                        "total_base_amount": 20000,
+                        "total_tax_amount": 5000,
+                        "total_fare_amount": 25000,
+                        "fare_type": "PUBLIC",
+                        "leg_wise_fare_rules": {
+                            "leg-h-via": {
+                                "ADT": {
+                                    "fare_basis": "VIAFARE",
+                                    "booking_code": "V",
+                                    "fare_family": "Economy",
+                                    "cabin_class": "Economy",
+                                }
+                            }
+                        },
+                    }
+                ],
+                "policies": [],
+            },
+        }
+
+        def _post_side_effect(url, json=None, headers=None, timeout=None):  # noqa: A002
+            if url.endswith("/flight/v4.0/search/"):
+                return _DummyResp(200, search_body)
+            if url.endswith("/flight/v4.0/search/legs/"):
+                return _DummyResp(200, legs_body)
+            if url.endswith("/flight/v4.0/search/legs/fares/"):
+                return _DummyResp(200, leg_fares_body)
+            return _DummyResp(500, {"status": False})
+
+        requester.session.post.side_effect = _post_side_effect
+
+        out = fetch_flights_for_airline(
+            airline_code="BS",
+            origin="DAC",
+            destination="DXB",
+            date="2026-04-13",
+            cabin="Economy",
+            adt=1,
+            chd=0,
+            inf=0,
+        )
+
+        self.assertTrue(out["ok"])
+        self.assertEqual("AUH", out["rows"][0]["via_airports"])
+
+    @patch("modules.gozayaan.Requester")
     @patch("modules.gozayaan._run_refresh_command")
     @patch("modules.gozayaan._resolve_active_kong_token")
     def test_rate_limit_retry_after_token_refresh(

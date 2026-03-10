@@ -3,7 +3,7 @@ import { DataPanel } from "@/components/data-panel";
 import { MetricCard } from "@/components/metric-card";
 import { getAirlines, getRecentCycles, getRoutes, getTaxPayload } from "@/lib/api";
 import { buildReportingExportUrl } from "@/lib/export";
-import { formatDhakaDateTime, formatMoney, formatNumber, formatRouteGeo, formatRouteType, shortCycle } from "@/lib/format";
+import { formatDhakaDateTime, formatMoney, formatNumber, formatRouteGeo, formatRouteType } from "@/lib/format";
 import { firstParam, manyParams, parseLimit, type RawSearchParams } from "@/lib/query";
 
 type PageProps = {
@@ -83,9 +83,10 @@ export default async function TaxesPage({ searchParams }: PageProps) {
   const cycleOptions = (recentCycles.data?.items ?? [])
     .filter((item) => item.cycle_id)
     .map((item) => ({
-      label: `${shortCycle(item.cycle_id)}${item.cycle_completed_at_utc ? ` | ${formatDhakaDateTime(item.cycle_completed_at_utc)}` : ""}`,
+      label: item.cycle_completed_at_utc ? formatDhakaDateTime(item.cycle_completed_at_utc) : "Latest",
       value: item.cycle_id as string,
     }));
+  const activeCycle = (recentCycles.data?.items ?? []).find((item) => item.cycle_id === (taxes.data?.cycle_id ?? cycleId));
 
   const routeCount = routeSummaries.length;
   const airlineCount = new Set(rows.map((row) => row.airline)).size;
@@ -111,7 +112,7 @@ export default async function TaxesPage({ searchParams }: PageProps) {
       <div className="grid cards">
         <MetricCard
           label="Cycle"
-          value={shortCycle(taxes.data?.cycle_id ?? cycleId ?? null)}
+          value={activeCycle?.cycle_completed_at_utc ? formatDhakaDateTime(activeCycle.cycle_completed_at_utc) : "Not available"}
           footnote={taxes.ok ? "Latest warehouse-backed tax slice" : "No cycle loaded"}
         />
         <MetricCard label="Tax rows" value={rows.length.toLocaleString()} footnote={`Detail limit ${limit.toLocaleString()}`} />

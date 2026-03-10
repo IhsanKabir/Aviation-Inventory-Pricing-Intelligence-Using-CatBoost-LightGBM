@@ -244,6 +244,14 @@ def _normalize_offer(
     equipment = (seg0.get("aircraft") or {}).get("code") or leg0.get("aircraftCode")
     aircraft_model = (seg0.get("aircraft") or {}).get("model") or (leg0.get("aircraft") or {}).get("model")
     penalty_source, penalty_text = _extract_penalty_text(offer)
+    via_airports = list(
+        dict.fromkeys(
+            str((seg.get("destination") or {}).get("code") or "").upper().strip()
+            for seg in segments[:-1]
+            if str((seg.get("destination") or {}).get("code") or "").upper().strip()
+            and str((seg.get("destination") or {}).get("code") or "").upper().strip() not in {origin, destination}
+        )
+    )
 
     row: Dict[str, Any] = {
         "airline": airline,
@@ -262,6 +270,7 @@ def _normalize_offer(
         "currency": str(offer.get("currency") or total_fare.get("currency") or "BDT"),
         "duration_min": _safe_int(seg0.get("duration")) or _safe_int(leg0.get("duration")) or _safe_int(offer.get("totalDuration")),
         "stops": max(0, len(segments) - 1),
+        "via_airports": "|".join(via_airports) if via_airports else None,
         "booking_class": str(seg0.get("resBookDesigCode") or seg0.get("cabinCode") or "").strip() or None,
         "baggage": bag_text,
         "equipment_code": str(equipment or "").strip() or None,
@@ -311,6 +320,7 @@ def _dedupe_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             r.get("fare_basis"),
             r.get("brand"),
             r.get("fare_ref_num"),
+            r.get("via_airports"),
         )
         if key in seen:
             continue

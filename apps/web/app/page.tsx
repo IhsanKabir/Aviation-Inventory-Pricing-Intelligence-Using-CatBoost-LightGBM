@@ -52,8 +52,8 @@ export default async function HomePage() {
       <div className="grid cards">
         <MetricCard
           label="Latest cycle"
-          value={latestCycle?.cycle_id?.slice(0, 8) ?? "None"}
-          footnote={formatDate(latestCycle?.cycle_completed_at_utc)}
+          value={formatDate(latestCycle?.cycle_completed_at_utc)}
+          footnote="Latest completed warehouse-backed snapshot"
         />
         <MetricCard
           label="Offer rows"

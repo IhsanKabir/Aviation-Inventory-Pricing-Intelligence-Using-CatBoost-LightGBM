@@ -299,6 +299,14 @@ def _normalize_trip_row(
     model = str(trip.get("fModel") or "").strip() or None
     refund_text = str(trip.get("fRefund") or "").strip()
     refundable = True if "REFUND" in refund_text.upper() else (False if refund_text else None)
+    via_airports = list(
+        dict.fromkeys(
+            str(leg.get("xDest") or "").upper().strip()
+            for leg in (legs[:-1] if isinstance(legs, list) else [])
+            if str(leg.get("xDest") or "").upper().strip()
+            and str(leg.get("xDest") or "").upper().strip() not in {origin, destination}
+        )
+    )
 
     row: Dict[str, Any] = {
         "airline": str(airline_code).upper(),
@@ -317,6 +325,7 @@ def _normalize_trip_row(
         "currency": "BDT",
         "duration_min": _safe_int(trip.get("fDursec")) or _safe_int(leg0.get("xDur")),
         "stops": max(0, len(legs) - 1) if isinstance(legs, list) else 0,
+        "via_airports": "|".join(via_airports) if via_airports else None,
         "booking_class": str(trip.get("fClsNam") or leg0.get("xClass") or "").strip() or None,
         "baggage": str(trip.get("fBag") or "").strip() or None,
         "equipment_code": model,
@@ -359,6 +368,7 @@ def _dedupe_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             r.get("cabin"),
             r.get("fare_basis"),
             r.get("brand"),
+            r.get("via_airports"),
         )
         if key in seen:
             continue

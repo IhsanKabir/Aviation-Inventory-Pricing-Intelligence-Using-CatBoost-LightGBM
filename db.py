@@ -14,6 +14,7 @@ from models.raw_offer_payload_store import RawOfferPayloadStoreORM
 from core.runtime_config import get_database_url
 from collections import Counter
 import hashlib
+import re
 
 
 
@@ -68,6 +69,7 @@ def _ensure_schema_extensions():
         "ALTER TABLE IF EXISTS flight_offer_raw_meta ADD COLUMN IF NOT EXISTS fare_cancel_fee_no_show NUMERIC(10,2)",
         "ALTER TABLE IF EXISTS flight_offer_raw_meta ADD COLUMN IF NOT EXISTS fare_changeable BOOLEAN",
         "ALTER TABLE IF EXISTS flight_offer_raw_meta ADD COLUMN IF NOT EXISTS fare_refundable BOOLEAN",
+        "ALTER TABLE IF EXISTS flight_offer_raw_meta ADD COLUMN IF NOT EXISTS via_airports VARCHAR",
         "CREATE INDEX IF NOT EXISTS ix_flight_offer_raw_meta_raw_offer_fingerprint ON flight_offer_raw_meta (raw_offer_fingerprint)",
         "CREATE INDEX IF NOT EXISTS ix_flight_offer_raw_meta_probe_group_id ON flight_offer_raw_meta (probe_group_id)",
         "CREATE INDEX IF NOT EXISTS ix_flight_offer_raw_meta_trip_request_id ON flight_offer_raw_meta (trip_request_id)",
@@ -94,6 +96,111 @@ def init_db(create_tables: bool = True):
 
 import logging
 LOG = logging.getLogger("db")
+
+AIRPORT_CODE_RE = re.compile(r"^[A-Z]{3}$")
+
+
+def _normalize_airport_code(value):
+    code = str(value or "").strip().upper()
+    return code if AIRPORT_CODE_RE.fullmatch(code) else None
+
+
+def _iter_segment_like_nodes(node):
+    if isinstance(node, dict):
+        departure_candidates = [
+            node.get("departureAirport"),
+            node.get("origin"),
+            node.get("from"),
+            node.get("xFrom"),
+            node.get("boardPoint"),
+            node.get("departureAirportCode"),
+            node.get("depAirport"),
+        ]
+        arrival_candidates = [
+            node.get("arrivalAirport"),
+            node.get("destination"),
+            node.get("to"),
+            node.get("xDest"),
+            node.get("offPoint"),
+            node.get("arrivalAirportCode"),
+            node.get("arrAirport"),
+        ]
+
+        def _extract_code(candidate):
+            if isinstance(candidate, dict):
+                for key in ("code", "iata", "iataCode", "airportCode", "value"):
+                    code = _normalize_airport_code(candidate.get(key))
+                    if code:
+                        return code
+                return None
+            return _normalize_airport_code(candidate)
+
+        dep_code = next((code for code in (_extract_code(item) for item in departure_candidates) if code), None)
+        arr_code = next((code for code in (_extract_code(item) for item in arrival_candidates) if code), None)
+        if dep_code or arr_code:
+            yield (dep_code, arr_code)
+
+        for value in node.values():
+            yield from _iter_segment_like_nodes(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from _iter_segment_like_nodes(item)
+
+
+def _collect_named_via_codes(node, origin=None, destination=None):
+    via_codes = []
+    if isinstance(node, dict):
+        for key in ("layoverAirports", "viaAirports", "transitAirports"):
+            values = node.get(key)
+            if isinstance(values, list):
+                for item in values:
+                    code = None
+                    if isinstance(item, dict):
+                        for nested_key in ("code", "iata", "iataCode", "airportCode", "value"):
+                            code = _normalize_airport_code(item.get(nested_key))
+                            if code:
+                                break
+                    else:
+                        code = _normalize_airport_code(item)
+                    if code and code != origin and code != destination:
+                        via_codes.append(code)
+        for value in node.values():
+            via_codes.extend(_collect_named_via_codes(value, origin=origin, destination=destination))
+    elif isinstance(node, list):
+        for item in node:
+            via_codes.extend(_collect_named_via_codes(item, origin=origin, destination=destination))
+    return via_codes
+
+
+def _infer_via_airports(row):
+    explicit = row.get("via_airports")
+    if explicit:
+        tokens = [_normalize_airport_code(part) for part in str(explicit).replace(",", "|").split("|")]
+        cleaned = [token for token in tokens if token]
+        if cleaned:
+            return "|".join(dict.fromkeys(cleaned))
+
+    raw_offer = row.get("raw_offer")
+    if not isinstance(raw_offer, (dict, list)):
+        return None
+
+    origin = _normalize_airport_code(row.get("origin"))
+    destination = _normalize_airport_code(row.get("destination"))
+    via_codes = []
+    for dep_code, arr_code in _iter_segment_like_nodes(raw_offer):
+        for code in (dep_code, arr_code):
+            if not code or code == origin or code == destination:
+                continue
+            via_codes.append(code)
+
+    via_codes.extend(_collect_named_via_codes(raw_offer, origin=origin, destination=destination))
+
+    unique_codes = list(dict.fromkeys(via_codes))
+    return "|".join(unique_codes) if unique_codes else None
+
+
+def infer_via_airports(row):
+    return _infer_via_airports(row)
 
 
 def bulk_insert_offers(rows: list[dict]) -> int:
@@ -473,6 +580,7 @@ def normalize_raw_meta(rows, scraped_at):
             "equipment_code": r.get("equipment_code"),
             "duration_min": r.get("duration_min"),
             "stops": r.get("stops"),
+            "via_airports": _infer_via_airports(r),
             "arrival": r.get("arrival"),
             "estimated_load_factor_pct": r.get("estimated_load_factor_pct"),
             "inventory_confidence": r.get("inventory_confidence"),

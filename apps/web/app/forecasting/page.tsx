@@ -1,7 +1,7 @@
 import { DataPanel } from "@/components/data-panel";
 import { MetricCard } from "@/components/metric-card";
 import { getForecastingPayload } from "@/lib/api";
-import { formatDhakaDateTime, formatNumber, formatPercent, shortCycle } from "@/lib/format";
+import { formatDhakaDateTime, formatNumber, formatPercent } from "@/lib/format";
 
 type MetricLike = Record<string, unknown>;
 
@@ -200,8 +200,8 @@ export default async function ForecastingPage() {
             <strong>{latestPrediction?.bundle_name ?? "None"}</strong>
           </div>
           <div className="forecast-inline-stat">
-            <span>Cycle stamp</span>
-            <strong>{shortCycle(latestPrediction?.stamp ?? null)}</strong>
+            <span>Updated</span>
+            <strong>{latestPrediction?.modified_at_utc ? formatDhakaDateTime(latestPrediction.modified_at_utc) : "Not available"}</strong>
           </div>
           <div className="forecast-inline-stat">
             <span>Source</span>
@@ -282,7 +282,7 @@ export default async function ForecastingPage() {
                   <span>Forward-looking prediction outputs</span>
                 </div>
                 <div className="pill good">{formatNumber(latestPrediction.next_day.length)}</div>
-                <span>{shortCycle(latestPrediction.stamp)}</span>
+                <span>{latestPrediction.modified_at_utc ? formatDhakaDateTime(latestPrediction.modified_at_utc) : "Not available"}</span>
               </div>
             </div>
           )}

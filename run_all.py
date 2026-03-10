@@ -30,6 +30,7 @@ from db import (
     get_session,
     bulk_insert_raw_meta,
     normalize_raw_meta,
+    infer_via_airports,
 )
 import uuid
 import datetime
@@ -2082,6 +2083,7 @@ def main():
                                     "equipment_code": r.get("equipment_code"),
                                     "duration_min": r.get("duration_min"),
                                     "stops": r.get("stops"),
+                                    "via_airports": r.get("via_airports") or infer_via_airports(r),
                                     "arrival": r.get("arrival"),
                                     "estimated_load_factor_pct": r.get("estimated_load_factor_pct"),
                                     "inventory_confidence": r.get("inventory_confidence") or _inventory_confidence(r),

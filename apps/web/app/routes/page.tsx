@@ -8,7 +8,7 @@ import {
   type RouteMonitorMatrixRoute
 } from "@/lib/api";
 import { buildReportingExportUrl } from "@/lib/export";
-import { formatDhakaDateTime, formatMoney, shortCycle } from "@/lib/format";
+import { formatDhakaDateTime, formatMoney } from "@/lib/format";
 import { buildHref, firstParam, manyParams, parseLimit, setParam, type RawSearchParams } from "@/lib/query";
 
 type PageProps = {
@@ -197,6 +197,7 @@ export default async function RoutesPage({ searchParams }: PageProps) {
   ).size;
   const flightGroupCount = routeBlocks.reduce((sum, route) => sum + route.flight_groups.length, 0);
   const datedRowCount = routeBlocks.reduce((sum, route) => sum + route.date_groups.length, 0);
+  const activeCycle = recentCycleOptions.find((item) => item.cycle_id === (matrix.data?.cycle_id ?? cycleId));
   const exportHref = buildReportingExportUrl(params, ["routes"]);
 
   return (
@@ -211,7 +212,7 @@ export default async function RoutesPage({ searchParams }: PageProps) {
       <div className="grid cards">
         <MetricCard
           label="Cycle"
-          value={shortCycle(matrix.data?.cycle_id ?? cycleId ?? null)}
+          value={activeCycle?.cycle_completed_at_utc ? formatDhakaDateTime(activeCycle.cycle_completed_at_utc) : "Not available"}
           footnote={matrix.ok ? "Latest warehouse-backed route matrix" : "No cycle loaded"}
         />
         <MetricCard label="Route blocks" value={routeBlocks.length.toLocaleString()} footnote={`Limit ${routeLimit.toLocaleString()}`} />

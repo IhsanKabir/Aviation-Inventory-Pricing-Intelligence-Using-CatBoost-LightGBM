@@ -14,7 +14,6 @@ import {
   formatRouteGeo,
   formatRouteType,
   formatRouteTypeDetail,
-  shortCycle,
 } from "@/lib/format";
 import { firstParam, manyParams, parseLimit, type RawSearchParams } from "@/lib/query";
 
@@ -38,12 +37,29 @@ function summarizeNetworkWindow(routes: OperationsRoute[]) {
   return `${sorted[0]} to ${sorted[sorted.length - 1]}`;
 }
 
+function uniqueSorted(values: string[]) {
+  return Array.from(new Set(values.filter(Boolean))).sort();
+}
+
+function summarizeAirportList(values: string[], maxVisible = 3) {
+  const unique = uniqueSorted(values);
+  if (!unique.length) {
+    return "Direct only";
+  }
+  if (unique.length <= maxVisible) {
+    return unique.join(", ");
+  }
+  return `${unique.slice(0, maxVisible).join(", ")} +${unique.length - maxVisible}`;
+}
+
 export default async function OperationsPage({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
   const selectedAirlines = manyParams(params, "airline");
   const selectedRouteTypes = manyParams(params, "route_type");
   const origin = firstParam(params, "origin");
   const destination = firstParam(params, "destination");
+  const selectedViaAirports = manyParams(params, "via_airport");
+  const viaAirport = selectedViaAirports[0];
   const cycleId = firstParam(params, "cycle_id") ?? undefined;
   const startDate = firstParam(params, "start_date") ?? undefined;
   const endDate = firstParam(params, "end_date") ?? undefined;
@@ -60,6 +76,7 @@ export default async function OperationsPage({ searchParams }: PageProps) {
       airlines: selectedAirlines,
       origins: origin ? [origin] : undefined,
       destinations: destination ? [destination] : undefined,
+      viaAirports: selectedViaAirports.length ? selectedViaAirports : undefined,
       routeTypes: selectedRouteTypes,
       startDate,
       endDate,
@@ -80,43 +97,57 @@ export default async function OperationsPage({ searchParams }: PageProps) {
   const cycleOptions = (recentCycles.data?.items ?? [])
     .filter((item) => item.cycle_id)
     .map((item) => ({
-      label: `${shortCycle(item.cycle_id)}${item.cycle_completed_at_utc ? ` | ${formatDhakaDateTime(item.cycle_completed_at_utc)}` : ""}`,
+      label: item.cycle_completed_at_utc ? formatDhakaDateTime(item.cycle_completed_at_utc) : "Latest",
       value: item.cycle_id as string,
     }));
   const exportHref = buildReportingExportUrl(params, ["operations"]);
+  const viaAirportOptions = Array.from(
+    new Set(
+      routeBlocks.flatMap((route) => [
+        ...route.via_airports,
+        ...route.airlines.flatMap((airline) => airline.via_airports),
+      ])
+    )
+  )
+    .sort()
+    .slice(0, 16)
+    .map((code) => ({ label: code, value: code }));
 
   const routeCount = routeBlocks.length;
+  const activeCycle = (recentCycles.data?.items ?? []).find((item) => item.cycle_id === (operations.data?.cycle_id ?? cycleId));
   const airlineCount = new Set(routeBlocks.flatMap((route) => route.airlines.map((item) => item.airline))).size;
   const flightInstanceCount = routeBlocks.reduce((sum, route) => sum + route.flight_instance_count, 0);
   const activeDateCount = routeBlocks.reduce((sum, route) => sum + route.active_date_count, 0);
+  const transitAirportCount = viaAirportOptions.length;
 
   return (
     <>
       <h1 className="page-title">Airline Operations</h1>
       <p className="page-copy">
         Route-level operating pattern review across airlines. This page focuses on who is flying, how often they
-        are flying, when they depart, and whether the operation footprint is expanding or narrowing across recent cycles.
+        are flying, when they depart, and whether the operation footprint is expanding or narrowing across recent cycles,
+        including the actual transit airports used in connecting service.
       </p>
 
       <div className="grid cards">
         <MetricCard
           label="Cycle"
-          value={shortCycle(operations.data?.cycle_id ?? cycleId ?? null)}
+          value={activeCycle?.cycle_completed_at_utc ? formatDhakaDateTime(activeCycle.cycle_completed_at_utc) : "Not available"}
           footnote={operations.ok ? "Latest warehouse-backed operations slice" : "No cycle loaded"}
         />
         <MetricCard label="Routes" value={routeCount.toLocaleString()} footnote={`Route block limit ${routeLimit.toLocaleString()}`} />
         <MetricCard label="Airlines" value={airlineCount.toLocaleString()} footnote={`${flightInstanceCount.toLocaleString()} visible departures`} />
-        <MetricCard label="Network window" value={summarizeNetworkWindow(routeBlocks)} footnote={`${activeDateCount.toLocaleString()} departure dates in scope`} />
+        <MetricCard label="Transit airports" value={transitAirportCount.toLocaleString()} footnote={`${summarizeNetworkWindow(routeBlocks)} network window | ${activeDateCount.toLocaleString()} departure dates`} />
       </div>
 
       <div className="stack">
         <DataPanel
           title="Operations filters"
-          copy="Use the same shared route and airline controls here, then narrow by cycle, route type, or departure-date window."
+          copy="Use the shared route and airline controls here, then narrow by cycle, route type, departure-date window, or one or more transit airports."
         >
           <LiveFilterControls
             airlineOptions={airlineOptions}
-            clearKeys={["airline", "origin", "destination", "route_type", "cycle_id", "start_date", "end_date", "route_limit", "trend_limit"]}
+            clearKeys={["airline", "origin", "destination", "via_airport", "route_type", "cycle_id", "start_date", "end_date", "route_limit", "trend_limit"]}
             extraGroups={[
               ...(cycleOptions.length
                 ? [
@@ -126,6 +157,17 @@ export default async function OperationsPage({ searchParams }: PageProps) {
                       selected: cycleId ? [cycleId] : [],
                       options: cycleOptions,
                       multi: false,
+                    },
+                  ]
+                : []),
+              ...(viaAirportOptions.length
+                ? [
+                    {
+                      key: "via_airport",
+                      label: "Via airport",
+                      selected: selectedViaAirports,
+                      options: viaAirportOptions,
+                      multi: true,
                     },
                   ]
                 : []),
@@ -143,6 +185,7 @@ export default async function OperationsPage({ searchParams }: PageProps) {
             initialValues={{
               origin: origin ?? "",
               destination: destination ?? "",
+              via_airport: viaAirport ?? "",
               start_date: startDate ?? "",
               end_date: endDate ?? "",
               route_limit: String(routeLimit),
@@ -151,6 +194,7 @@ export default async function OperationsPage({ searchParams }: PageProps) {
             manualFields={[
               { name: "origin", label: "Origin", placeholder: "DAC" },
               { name: "destination", label: "Destination", placeholder: "DXB" },
+              { name: "via_airport", label: "Via airport", placeholder: "AUH" },
               { name: "start_date", label: "Start date", type: "date" },
               { name: "end_date", label: "End date", type: "date" },
               { name: "route_limit", label: "Route blocks", inputMode: "numeric", pattern: "[0-9]*" },
@@ -210,6 +254,22 @@ export default async function OperationsPage({ searchParams }: PageProps) {
                   <strong>{route.first_departure_time ?? "-"}</strong>
                   <small>{route.last_departure_time ?? "-"}</small>
                 </div>
+                <div className="card operations-stat">
+                  <span>Transit footprint</span>
+                  <strong>{route.service_patterns.join(", ") || "-"}</strong>
+                  <small>{route.via_airports.length ? `Via ${summarizeAirportList(route.via_airports, 4)}` : "Direct vs connecting pattern in current scope"}</small>
+                  <div className="operations-airport-list">
+                    {route.via_airports.length ? (
+                      uniqueSorted(route.via_airports).map((code) => (
+                        <span className="operations-airport-chip" key={`${route.route_key}-${code}`}>
+                          {code}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="operations-direct-chip">Direct only</span>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <div className="section-grid operations-grid">
@@ -219,9 +279,20 @@ export default async function OperationsPage({ searchParams }: PageProps) {
                     <div className="table-row" key={`${route.route_key}-${airline.airline}`}>
                       <div>
                         <strong>{airline.airline}</strong>
-                        <span>
-                          {airline.departure_times.join(", ") || "-"} | Flights: {airline.flight_numbers.join(", ") || "-"}
+                        <span className="operations-airline-meta">
+                          {airline.departure_times.join(", ") || "-"} | Flights: {airline.flight_numbers.join(", ") || "-"} | Transit: {airline.service_patterns.join(", ") || "-"}
                         </span>
+                        <div className="operations-airport-list">
+                          {airline.via_airports.length ? (
+                            uniqueSorted(airline.via_airports).map((code) => (
+                              <span className="operations-airport-chip" key={`${route.route_key}-${airline.airline}-${code}`}>
+                                {code}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="operations-direct-chip">Direct only</span>
+                          )}
+                        </div>
                       </div>
                       <div className="pill good">{airline.flight_instance_count.toLocaleString()} deps</div>
                       <span>{airline.active_date_count.toLocaleString()} days</span>
@@ -272,8 +343,7 @@ export default async function OperationsPage({ searchParams }: PageProps) {
                   <table className="data-table">
                     <thead>
                       <tr>
-                        <th>Cycle</th>
-                        <th>Completed</th>
+                        <th>Snapshot time</th>
                         <th>Airlines</th>
                         <th>Departures</th>
                         <th>Active dates</th>
@@ -283,7 +353,6 @@ export default async function OperationsPage({ searchParams }: PageProps) {
                     <tbody>
                       {route.timeline.map((point) => (
                         <tr key={`${route.route_key}-${point.cycle_id}`}>
-                          <td>{shortCycle(point.cycle_id)}</td>
                           <td>{formatDhakaDateTime(point.cycle_completed_at_utc)}</td>
                           <td>{point.airline_count?.toLocaleString() ?? "-"}</td>
                           <td>{point.flight_instance_count.toLocaleString()}</td>

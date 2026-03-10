@@ -199,6 +199,8 @@ export type OperationsAirlineRow = {
   last_departure_time?: string | null;
   departure_times: string[];
   flight_numbers: string[];
+  service_patterns: string[];
+  via_airports: string[];
   weekday_profile: OperationsWeekdayProfile[];
   timeline: OperationsTimelinePoint[];
 };
@@ -228,6 +230,8 @@ export type OperationsRoute = {
   first_departure_time?: string | null;
   last_departure_time?: string | null;
   departure_times: string[];
+  service_patterns: string[];
+  via_airports: string[];
   departure_days: OperationsDepartureDay[];
   weekday_profile: OperationsWeekdayProfile[];
   airlines: OperationsAirlineRow[];
@@ -669,6 +673,7 @@ export async function getRouteMonitorMatrixPayload(
 export async function getAirlineOperationsPayload(
   query: SnapshotQuery & {
     routeTypes?: string[];
+    viaAirports?: string[];
     startDate?: string;
     endDate?: string;
     routeLimit?: number;
@@ -681,6 +686,7 @@ export async function getAirlineOperationsPayload(
       airline: query.airlines,
       origin: query.origins,
       destination: query.destinations,
+      via_airport: query.viaAirports,
       route_type: query.routeTypes,
       start_date: query.startDate,
       end_date: query.endDate,

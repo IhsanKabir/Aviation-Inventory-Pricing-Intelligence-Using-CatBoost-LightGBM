@@ -31,6 +31,7 @@ PREDICTION_BACKTEST_EVAL_RE = re.compile(r"^prediction_backtest_eval_(?P<target>
 ROUTE_TYPE_DOM = "DOM"
 ROUTE_TYPE_INT = "INT"
 ROUTE_TYPE_UNK = "UNK"
+AIRPORT_CODE_RE = re.compile(r"^[A-Z]{3}$")
 WEEKDAY_ORDER = [
     "Monday",
     "Tuesday",
@@ -167,6 +168,23 @@ def _weekday_sort_key(label: str) -> tuple[int, str]:
         return (WEEKDAY_ORDER.index(label), label)
     except ValueError:
         return (len(WEEKDAY_ORDER), label)
+
+
+def _stops_label(value: Any) -> str:
+    try:
+        normalized = int(value)
+    except (TypeError, ValueError):
+        return "Unknown"
+    if normalized <= 0:
+        return "Direct"
+    return f"{normalized} stop" if normalized == 1 else f"{normalized} stops"
+
+
+def _split_via_airports(value: Any) -> list[str]:
+    if not value:
+        return []
+    parts = [str(part or "").strip().upper() for part in str(value).replace(",", "|").split("|")]
+    return [part for part in dict.fromkeys(parts) if AIRPORT_CODE_RE.fullmatch(part)]
 
 
 def _display_change_field_name(value: Any) -> str:
@@ -1995,12 +2013,18 @@ def _build_airline_operations_payload(
         weekday_map: dict[str, dict[str, Any]] = {}
         departure_days_map: dict[str, dict[str, Any]] = {}
         airline_map: dict[str, dict[str, Any]] = {}
+        route_stop_counts: dict[str, int] = defaultdict(int)
+        route_via_airports: set[str] = set()
         for row in route_rows:
             dep_date = _iso_date(row.get("departure_date"))
             dep_time = str(row.get("departure_time") or "").strip()
             airline = str(row.get("airline") or "").strip()
             flight_number = str(row.get("flight_number") or "").strip()
             day_label = _departure_day_label(dep_date)
+            stop_label = _stops_label(row.get("stops"))
+            route_stop_counts[stop_label] += 1
+            for via_airport in _split_via_airports(row.get("via_airports")):
+                route_via_airports.add(via_airport)
 
             departure_day = departure_days_map.setdefault(
                 dep_date,
@@ -2040,6 +2064,8 @@ def _build_airline_operations_payload(
                     "flight_numbers": set(),
                     "departure_times": set(),
                     "active_dates": set(),
+                    "stop_counts": defaultdict(int),
+                    "via_airports": set(),
                     "weekday_counts": defaultdict(int),
                     "weekday_dates": defaultdict(set),
                 },
@@ -2050,6 +2076,9 @@ def _build_airline_operations_payload(
                 airline_entry["departure_times"].add(dep_time)
             if dep_date:
                 airline_entry["active_dates"].add(dep_date)
+            airline_entry["stop_counts"][stop_label] += 1
+            for via_airport in _split_via_airports(row.get("via_airports")):
+                airline_entry["via_airports"].add(via_airport)
             airline_entry["weekday_counts"][day_label] += 1
             if dep_date:
                 airline_entry["weekday_dates"][day_label].add(dep_date)
@@ -2060,6 +2089,13 @@ def _build_airline_operations_payload(
             key=lambda item: (_time_sort_key(min(item[1]["departure_times"]) if item[1]["departure_times"] else None), item[0]),
         ):
             departure_times = sorted(entry["departure_times"], key=_time_sort_key)
+            service_patterns = [
+                label
+                for label, _count in sorted(
+                    entry["stop_counts"].items(),
+                    key=lambda item: (0 if item[0] == "Direct" else 1, item[0]),
+                )
+            ]
             weekday_profile = [
                 {
                     "day_label": day_label,
@@ -2098,6 +2134,8 @@ def _build_airline_operations_payload(
                     "last_departure_time": departure_times[-1] if departure_times else None,
                     "departure_times": departure_times,
                     "flight_numbers": sorted(entry["flight_numbers"]),
+                    "service_patterns": service_patterns,
+                    "via_airports": sorted(entry["via_airports"]),
                     "weekday_profile": weekday_profile,
                     "timeline": timeline,
                 }
@@ -2148,6 +2186,13 @@ def _build_airline_operations_payload(
             },
             key=_time_sort_key,
         )
+        route_service_patterns = [
+            label
+            for label, _count in sorted(
+                route_stop_counts.items(),
+                key=lambda item: (0 if item[0] == "Direct" else 1, item[0]),
+            )
+        ]
         route_payloads.append(
             {
                 **dict(route),
@@ -2157,6 +2202,8 @@ def _build_airline_operations_payload(
                 "first_departure_time": route_times[0] if route_times else None,
                 "last_departure_time": route_times[-1] if route_times else None,
                 "departure_times": route_times,
+                "service_patterns": route_service_patterns,
+                "via_airports": sorted(route_via_airports),
                 "departure_days": departure_days,
                 "weekday_profile": weekday_profile,
                 "airlines": airlines_payload,
@@ -2173,6 +2220,7 @@ def _get_airline_operations_from_bigquery(
     airlines: Sequence[str] | None = None,
     origins: Sequence[str] | None = None,
     destinations: Sequence[str] | None = None,
+    via_airports: Sequence[str] | None = None,
     route_types: Sequence[str] | None = None,
     start_date: date | None = None,
     end_date: date | None = None,
@@ -2196,6 +2244,16 @@ def _get_airline_operations_from_bigquery(
     if destinations:
         route_filters.append("destination IN UNNEST(@destinations)")
         route_params.append(bigquery.ArrayQueryParameter("destinations", "STRING", _normalize_codes(destinations)))
+    if via_airports:
+        via_codes = _normalize_codes(via_airports)
+        route_filters.append(
+            "(" + " OR ".join(
+                [
+                    f"REGEXP_CONTAINS(CONCAT('|', IFNULL(via_airports, ''), '|'), r'\\|{code}\\|')"
+                    for code in via_codes
+                ]
+            ) + ")"
+        )
     if start_date:
         route_filters.append("departure_date >= @start_date")
         route_params.append(bigquery.ScalarQueryParameter("start_date", "DATE", start_date))
@@ -2233,6 +2291,16 @@ def _get_airline_operations_from_bigquery(
     if airlines:
         current_filters.append("airline IN UNNEST(@airlines)")
         current_params.append(bigquery.ArrayQueryParameter("airlines", "STRING", _normalize_codes(airlines)))
+    if via_airports:
+        via_codes = _normalize_codes(via_airports)
+        current_filters.append(
+            "(" + " OR ".join(
+                [
+                    f"REGEXP_CONTAINS(CONCAT('|', IFNULL(via_airports, ''), '|'), r'\\|{code}\\|')"
+                    for code in via_codes
+                ]
+            ) + ")"
+        )
     if start_date:
         current_filters.append("departure_date >= @start_date")
         current_params.append(bigquery.ScalarQueryParameter("start_date", "DATE", start_date))
@@ -2254,8 +2322,10 @@ def _get_airline_operations_from_bigquery(
                 flight_number,
                 departure_date,
                 FORMAT_TIMESTAMP('%H:%M', departure_utc) AS departure_time,
+                via_airports,
+                stops,
                 ROW_NUMBER() OVER (
-                  PARTITION BY route_key, airline, flight_number, departure_date, FORMAT_TIMESTAMP('%H:%M', departure_utc)
+                  PARTITION BY route_key, airline, flight_number, departure_date, FORMAT_TIMESTAMP('%H:%M', departure_utc), IFNULL(via_airports, '')
                   ORDER BY captured_at_utc DESC
                 ) AS row_num
               FROM {_bq_table("fact_offer_snapshot")}
@@ -2270,7 +2340,9 @@ def _get_airline_operations_from_bigquery(
               route_key,
               flight_number,
               departure_date,
-              departure_time
+              departure_time,
+              via_airports,
+              stops
             FROM ranked_ops
             WHERE row_num = 1
             ORDER BY route_key, departure_date, departure_time, airline, flight_number
@@ -2299,6 +2371,16 @@ def _get_airline_operations_from_bigquery(
     if airlines:
         trend_base_filters.append("airline IN UNNEST(@airlines)")
         trend_base_params.append(bigquery.ArrayQueryParameter("airlines", "STRING", _normalize_codes(airlines)))
+    if via_airports:
+        via_codes = _normalize_codes(via_airports)
+        trend_base_filters.append(
+            "(" + " OR ".join(
+                [
+                    f"REGEXP_CONTAINS(CONCAT('|', IFNULL(via_airports, ''), '|'), r'\\|{code}\\|')"
+                    for code in via_codes
+                ]
+            ) + ")"
+        )
     if start_date:
         trend_base_filters.append("departure_date >= @start_date")
         trend_base_params.append(bigquery.ScalarQueryParameter("start_date", "DATE", start_date))
@@ -2380,6 +2462,7 @@ def get_airline_operations(
     airlines: Sequence[str] | None = None,
     origins: Sequence[str] | None = None,
     destinations: Sequence[str] | None = None,
+    via_airports: Sequence[str] | None = None,
     route_types: Sequence[str] | None = None,
     start_date: date | None = None,
     end_date: date | None = None,
@@ -2393,6 +2476,7 @@ def get_airline_operations(
                 airlines=airlines,
                 origins=origins,
                 destinations=destinations,
+                via_airports=via_airports,
                 route_types=route_types,
                 start_date=start_date,
                 end_date=end_date,
@@ -2411,6 +2495,15 @@ def get_airline_operations(
     _apply_in_filter(route_clauses, route_params, "fo.airline", airlines, "ops_route_airline")
     _apply_in_filter(route_clauses, route_params, "fo.origin", origins, "ops_route_origin")
     _apply_in_filter(route_clauses, route_params, "fo.destination", destinations, "ops_route_destination")
+    if via_airports:
+        via_codes = _normalize_codes(via_airports)
+        route_clauses.append(
+            "(" + " OR ".join(
+                [f"('|' || COALESCE(frm.via_airports, '') || '|') LIKE :ops_route_via_{idx}" for idx, _code in enumerate(via_codes)]
+            ) + ")"
+        )
+        for idx, code in enumerate(via_codes):
+            route_params[f"ops_route_via_{idx}"] = f"%|{code}|%"
     if start_date:
         route_clauses.append("fo.departure::date >= :start_date")
         route_params["start_date"] = start_date
@@ -2427,6 +2520,8 @@ def get_airline_operations(
               (fo.origin || '-' || fo.destination) AS route_key,
               COUNT(*) AS row_count
             FROM flight_offers fo
+            LEFT JOIN flight_offer_raw_meta frm
+              ON frm.flight_offer_id = fo.id
             WHERE {' AND '.join(route_clauses)}
             GROUP BY fo.origin, fo.destination
             ORDER BY row_count DESC, route_key
@@ -2444,6 +2539,15 @@ def get_airline_operations(
     current_params: dict[str, Any] = {"cycle_id": resolved_cycle_id}
     _apply_in_filter(current_clauses, current_params, "(fo.origin || '-' || fo.destination)", route_keys, "ops_current_route")
     _apply_in_filter(current_clauses, current_params, "fo.airline", airlines, "ops_current_airline")
+    if via_airports:
+        via_codes = _normalize_codes(via_airports)
+        current_clauses.append(
+            "(" + " OR ".join(
+                [f"('|' || COALESCE(frm.via_airports, '') || '|') LIKE :ops_current_via_{idx}" for idx, _code in enumerate(via_codes)]
+            ) + ")"
+        )
+        for idx, code in enumerate(via_codes):
+            current_params[f"ops_current_via_{idx}"] = f"%|{code}|%"
     if start_date:
         current_clauses.append("fo.departure::date >= :start_date")
         current_params["start_date"] = start_date
@@ -2463,14 +2567,17 @@ def get_airline_operations(
               current_ops.route_key,
               current_ops.flight_number,
               current_ops.departure_date,
-              current_ops.departure_time
+              current_ops.departure_time,
+              current_ops.via_airports,
+              current_ops.stops
             FROM (
               SELECT DISTINCT ON (
                 (fo.origin || '-' || fo.destination),
                 fo.airline,
                 fo.flight_number,
                 fo.departure::date,
-                TO_CHAR(fo.departure, 'HH24:MI')
+                TO_CHAR(fo.departure, 'HH24:MI'),
+                COALESCE(frm.via_airports, '')
               )
                 fo.scrape_id::text AS cycle_id,
                 fo.scraped_at AS captured_at_utc,
@@ -2480,8 +2587,12 @@ def get_airline_operations(
                 (fo.origin || '-' || fo.destination) AS route_key,
                 fo.flight_number,
                 fo.departure::date AS departure_date,
-                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time
+                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time,
+                frm.via_airports,
+                COALESCE(frm.stops, 0) AS stops
               FROM flight_offers fo
+              LEFT JOIN flight_offer_raw_meta frm
+                ON frm.flight_offer_id = fo.id
               WHERE {' AND '.join(current_clauses)}
               ORDER BY
                 (fo.origin || '-' || fo.destination),
@@ -2489,6 +2600,7 @@ def get_airline_operations(
                 fo.flight_number,
                 fo.departure::date,
                 TO_CHAR(fo.departure, 'HH24:MI'),
+                COALESCE(frm.via_airports, ''),
                 fo.scraped_at DESC
             ) current_ops
             ORDER BY current_ops.route_key, current_ops.departure_date, current_ops.departure_time, current_ops.airline, current_ops.flight_number
@@ -2515,6 +2627,15 @@ def get_airline_operations(
     _apply_in_filter(trend_clauses, trend_params, "trend_ops.cycle_id", trend_cycle_ids, "ops_trend_cycle", uppercase=False)
     _apply_in_filter(trend_clauses, trend_params, "trend_ops.route_key", route_keys, "ops_trend_route")
     _apply_in_filter(trend_clauses, trend_params, "trend_ops.airline", airlines, "ops_trend_airline")
+    if via_airports:
+        via_codes = _normalize_codes(via_airports)
+        trend_clauses.append(
+            "(" + " OR ".join(
+                [f"('|' || COALESCE(trend_ops.via_airports, '') || '|') LIKE :ops_trend_via_{idx}" for idx, _code in enumerate(via_codes)]
+            ) + ")"
+        )
+        for idx, code in enumerate(via_codes):
+            trend_params[f"ops_trend_via_{idx}"] = f"%|{code}|%"
     if start_date:
         trend_clauses.append("trend_ops.departure_date >= :start_date")
         trend_params["start_date"] = start_date
@@ -2535,8 +2656,11 @@ def get_airline_operations(
                 (fo.origin || '-' || fo.destination) AS route_key,
                 fo.flight_number,
                 fo.departure::date AS departure_date,
-                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time
+                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time,
+                frm.via_airports
               FROM flight_offers fo
+              LEFT JOIN flight_offer_raw_meta frm
+                ON frm.flight_offer_id = fo.id
             )
             SELECT
               trend_ops.cycle_id,
@@ -2568,8 +2692,11 @@ def get_airline_operations(
                 (fo.origin || '-' || fo.destination) AS route_key,
                 fo.flight_number,
                 fo.departure::date AS departure_date,
-                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time
+                TO_CHAR(fo.departure, 'HH24:MI') AS departure_time,
+                frm.via_airports
               FROM flight_offers fo
+              LEFT JOIN flight_offer_raw_meta frm
+                ON frm.flight_offer_id = fo.id
             )
             SELECT
               trend_ops.cycle_id,

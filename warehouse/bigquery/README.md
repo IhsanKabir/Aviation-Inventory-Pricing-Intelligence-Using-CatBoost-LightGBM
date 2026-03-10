@@ -54,6 +54,7 @@ Source of truth for export layout:
 
 - [sql/bigquery/create_analytics_tables.sql](../../sql/bigquery/create_analytics_tables.sql)
 - [sql/bigquery/create_analytics_views.sql](../../sql/bigquery/create_analytics_views.sql)
+- [sql/bigquery/alter_aviation_intel_live_schema.sql](../../sql/bigquery/alter_aviation_intel_live_schema.sql)
 - [sql/bigquery/create_aviation_intel_dataset.sql](../../sql/bigquery/create_aviation_intel_dataset.sql)
 - [sql/bigquery/create_aviation_intel_tables.sql](../../sql/bigquery/create_aviation_intel_tables.sql)
 - [sql/bigquery/create_aviation_intel_looker_views.sql](../../sql/bigquery/create_aviation_intel_looker_views.sql)
@@ -89,3 +90,44 @@ Source of truth for export layout:
 ## Schema Note
 
 If `fact_offer_snapshot` already exists in BigQuery, add the new round-trip columns before the next append load or rerun the bootstrap SQL against a fresh table set. The canonical schema is in [sql/bigquery/create_aviation_intel_tables.sql](../../sql/bigquery/create_aviation_intel_tables.sql).
+
+For a live additive patch, run [sql/bigquery/alter_aviation_intel_live_schema.sql](../../sql/bigquery/alter_aviation_intel_live_schema.sql) first. It covers:
+
+- round-trip route-monitor columns on `fact_offer_snapshot`
+- `via_airports` on `fact_offer_snapshot`
+- forecast bundle flags that older live tables may still be missing
+
+## Live Reload Path
+
+For the current production dataset:
+
+1. Open BigQuery SQL workspace and run [sql/bigquery/alter_aviation_intel_live_schema.sql](../../sql/bigquery/alter_aviation_intel_live_schema.sql)
+2. Reload the recent window with the loader helper:
+
+```powershell
+.\tools\load_bigquery_latest.ps1 -CredentialsJson "C:\path\to\aero-pulse-bq-loader.json" -StartDate 2026-03-03 -EndDate 2026-03-10
+```
+
+3. Validate the new column has data:
+
+```sql
+SELECT
+  COUNTIF(via_airports IS NOT NULL AND via_airports != '') AS rows_with_via_airports,
+  COUNTIF(search_trip_type = 'RT') AS round_trip_rows
+FROM `aeropulseintelligence.aviation_intel.fact_offer_snapshot`;
+```
+
+4. Validate hosted operations reads:
+
+```sql
+SELECT
+  route_key,
+  airline,
+  via_airports,
+  stops,
+  departure_date
+FROM `aeropulseintelligence.aviation_intel.fact_offer_snapshot`
+WHERE via_airports IS NOT NULL
+ORDER BY captured_at_utc DESC
+LIMIT 50;
+```

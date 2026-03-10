@@ -3,7 +3,7 @@ import { DataPanel } from "@/components/data-panel";
 import { MetricCard } from "@/components/metric-card";
 import { getAirlines, getPenaltyPayload, getRecentCycles, getRoutes } from "@/lib/api";
 import { buildReportingExportUrl } from "@/lib/export";
-import { formatBooleanFlag, formatDhakaDateTime, formatMoney, formatRouteGeo, formatRouteType, normalizeLongText, shortCycle, summarizePenaltyText } from "@/lib/format";
+import { formatBooleanFlag, formatDhakaDateTime, formatMoney, formatRouteGeo, formatRouteType, normalizeLongText, summarizePenaltyText } from "@/lib/format";
 import { firstParam, manyParams, parseLimit, type RawSearchParams } from "@/lib/query";
 
 type PageProps = {
@@ -35,8 +35,8 @@ export default async function PenaltiesPage({ searchParams }: PageProps) {
       airlines: selectedAirlines,
       origins: origin ? [origin] : undefined,
       destinations: destination ? [destination] : undefined,
-      limit
-    })
+      limit,
+    }),
   ]);
 
   const rows = penalties.data?.rows ?? [];
@@ -51,9 +51,10 @@ export default async function PenaltiesPage({ searchParams }: PageProps) {
   const cycleOptions = (recentCycles.data?.items ?? [])
     .filter((item) => item.cycle_id)
     .map((item) => ({
-      label: `${shortCycle(item.cycle_id)}${item.cycle_completed_at_utc ? ` · ${formatDhakaDateTime(item.cycle_completed_at_utc)}` : ""}`,
-      value: item.cycle_id as string
+      label: item.cycle_completed_at_utc ? formatDhakaDateTime(item.cycle_completed_at_utc) : "Latest",
+      value: item.cycle_id as string,
     }));
+  const activeCycle = (recentCycles.data?.items ?? []).find((item) => item.cycle_id === (penalties.data?.cycle_id ?? cycleId));
 
   const airlineCount = new Set(rows.map((row) => row.airline)).size;
   const routeCount = new Set(rows.map((row) => row.route_key)).size;
@@ -71,7 +72,7 @@ export default async function PenaltiesPage({ searchParams }: PageProps) {
       <div className="grid cards">
         <MetricCard
           label="Cycle"
-          value={shortCycle(penalties.data?.cycle_id ?? cycleId ?? null)}
+          value={activeCycle?.cycle_completed_at_utc ? formatDhakaDateTime(activeCycle.cycle_completed_at_utc) : "Not available"}
           footnote={penalties.ok ? "Latest warehouse-backed penalty slice" : "No cycle loaded"}
         />
         <MetricCard label="Penalty rows" value={rows.length.toLocaleString()} footnote={`Limit ${limit.toLocaleString()}`} />
@@ -95,20 +96,20 @@ export default async function PenaltiesPage({ searchParams }: PageProps) {
                       label: "Recent cycles",
                       selected: cycleId ? [cycleId] : [],
                       options: cycleOptions,
-                      multi: false
-                    }
+                      multi: false,
+                    },
                   ]
                 : []
             }
             initialValues={{
               origin: origin ?? "",
               destination: destination ?? "",
-              limit: String(limit)
+              limit: String(limit),
             }}
             manualFields={[
               { name: "origin", label: "Origin", placeholder: "DAC" },
               { name: "destination", label: "Destination", placeholder: "RUH" },
-              { name: "limit", label: "Row limit", inputMode: "numeric", pattern: "[0-9]*" }
+              { name: "limit", label: "Row limit", inputMode: "numeric", pattern: "[0-9]*" },
             ]}
             routeOptions={routeOptions}
             selectedAirlines={selectedAirlines}

@@ -29,6 +29,7 @@ class FlightOfferRawMetaORM(Base):
     equipment_code = Column(String)
     duration_min = Column(Integer)
     stops = Column(Integer)
+    via_airports = Column(String)
     arrival = Column(DateTime)
 
     estimated_load_factor_pct = Column(Numeric(5, 2))

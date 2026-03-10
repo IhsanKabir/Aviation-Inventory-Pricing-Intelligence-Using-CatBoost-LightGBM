@@ -94,6 +94,16 @@ Direct from script:
 .\.venv\Scripts\python.exe tools\export_bigquery_stage.py --output-dir output\warehouse\bigquery --start-date 2026-03-01 --end-date 2026-03-08 --load-bigquery --project-id aeropulseintelligence --dataset aviation_intel
 ```
 
+If the dataset already exists and you are applying new additive columns to a live table set, run this first:
+
+1. [sql/bigquery/alter_aviation_intel_live_schema.sql](../../sql/bigquery/alter_aviation_intel_live_schema.sql)
+
+Current live patch coverage:
+
+- `fact_offer_snapshot.via_airports`
+- round-trip route-monitor fields on `fact_offer_snapshot`
+- forecast bundle flags on `fact_forecast_bundle`
+
 ## Step 9: Validate warehouse tables
 
 Minimum checks:
@@ -123,6 +133,29 @@ Minimum checks:
    - `vw_forecast_next_day_latest`
    - `vw_backtest_eval_latest`
    - `vw_backtest_route_winner_latest`
+
+Additional current checks for the via-airport rollout:
+
+```sql
+SELECT
+  COUNTIF(via_airports IS NOT NULL AND via_airports != '') AS rows_with_via_airports,
+  COUNTIF(search_trip_type = 'RT') AS round_trip_rows
+FROM `aeropulseintelligence.aviation_intel.fact_offer_snapshot`;
+```
+
+```sql
+SELECT
+  route_key,
+  airline,
+  via_airports,
+  stops,
+  departure_date,
+  captured_at_utc
+FROM `aeropulseintelligence.aviation_intel.fact_offer_snapshot`
+WHERE via_airports IS NOT NULL
+ORDER BY captured_at_utc DESC
+LIMIT 50;
+```
 
 ## Step 10: Connect Looker Studio
 
@@ -163,6 +196,19 @@ Default behavior after this integration:
 - if `BIGQUERY_PROJECT_ID` and `BIGQUERY_DATASET` are configured, successful pipeline runs also refresh BigQuery
 - the sync window is recent UTC capture dates, not just the single latest cycle id
 - manual `tools/export_bigquery_stage.py --load-bigquery ...` remains available for backfills
+
+## Current production reload path
+
+Use this exact sequence for the live `aeropulseintelligence.aviation_intel` dataset:
+
+1. Run [sql/bigquery/alter_aviation_intel_live_schema.sql](../../sql/bigquery/alter_aviation_intel_live_schema.sql)
+2. Reload the recent window:
+
+```powershell
+.\tools\load_bigquery_latest.ps1 -CredentialsJson "C:\path\to\aero-pulse-bq-loader.json" -StartDate 2026-03-03 -EndDate 2026-03-10
+```
+
+3. Refresh the hosted web/API after the load completes
 
 ## Hosted API note
 

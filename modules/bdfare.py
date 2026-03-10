@@ -263,6 +263,13 @@ def _normalize_row(
         stops = 0 if first_stop == "NS" else max(1, len(info.get("layoverAirports") or []))
     else:
         stops = max(0, len(info.get("layoverAirports") or []))
+    via_airports = list(
+        dict.fromkeys(
+            str(item.get("code") if isinstance(item, dict) else item or "").upper().strip()
+            for item in (info.get("layoverAirports") or [])
+            if str(item.get("code") if isinstance(item, dict) else item or "").upper().strip()
+        )
+    )
 
     row: Dict[str, Any] = {
         "airline": str(info.get("airlineCode") or "").upper().strip(),
@@ -281,6 +288,7 @@ def _normalize_row(
         "currency": str(info.get("currency") or "BDT"),
         "duration_min": _safe_int(info.get("duration")) or _parse_duration_min(s0.get("journeyDuration")),
         "stops": stops,
+        "via_airports": "|".join(via_airports) if via_airports else None,
         "booking_class": str(info.get("productClass") or "").strip() or None,
         "baggage": None,
         "equipment_code": None,
@@ -335,6 +343,7 @@ def _dedupe_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             r.get("fare_basis"),
             r.get("brand"),
             r.get("fare_ref_num"),
+            r.get("via_airports"),
         )
         if key in seen:
             continue

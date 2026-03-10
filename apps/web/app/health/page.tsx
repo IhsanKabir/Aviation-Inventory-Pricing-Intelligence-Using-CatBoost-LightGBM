@@ -1,7 +1,7 @@
 import { DataPanel } from "@/components/data-panel";
 import { MetricCard } from "@/components/metric-card";
 import { getApiBaseUrl, getCycleHealth } from "@/lib/api";
-import { formatDhakaDateTime, formatNumber, formatPercent, shortCycle } from "@/lib/format";
+import { formatDhakaDateTime, formatNumber, formatPercent } from "@/lib/format";
 
 export default async function HealthPage() {
   const result = await getCycleHealth();
@@ -19,7 +19,7 @@ export default async function HealthPage() {
   const runRowsContext = !runStatus
     ? "No latest run status file"
     : !runMatchesLatestCycle
-      ? `Status file belongs to ${shortCycle(runStatus.cycle_id ?? null)}, not the latest cycle`
+      ? "Status file belongs to an older cycle, not the latest cycle"
       : "Accumulated row count from latest aligned run status";
 
   return (
@@ -33,8 +33,8 @@ export default async function HealthPage() {
       <div className="grid cards">
         <MetricCard
           label="Cycle"
-          value={shortCycle(data?.cycle_id ?? null)}
-          footnote={data?.cycle_completed_at_utc ? formatDhakaDateTime(data.cycle_completed_at_utc) : "No cycle available"}
+          value={data?.cycle_completed_at_utc ? formatDhakaDateTime(data.cycle_completed_at_utc) : "Not available"}
+          footnote={data?.cycle_completed_at_utc ? "Latest completed operational cycle" : "No cycle available"}
         />
         <MetricCard
           label="Age"

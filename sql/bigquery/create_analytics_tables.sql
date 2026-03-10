@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `__PROJECT_ID__.__DATASET__.fact_offer_snapshot` (
   aircraft STRING,
   duration_min INT64,
   stops INT64,
+  via_airports STRING,
   soldout BOOL,
   penalty_source STRING,
   search_trip_type STRING,

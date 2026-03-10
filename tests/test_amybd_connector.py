@@ -149,6 +149,82 @@ class AmybdConnectorTests(unittest.TestCase):
 
     @patch("modules.amybd.Requester")
     @patch.dict(os.environ, {"AMYBD_TOKEN": "", "AMYBD_DISABLE_DEFAULT_TOKEN": "1"}, clear=False)
+    def test_populates_via_airports_from_multileg_trip(self, mock_requester_cls):
+        requester = MagicMock()
+        requester.timeout = 30
+        requester.session = MagicMock()
+        mock_requester_cls.return_value = requester
+
+        body = {
+            "success": True,
+            "message": "",
+            "SearchID": 128465999,
+            "Trips": [
+                {
+                    "stAirline": "USBANGLA",
+                    "stAirCode": "BS",
+                    "fNo": "BS 341",
+                    "fFrom": "DAC",
+                    "fDest": "DXB",
+                    "fDTime": "2026-03-27T06:15:00",
+                    "fATime": "2026-03-27T14:10:00",
+                    "fDursec": 475,
+                    "fModel": "Boeing 737-800",
+                    "fBag": "Baggage: 20 kg",
+                    "fClsNam": "E",
+                    "fCabin": "Y",
+                    "fFare": 24749,
+                    "fTBFare": 18524,
+                    "fSeat": "4",
+                    "fRefund": "",
+                    "fSoft": "x-soft-via",
+                    "fAMYid": 1772375634999,
+                    "search_id": "6b6040e8-999e-4523-b7df-7efd3e4183fe",
+                    "csource": "BD",
+                    "fLegs": [
+                        {
+                            "DTime": "2026-03-27T06:15:00",
+                            "ATime": "2026-03-27T10:10:00",
+                            "xFrom": "DAC",
+                            "xDest": "AUH",
+                            "xACode": "BS",
+                            "xFlight": "341",
+                            "xClass": "E",
+                            "xDur": 235,
+                        },
+                        {
+                            "DTime": "2026-03-27T11:40:00",
+                            "ATime": "2026-03-27T14:10:00",
+                            "xFrom": "AUH",
+                            "xDest": "DXB",
+                            "xACode": "BS",
+                            "xFlight": "341",
+                            "xClass": "E",
+                            "xDur": 150,
+                        },
+                    ],
+                }
+            ],
+        }
+
+        requester.session.post.side_effect = lambda url, data=None, headers=None, timeout=None: _DummyResp(200, body)  # noqa: ARG005
+
+        out = fetch_flights_for_airline(
+            airline_code="BS",
+            origin="DAC",
+            destination="DXB",
+            date="2026-03-27",
+            cabin="Economy",
+            adt=1,
+            chd=0,
+            inf=0,
+        )
+
+        self.assertTrue(out["ok"])
+        self.assertEqual("AUH", out["rows"][0]["via_airports"])
+
+    @patch("modules.amybd.Requester")
+    @patch.dict(os.environ, {"AMYBD_TOKEN": "", "AMYBD_DISABLE_DEFAULT_TOKEN": "1"}, clear=False)
     def test_falls_back_to_flightsearchopen_when_primary_not_ok(self, mock_requester_cls):
         requester = MagicMock()
         requester.timeout = 30
