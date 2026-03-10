@@ -221,6 +221,22 @@ function flightLegLabel(flight: RouteMonitorFlightGroup) {
   return direction;
 }
 
+function routeHasSeatData(route: RouteMonitorMatrixRoute) {
+  return route.date_groups.some((dateGroup) =>
+    dateGroup.captures.some((capture) =>
+      capture.cells.some((cell) => cell.seat_available != null || cell.seat_capacity != null)
+    )
+  );
+}
+
+function routeHasLoadData(route: RouteMonitorMatrixRoute) {
+  return route.date_groups.some((dateGroup) =>
+    dateGroup.captures.some((capture) =>
+      capture.cells.some((cell) => cell.load_factor_pct != null)
+    )
+  );
+}
+
 export function RouteMonitorMatrix({
   payload,
   initialAirlines = []
@@ -285,9 +301,19 @@ export function RouteMonitorMatrix({
           return null;
         }
 
+        const activeFlightIds = new Set(
+          dateGroups.flatMap((dateGroup) =>
+            dateGroup.captures.flatMap((capture) => capture.cells.map((cell) => cell.flight_group_id))
+          )
+        );
+        const activeFlightGroups = sortedFlightGroups.filter((item) => activeFlightIds.has(item.flight_group_id));
+        if (activeFlightGroups.length === 0) {
+          return null;
+        }
+
         return {
           ...route,
-          flight_groups: sortedFlightGroups,
+          flight_groups: activeFlightGroups,
           date_groups: dateGroups
         };
       })
@@ -337,26 +363,6 @@ export function RouteMonitorMatrix({
         })
       }))
       .sort((left, right) => left.key.localeCompare(right.key));
-  }, [visibleRoutes]);
-
-  const showSeatColumn = useMemo(() => {
-    return visibleRoutes.some((route) =>
-      route.date_groups.some((dateGroup) =>
-        dateGroup.captures.some((capture) =>
-          capture.cells.some((cell) => cell.seat_available != null || cell.seat_capacity != null)
-        )
-      )
-    );
-  }, [visibleRoutes]);
-
-  const showLoadColumn = useMemo(() => {
-    return visibleRoutes.some((route) =>
-      route.date_groups.some((dateGroup) =>
-        dateGroup.captures.some((capture) =>
-          capture.cells.some((cell) => cell.load_factor_pct != null)
-        )
-      )
-    );
   }, [visibleRoutes]);
 
   const signalCounts = useMemo(() => {
@@ -505,6 +511,8 @@ export function RouteMonitorMatrix({
                 <div className="route-report-stack nested">
                   {section.routes.map((route) => {
                     const leader = routeLeader(route, route.flight_groups);
+                    const showSeatColumn = routeHasSeatData(route);
+                    const showLoadColumn = routeHasLoadData(route);
                     return (
                       <section className="route-report-block" key={`${section.key}-${route.route_key}`}>
                         <div className="route-report-title-row">

@@ -243,8 +243,7 @@ export default async function RoutesPage({ searchParams }: PageProps) {
                     href={buildHref(setParam(params, "cycle_id", item.cycle_id ?? undefined))}
                     key={item.cycle_id ?? "latest-cycle"}
                   >
-                    {shortCycle(item.cycle_id)}
-                    {item.cycle_completed_at_utc ? ` · ${formatDhakaDateTime(item.cycle_completed_at_utc)}` : ""}
+                    {item.cycle_completed_at_utc ? formatDhakaDateTime(item.cycle_completed_at_utc) : "Latest"}
                   </a>
                 ))}
               </div>
