@@ -106,6 +106,7 @@ export type RouteMonitorMatrixCell = {
   min_total_price_bdt?: number | null;
   max_total_price_bdt?: number | null;
   tax_amount?: number | null;
+  booking_class?: string | null;
   seat_available?: number | null;
   seat_capacity?: number | null;
   load_factor_pct?: number | null;

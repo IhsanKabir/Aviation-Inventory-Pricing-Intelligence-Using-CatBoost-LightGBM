@@ -1171,6 +1171,35 @@ a {
   font-weight: 700;
 }
 
+.fare-cell-stack {
+  display: grid;
+  gap: 2px;
+}
+
+.fare-cell-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fare-cell-meta {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  opacity: 0.82;
+}
+
+.fare-cell-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(16, 35, 59, 0.12);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
 .metric-arrow {
   margin-left: 4px;
   font-weight: 900;

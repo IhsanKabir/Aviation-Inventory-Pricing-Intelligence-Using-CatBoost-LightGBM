@@ -78,8 +78,17 @@ function summarizeCell(cell: RouteMonitorMatrixCell | undefined) {
       maxFare: "\u2014",
       tax: "\u2014",
       seats: "\u2014 / \u2014",
-      load: "\u2014"
+      load: "\u2014",
+      fareMeta: null as string | null
     };
+  }
+
+  const fareMetaParts: string[] = [];
+  if (cell.booking_class) {
+    fareMetaParts.push(`RBD ${cell.booking_class}`);
+  }
+  if (cell.seat_available != null) {
+    fareMetaParts.push(`${cell.seat_available} seat${Number(cell.seat_available) === 1 ? "" : "s"}`);
   }
 
   return {
@@ -90,8 +99,19 @@ function summarizeCell(cell: RouteMonitorMatrixCell | undefined) {
       cell.seat_available != null || cell.seat_capacity != null
         ? `${cell.seat_available ?? "\u2014"} / ${cell.seat_capacity ?? "\u2014"}`
         : "\u2014 / \u2014",
-    load: formatPercent(cell.load_factor_pct)
+    load: formatPercent(cell.load_factor_pct),
+    fareMeta: fareMetaParts.length ? fareMetaParts.join(" · ") : null
   };
+}
+
+function fareSignalTag(signal: SignalKey, soldout?: boolean | null) {
+  if (soldout || signal === "sold_out") {
+    return "SOLD OUT";
+  }
+  if (signal === "new") {
+    return "NEW";
+  }
+  return null;
 }
 
 function routeLeader(route: RouteMonitorMatrixRoute, visibleFlights: RouteMonitorFlightGroup[]) {
@@ -640,8 +660,16 @@ export function RouteMonitorMatrix({
                                             key={`${capture.captured_at_utc}-${flight.flight_group_id}-min`}
                                             style={{ background: theme.cell, color: theme.text }}
                                           >
-                                            <span className="metric-value-text">{summary.minFare}</span>
-                                            {signalArrow(signal) ? <span className={`metric-arrow ${signal}`}>{signalArrow(signal)}</span> : null}
+                                            <div className="fare-cell-stack">
+                                              <div className="fare-cell-main">
+                                                <span className="metric-value-text">{summary.minFare}</span>
+                                                {signalArrow(signal) ? <span className={`metric-arrow ${signal}`}>{signalArrow(signal)}</span> : null}
+                                              </div>
+                                              {summary.fareMeta ? <div className="fare-cell-meta">{summary.fareMeta}</div> : null}
+                                              {fareSignalTag(signal, cell?.soldout) ? (
+                                                <div className="fare-cell-tag">{fareSignalTag(signal, cell?.soldout)}</div>
+                                              ) : null}
+                                            </div>
                                           </td>,
                                           <td
                                             className={`report-cell signal-${signal}`}

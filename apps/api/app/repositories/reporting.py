@@ -1325,17 +1325,18 @@ def _build_route_monitor_matrix_from_aggregates(
                     if captured_at_iso == capture_times[0]:
                         signal_counts[signal] += 1
                     cells.append(
-                        {
-                            "flight_group_id": fgid,
-                            "airline": current_cell.get("airline"),
-                            "min_total_price_bdt": current_cell.get("min_total_price_bdt"),
-                            "max_total_price_bdt": current_cell.get("max_total_price_bdt"),
-                            "tax_amount": current_cell.get("tax_amount"),
-                            "seat_available": current_cell.get("seat_available"),
-                            "seat_capacity": current_cell.get("seat_capacity"),
-                            "load_factor_pct": current_cell.get("load_factor_pct"),
-                            "soldout": current_cell.get("soldout"),
-                            "signal": signal,
+                            {
+                                "flight_group_id": fgid,
+                                "airline": current_cell.get("airline"),
+                                "min_total_price_bdt": current_cell.get("min_total_price_bdt"),
+                                "max_total_price_bdt": current_cell.get("max_total_price_bdt"),
+                                "tax_amount": current_cell.get("tax_amount"),
+                                "booking_class": current_cell.get("booking_class"),
+                                "seat_available": current_cell.get("seat_available"),
+                                "seat_capacity": current_cell.get("seat_capacity"),
+                                "load_factor_pct": current_cell.get("load_factor_pct"),
+                                "soldout": current_cell.get("soldout"),
+                                "signal": signal,
                         }
                     )
                 captures.append(
@@ -1501,6 +1502,7 @@ def _get_route_monitor_matrix_from_bigquery(
               MIN(total_price_bdt) AS min_total_price_bdt,
               MAX(total_price_bdt) AS max_total_price_bdt,
               MAX(tax_amount) AS tax_amount,
+              ARRAY_AGG(booking_class IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
               MIN(seat_available) AS seat_available,
               MAX(seat_capacity) AS seat_capacity,
               MAX(load_factor_pct) AS load_factor_pct,
@@ -1578,6 +1580,7 @@ def _get_route_monitor_matrix_from_bigquery(
               MIN(total_price_bdt) AS min_total_price_bdt,
               MAX(total_price_bdt) AS max_total_price_bdt,
               MAX(tax_amount) AS tax_amount,
+              ARRAY_AGG(booking_class IGNORE NULLS ORDER BY total_price_bdt ASC, seat_available DESC LIMIT 1)[SAFE_OFFSET(0)] AS booking_class,
               MIN(seat_available) AS seat_available,
               MAX(seat_capacity) AS seat_capacity,
               MAX(load_factor_pct) AS load_factor_pct,
@@ -1778,6 +1781,8 @@ def get_route_monitor_matrix(
                 CAST(MIN(fo.price_total_bdt) AS NUMERIC(12, 2)) AS min_total_price_bdt,
                 CAST(MAX(fo.price_total_bdt) AS NUMERIC(12, 2)) AS max_total_price_bdt,
                 CAST(MAX(frm.tax_amount) AS NUMERIC(12, 2)) AS tax_amount,
+                (ARRAY_AGG(frm.booking_class ORDER BY fo.price_total_bdt ASC NULLS LAST, fo.seat_available DESC NULLS LAST)
+                  FILTER (WHERE frm.booking_class IS NOT NULL))[1] AS booking_class,
                 MIN(fo.seat_available) AS seat_available,
                 MAX(fo.seat_capacity) AS seat_capacity,
                 CAST(MAX(frm.estimated_load_factor_pct) AS NUMERIC(6, 2)) AS load_factor_pct,
@@ -1858,6 +1863,8 @@ def get_route_monitor_matrix(
                 CAST(MIN(fo.price_total_bdt) AS NUMERIC(12, 2)) AS min_total_price_bdt,
                 CAST(MAX(fo.price_total_bdt) AS NUMERIC(12, 2)) AS max_total_price_bdt,
                 CAST(MAX(frm.tax_amount) AS NUMERIC(12, 2)) AS tax_amount,
+                (ARRAY_AGG(frm.booking_class ORDER BY fo.price_total_bdt ASC NULLS LAST, fo.seat_available DESC NULLS LAST)
+                  FILTER (WHERE frm.booking_class IS NOT NULL))[1] AS booking_class,
                 MIN(fo.seat_available) AS seat_available,
                 MAX(fo.seat_capacity) AS seat_capacity,
                 CAST(MAX(frm.estimated_load_factor_pct) AS NUMERIC(6, 2)) AS load_factor_pct,
