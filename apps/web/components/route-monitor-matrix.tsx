@@ -79,17 +79,21 @@ function summarizeCell(cell: RouteMonitorMatrixCell | undefined) {
       tax: "\u2014",
       seats: "\u2014 / \u2014",
       load: "\u2014",
-      fareMeta: null as string | null
+      minFareMeta: null as string | null,
+      maxFareMeta: null as string | null
     };
   }
 
-  const fareMetaParts: string[] = [];
-  if (cell.booking_class) {
-    fareMetaParts.push(String(cell.booking_class).trim());
-  }
-  if (cell.seat_available != null) {
-    fareMetaParts.push(`${cell.seat_available} seat${Number(cell.seat_available) === 1 ? "" : "s"}`);
-  }
+  const buildFareMeta = (bookingClass?: string | null, seatAvailable?: number | null) => {
+    const fareMetaParts: string[] = [];
+    if (bookingClass) {
+      fareMetaParts.push(String(bookingClass).trim());
+    }
+    if (seatAvailable != null) {
+      fareMetaParts.push(`${seatAvailable} seat${Number(seatAvailable) === 1 ? "" : "s"}`);
+    }
+    return fareMetaParts.length ? fareMetaParts.join(" | ") : null;
+  };
 
   return {
     minFare: cell.min_total_price_bdt != null ? formatMoney(cell.min_total_price_bdt, "BDT").replace("BDT ", "") : "N/O",
@@ -100,7 +104,8 @@ function summarizeCell(cell: RouteMonitorMatrixCell | undefined) {
         ? `${cell.seat_available ?? "\u2014"} / ${cell.seat_capacity ?? "\u2014"}`
         : "\u2014 / \u2014",
     load: formatPercent(cell.load_factor_pct),
-    fareMeta: fareMetaParts.length ? fareMetaParts.join(" | ") : null
+    minFareMeta: buildFareMeta(cell.min_booking_class ?? cell.booking_class, cell.min_seat_available ?? cell.seat_available),
+    maxFareMeta: buildFareMeta(cell.max_booking_class, cell.max_seat_available)
   };
 }
 
@@ -221,6 +226,19 @@ function flightLegLabel(flight: RouteMonitorFlightGroup) {
   return direction;
 }
 
+function hasRenderableCellData(cell: RouteMonitorMatrixCell) {
+  return (
+    cell.min_total_price_bdt != null ||
+    cell.max_total_price_bdt != null ||
+    cell.tax_amount != null ||
+    cell.booking_class != null ||
+    cell.seat_available != null ||
+    cell.seat_capacity != null ||
+    cell.load_factor_pct != null ||
+    Boolean(cell.soldout)
+  );
+}
+
 function routeHasSeatData(route: RouteMonitorMatrixRoute) {
   return route.date_groups.some((dateGroup) =>
     dateGroup.captures.some((capture) =>
@@ -280,7 +298,9 @@ export function RouteMonitorMatrix({
             const captures = dateGroup.captures
               .map((capture) => ({
                 ...capture,
-                cells: capture.cells.filter((cell) => visibleFlightSet.has(cell.flight_group_id))
+                cells: capture.cells.filter(
+                  (cell) => visibleFlightSet.has(cell.flight_group_id) && hasRenderableCellData(cell)
+                )
               }))
               .filter((capture) => capture.cells.length > 0);
 
@@ -673,7 +693,7 @@ export function RouteMonitorMatrix({
                                                 <span className="metric-value-text">{summary.minFare}</span>
                                                 {signalArrow(signal) ? <span className={`metric-arrow ${signal}`}>{signalArrow(signal)}</span> : null}
                                               </div>
-                                              {summary.fareMeta ? <div className="fare-cell-meta">{summary.fareMeta}</div> : null}
+                                              {summary.minFareMeta ? <div className="fare-cell-meta">{summary.minFareMeta}</div> : null}
                                               {fareSignalTag(signal, cell?.soldout) ? (
                                                 <div className="fare-cell-tag">{fareSignalTag(signal, cell?.soldout)}</div>
                                               ) : null}
@@ -684,7 +704,12 @@ export function RouteMonitorMatrix({
                                             key={`${capture.captured_at_utc}-${flight.flight_group_id}-max`}
                                             style={{ background: theme.cell, color: theme.text }}
                                           >
-                                            {summary.maxFare}
+                                            <div className="fare-cell-stack">
+                                              <div className="fare-cell-main">
+                                                <span className="metric-value-text">{summary.maxFare}</span>
+                                              </div>
+                                              {summary.maxFareMeta ? <div className="fare-cell-meta">{summary.maxFareMeta}</div> : null}
+                                            </div>
                                           </td>,
                                           <td
                                             className="report-cell"
