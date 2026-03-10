@@ -1173,7 +1173,7 @@ a {
 
 .fare-cell-stack {
   display: grid;
-  gap: 2px;
+  gap: 1px;
 }
 
 .fare-cell-main {
@@ -1183,9 +1183,10 @@ a {
 }
 
 .fare-cell-meta {
-  font-size: 0.72rem;
-  line-height: 1.2;
-  opacity: 0.82;
+  font-size: 0.64rem;
+  line-height: 1.05;
+  opacity: 0.72;
+  letter-spacing: 0.01em;
 }
 
 .fare-cell-tag {

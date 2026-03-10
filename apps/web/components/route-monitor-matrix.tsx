@@ -85,7 +85,7 @@ function summarizeCell(cell: RouteMonitorMatrixCell | undefined) {
 
   const fareMetaParts: string[] = [];
   if (cell.booking_class) {
-    fareMetaParts.push(`RBD ${cell.booking_class}`);
+    fareMetaParts.push(String(cell.booking_class).trim());
   }
   if (cell.seat_available != null) {
     fareMetaParts.push(`${cell.seat_available} seat${Number(cell.seat_available) === 1 ? "" : "s"}`);
@@ -100,7 +100,7 @@ function summarizeCell(cell: RouteMonitorMatrixCell | undefined) {
         ? `${cell.seat_available ?? "\u2014"} / ${cell.seat_capacity ?? "\u2014"}`
         : "\u2014 / \u2014",
     load: formatPercent(cell.load_factor_pct),
-    fareMeta: fareMetaParts.length ? fareMetaParts.join(" · ") : null
+    fareMeta: fareMetaParts.length ? fareMetaParts.join(" | ") : null
   };
 }
 

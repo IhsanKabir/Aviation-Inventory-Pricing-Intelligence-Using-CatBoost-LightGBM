@@ -163,7 +163,7 @@ def _fare_display(cell: dict[str, Any] | None) -> str:
     details: list[str] = []
     booking_class = str(cell.get("booking_class") or "").strip()
     if booking_class:
-        details.append(f"RBD {booking_class}")
+        details.append(booking_class)
     if cell.get("seat_available") is not None:
         seats = int(cell.get("seat_available"))
         details.append(f"{seats} seat" if seats == 1 else f"{seats} seats")
@@ -492,10 +492,7 @@ def build_reporting_workbook(
                 route_limit=route_limit,
                 history_limit=history_limit,
             )
-            route_frame = _flatten_route_monitor(route_payload)
             section_row_counts["routes"] = _write_route_monitor_sheet(writer, route_payload)
-            section_row_counts["routes_raw"] = int(len(route_frame))
-            route_frame.to_excel(writer, index=False, sheet_name="Routes Raw")
 
         if "operations" in normalized_sections:
             operations_payload = reporting.get_airline_operations(
@@ -580,28 +577,6 @@ def build_reporting_workbook(
             penalty_frame = _rows_to_frame(penalty_payload.get("rows", []))
             section_row_counts["penalties"] = int(len(penalty_frame))
             penalty_frame.to_excel(writer, index=False, sheet_name="Penalties")
-
-        summary_rows = _metadata_sheet_rows(
-            sections=normalized_sections,
-            cycle_id=cycle_id,
-            airlines=airlines,
-            origins=origins,
-            destinations=destinations,
-            route_types=route_types,
-            trip_types=trip_types,
-            return_date=return_date,
-            cabins=cabins,
-            start_date=start_date,
-            end_date=end_date,
-            domains=domains,
-            change_types=change_types,
-            directions=directions,
-            route_limit=route_limit,
-            history_limit=history_limit,
-            limit=limit,
-            section_row_counts=section_row_counts,
-        )
-        pd.DataFrame(summary_rows).to_excel(writer, index=False, sheet_name="Summary")
 
         if "Sheet" in writer.book.sheetnames and len(writer.book.sheetnames) > 1:
             writer.book.remove(writer.book["Sheet"])
