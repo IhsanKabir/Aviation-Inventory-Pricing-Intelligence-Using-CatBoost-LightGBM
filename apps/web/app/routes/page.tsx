@@ -1,5 +1,6 @@
 import { DataPanel } from "@/components/data-panel";
 import { MetricCard } from "@/components/metric-card";
+import { RouteScopeControls } from "@/components/route-scope-controls";
 import { RouteMonitorMatrix } from "@/components/route-monitor-matrix";
 import {
   getRecentCycles,
@@ -9,9 +10,8 @@ import {
   type RouteDateAvailabilityPoint,
   type RouteMonitorMatrixRoute
 } from "@/lib/api";
-import { buildReportingExportUrl } from "@/lib/export";
 import { formatDhakaDateTime, formatMoney } from "@/lib/format";
-import { buildHref, firstParam, manyParams, parseLimit, setParam, type RawSearchParams } from "@/lib/query";
+import { firstParam, manyParams, parseLimit, type RawSearchParams } from "@/lib/query";
 
 type PageProps = {
   searchParams?: Promise<RawSearchParams>;
@@ -240,8 +240,12 @@ export default async function RoutesPage({ searchParams }: PageProps) {
   const recentCycleOptions = uniqueByKey(recentCycles.data?.items ?? [], (item) => item.cycle_id ?? "");
   const routeOptions = uniqueByKey(routes.data?.items ?? [], (item) => item.route_key)
     .sort((left, right) => (right.offer_rows ?? 0) - (left.offer_rows ?? 0) || left.route_key.localeCompare(right.route_key))
-    .slice(0, 16)
     .map((item) => ({ routeKey: item.route_key, origin: item.origin, destination: item.destination }));
+  const exactRouteExists = Boolean(
+    origin &&
+      destination &&
+      routeOptions.some((item) => item.origin === origin && item.destination === destination)
+  );
 
   const availableAirlineCount = new Set(
     routeBlocks.flatMap((route) => route.flight_groups.map((flight) => flight.airline))
@@ -249,7 +253,6 @@ export default async function RoutesPage({ searchParams }: PageProps) {
   const flightGroupCount = routeBlocks.reduce((sum, route) => sum + route.flight_groups.length, 0);
   const datedRowCount = routeBlocks.reduce((sum, route) => sum + route.date_groups.length, 0);
   const activeCycle = recentCycleOptions.find((item) => item.cycle_id === (matrix.data?.cycle_id ?? cycleId));
-  const exportHref = buildReportingExportUrl(params, ["routes"]);
   const departureDateOptions = availability.data?.departure_dates ?? [];
   const returnDateOptions = availability.data?.return_dates ?? [];
   const returnDateMap = buildDateAvailabilityMap(returnDateOptions);
@@ -306,203 +309,34 @@ export default async function RoutesPage({ searchParams }: PageProps) {
           title="Matrix scope"
           copy="Use route scope controls to load a tighter matrix from the API. Inside the matrix itself, airline and signal toggles behave like the workbook."
         >
-          {recentCycleOptions.length ? (
-            <div className="filter-group">
-              <div className="filter-label">Comparable cycles</div>
-              <div className="chip-row">
-                {recentCycleOptions.map((item) => (
-                  <a
-                    className="chip"
-                    data-active={cycleId === item.cycle_id}
-                    href={buildHref(setParam(params, "cycle_id", item.cycle_id ?? undefined))}
-                    key={item.cycle_id ?? "latest-cycle"}
-                  >
-                    {item.cycle_completed_at_utc ? formatDhakaDateTime(item.cycle_completed_at_utc) : "Latest"}
-                  </a>
-                ))}
-              </div>
-            </div>
-          ) : null}
-          <form className="filter-form" action="/routes">
-            {cycleId ? <input name="cycle_id" type="hidden" value={cycleId} /> : null}
-            <div className="field-grid route-scope-grid">
-              <label className="field">
-                <span>Origin</span>
-                <input defaultValue={origin ?? ""} name="origin" placeholder="DAC" type="text" />
-              </label>
-              <label className="field">
-                <span>Destination</span>
-                <input defaultValue={destination ?? ""} name="destination" placeholder="CXB" type="text" />
-              </label>
-              <label className="field">
-                <span>Cabin</span>
-                <input defaultValue={cabin ?? ""} name="cabin" placeholder="Economy" type="text" />
-              </label>
-              <label className="field">
-                <span>Trip type</span>
-                <select defaultValue={tripType} name="trip_type">
-                  <option value="OW">One-way</option>
-                  <option value="RT">Round-trip</option>
-                </select>
-              </label>
-              {tripType === "RT" ? (
-                <>
-                  <label className="field">
-                    <span>Return scope</span>
-                    <select defaultValue={returnScope} name="return_scope">
-                      <option value="any">Any collected return</option>
-                      <option value="exact">Single return date</option>
-                      <option value="range">Return date range</option>
-                    </select>
-                  </label>
-                  <label className="field">
-                    <span>Return date</span>
-                    <input defaultValue={returnDate ?? ""} name="return_date" type="date" />
-                  </label>
-                  <label className="field">
-                    <span>Return start</span>
-                    <input defaultValue={returnDateStart ?? ""} name="return_date_start" type="date" />
-                  </label>
-                  <label className="field">
-                    <span>Return end</span>
-                    <input defaultValue={returnDateEnd ?? ""} name="return_date_end" type="date" />
-                  </label>
-                </>
-              ) : null}
-              <label className="field">
-                <span>Route blocks</span>
-                <input defaultValue={String(routeLimit)} inputMode="numeric" name="route_limit" pattern="[0-9]*" type="text" />
-              </label>
-              <label className="field">
-                <span>History depth</span>
-                <input defaultValue={String(historyLimit)} inputMode="numeric" name="history_limit" pattern="[0-9]*" type="text" />
-              </label>
-            </div>
-            <div className="button-row">
-              <button className="button-link" type="submit">
-                Reload matrix
-              </button>
-              <a className="button-link ghost" href={exportHref}>
-                Download Excel
-              </a>
-              <a className="button-link ghost" href="/routes">
-                Reset scope
-              </a>
-            </div>
-            <p className="page-copy" style={{ marginTop: "0.25rem" }}>
-              Trip scope: {tripScopeLabel}
-            </p>
-            <div className="route-availability-grid">
-              <div className="filter-group">
-                <div className="filter-label">Collected departure dates</div>
-                {availability.ok ? (
-                  departureDateOptions.length ? (
-                    <div className="chip-row">
-                      {departureDateOptions.map((item) => (
-                        <span className="chip route-date-chip" key={`departure-${item.date}`}>
-                          {item.date} ({item.row_count})
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="empty-state">No collected departure dates for the current scope.</div>
-                  )
-                ) : availabilityEndpointMissing ? (
-                  <div className="empty-state">Date availability is not available on the current API revision yet.</div>
-                ) : (
-                  <div className="empty-state error-state">
-                    Availability error: {availability.error ?? "Unable to inspect collected dates."}
-                  </div>
-                )}
-              </div>
-              {tripType === "RT" ? (
-                <div className="filter-group">
-                  <div className="filter-label">Collected return dates</div>
-                  {availability.ok ? (
-                    returnDateOptions.length ? (
-                      <div className="chip-row">
-                        {returnDateOptions.map((item) => (
-                          <span className="chip route-date-chip" key={`return-${item.date}`}>
-                            {item.date} ({item.row_count})
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="empty-state">No collected round-trip return dates for the current scope.</div>
-                    )
-                  ) : availabilityEndpointMissing ? (
-                    <div className="empty-state">Date availability is not available on the current API revision yet.</div>
-                  ) : (
-                    <div className="empty-state error-state">
-                      Availability error: {availability.error ?? "Unable to inspect collected return dates."}
-                    </div>
-                  )}
-                </div>
-              ) : null}
-            </div>
-            {selectedReturnDateUnavailable ? (
-              <div className="status-banner warn">
-                The selected return date is not currently collected for this route scope and comparable cycle.
-              </div>
-            ) : null}
-            {selectedReturnRangeUnavailable ? (
-              <div className="status-banner warn">
-                The selected return-date range has no collected matches for this route scope and comparable cycle.
-              </div>
-            ) : null}
-            {routeOptions.length ? (
-              <div className="route-hint-row">
-                {routeOptions.map((item) => (
-                  <a
-                    className="route-hint-chip"
-                    href={buildHref(
-                      setParam(
-                        setParam(
-                          setParam(
-                            setParam(
-                              setParam(
-                                setParam(
-                                  setParam(
-                                    setParam(
-                                      {
-                                        origin: item.origin,
-                                        destination: item.destination,
-                                        route_limit: String(routeLimit),
-                                        history_limit: String(historyLimit)
-                                      },
-                                      "cabin",
-                                      cabin ?? undefined
-                                    ),
-                                    "trip_type",
-                                    tripType
-                                  ),
-                                  "return_scope",
-                                  tripType === "RT" ? returnScope : undefined
-                                ),
-                                "return_date",
-                                effectiveReturnDate
-                              ),
-                              "return_date_start",
-                              effectiveReturnDateStart
-                            ),
-                            "return_date_end",
-                            effectiveReturnDateEnd
-                          ),
-                          "cycle_id",
-                          cycleId
-                        ),
-                        "airline",
-                        undefined
-                      )
-                    )}
-                    key={item.routeKey}
-                  >
-                    {item.routeKey}
-                  </a>
-                ))}
-              </div>
-            ) : null}
-          </form>
+          <RouteScopeControls
+            availabilityEndpointMissing={availabilityEndpointMissing}
+            availabilityError={availability.error}
+            availabilityOk={availability.ok}
+            cycleOptions={recentCycleOptions.map((item) => ({
+              cycleId: item.cycle_id ?? null,
+              label: item.cycle_completed_at_utc ? formatDhakaDateTime(item.cycle_completed_at_utc) : "Latest"
+            }))}
+            departureDateOptions={departureDateOptions}
+            initialState={{
+              cycleId: cycleId ?? "",
+              origin: origin ?? "",
+              destination: destination ?? "",
+              cabin: cabin ?? "",
+              tripType,
+              returnScope,
+              returnDate: returnDate ?? "",
+              returnDateStart: returnDateStart ?? "",
+              returnDateEnd: returnDateEnd ?? "",
+              routeLimit: String(routeLimit),
+              historyLimit: String(historyLimit)
+            }}
+            returnDateOptions={returnDateOptions}
+            routeOptions={routeOptions}
+            selectedReturnDateUnavailable={selectedReturnDateUnavailable}
+            selectedReturnRangeUnavailable={selectedReturnRangeUnavailable}
+            tripScopeLabel={tripScopeLabel}
+          />
         </DataPanel>
 
         <DataPanel
@@ -537,7 +371,11 @@ export default async function RoutesPage({ searchParams }: PageProps) {
           {!matrix.ok ? (
             <div className="empty-state error-state">API error: {matrix.error ?? "Unable to load route monitor matrix."}</div>
           ) : routeBlocks.length === 0 ? (
-            <div className="empty-state">No route blocks matched the current scope.</div>
+            <div className="empty-state">
+              {exactRouteExists
+                ? "This route exists, but no route blocks matched the selected comparable cycle, cabin, or trip scope."
+                : "No route blocks matched the current scope."}
+            </div>
           ) : (
             <RouteMonitorMatrix initialAirlines={selectedAirlines} payload={matrix.data!} />
           )}
