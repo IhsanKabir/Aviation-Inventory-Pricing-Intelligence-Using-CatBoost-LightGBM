@@ -494,6 +494,176 @@ def get_recent_cycles(session: Session | None, limit: int = 10, comparable_only:
     return _rows_to_dicts([dict(row) for row in rows])
 
 
+def _serialize_date_count_rows(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+    payload: list[dict[str, Any]] = []
+    for row in rows:
+        normalized_date = _iso_date(row.get("date"))
+        if not normalized_date:
+            continue
+        try:
+            row_count = int(row.get("row_count") or 0)
+        except (TypeError, ValueError):
+            row_count = 0
+        payload.append({"date": normalized_date, "row_count": row_count})
+    return payload
+
+
+def _get_route_date_availability_from_bigquery(
+    cycle_id: str | None = None,
+    airlines: Sequence[str] | None = None,
+    origins: Sequence[str] | None = None,
+    destinations: Sequence[str] | None = None,
+    cabins: Sequence[str] | None = None,
+    trip_types: Sequence[str] | None = None,
+) -> dict[str, Any]:
+    resolved_cycle_id = _resolve_cycle_id_bigquery(cycle_id)
+    if not resolved_cycle_id:
+        return {"cycle_id": None, "departure_dates": [], "return_dates": []}
+
+    filters = ["cycle_id = @cycle_id"]
+    params: list[bigquery.ScalarQueryParameter] = [
+        bigquery.ScalarQueryParameter("cycle_id", "STRING", resolved_cycle_id)
+    ]
+    if airlines:
+        filters.append("airline IN UNNEST(@airlines)")
+        params.append(bigquery.ArrayQueryParameter("airlines", "STRING", _normalize_codes(airlines)))
+    if origins:
+        filters.append("origin IN UNNEST(@origins)")
+        params.append(bigquery.ArrayQueryParameter("origins", "STRING", _normalize_codes(origins)))
+    if destinations:
+        filters.append("destination IN UNNEST(@destinations)")
+        params.append(bigquery.ArrayQueryParameter("destinations", "STRING", _normalize_codes(destinations)))
+    if cabins:
+        filters.append("cabin IN UNNEST(@cabins)")
+        params.append(bigquery.ArrayQueryParameter("cabins", "STRING", _normalize_codes(cabins, uppercase=False)))
+    normalized_trip_types = [value for value in _normalize_codes(trip_types) if value in {"OW", "RT"}]
+    if normalized_trip_types:
+        filters.append("search_trip_type IN UNNEST(@trip_types)")
+        params.append(bigquery.ArrayQueryParameter("trip_types", "STRING", normalized_trip_types))
+
+    where_clause = " AND ".join(filters)
+    departure_rows = _serialize_warehouse_rows(
+        _run_bigquery_query(
+            f"""
+            SELECT
+              departure_date AS date,
+              COUNT(*) AS row_count
+            FROM {_bq_table("fact_offer_snapshot")}
+            WHERE {where_clause}
+              AND departure_date IS NOT NULL
+            GROUP BY departure_date
+            ORDER BY departure_date
+            """,
+            params,
+        )
+    )
+    return_rows = _serialize_warehouse_rows(
+        _run_bigquery_query(
+            f"""
+            SELECT
+              requested_return_date AS date,
+              COUNT(*) AS row_count
+            FROM {_bq_table("fact_offer_snapshot")}
+            WHERE {where_clause}
+              AND requested_return_date IS NOT NULL
+            GROUP BY requested_return_date
+            ORDER BY requested_return_date
+            """,
+            params,
+        )
+    )
+    return {
+        "cycle_id": resolved_cycle_id,
+        "departure_dates": _serialize_date_count_rows(departure_rows),
+        "return_dates": _serialize_date_count_rows(return_rows),
+    }
+
+
+def get_route_date_availability(
+    session: Session | None,
+    cycle_id: str | None = None,
+    airlines: Sequence[str] | None = None,
+    origins: Sequence[str] | None = None,
+    destinations: Sequence[str] | None = None,
+    cabins: Sequence[str] | None = None,
+    trip_types: Sequence[str] | None = None,
+) -> dict[str, Any]:
+    normalized_trip_types = [value for value in _normalize_codes(trip_types) if value in {"OW", "RT"}]
+    if _bigquery_ready():
+        try:
+            return _get_route_date_availability_from_bigquery(
+                cycle_id=cycle_id,
+                airlines=airlines,
+                origins=origins,
+                destinations=destinations,
+                cabins=cabins,
+                trip_types=normalized_trip_types,
+            )
+        except (GoogleAPIError, RuntimeError, ValueError):
+            pass
+    if session is None:
+        return {"cycle_id": None, "departure_dates": [], "return_dates": []}
+
+    resolved_cycle_id = _resolve_cycle_id(session, cycle_id)
+    if not resolved_cycle_id:
+        return {"cycle_id": None, "departure_dates": [], "return_dates": []}
+
+    clauses = ["fo.scrape_id = CAST(:cycle_id AS uuid)"]
+    params: dict[str, Any] = {"cycle_id": resolved_cycle_id}
+    _apply_in_filter(clauses, params, "fo.airline", airlines, "availability_airline")
+    _apply_in_filter(clauses, params, "fo.origin", origins, "availability_origin")
+    _apply_in_filter(clauses, params, "fo.destination", destinations, "availability_destination")
+    _apply_in_filter(clauses, params, "fo.cabin", cabins, "availability_cabin", uppercase=False)
+    if normalized_trip_types:
+        _apply_in_filter(
+            clauses,
+            params,
+            "COALESCE(frm.search_trip_type, 'OW')",
+            normalized_trip_types,
+            "availability_trip_type",
+        )
+
+    where_clause = " AND ".join(clauses)
+    departure_rows = session.execute(
+        text(
+            f"""
+            SELECT
+              fo.departure::date AS date,
+              COUNT(*) AS row_count
+            FROM flight_offers fo
+            LEFT JOIN flight_offer_raw_meta frm
+              ON frm.flight_offer_id = fo.id
+            WHERE {where_clause}
+            GROUP BY fo.departure::date
+            ORDER BY fo.departure::date
+            """
+        ),
+        params,
+    ).mappings().all()
+    return_rows = session.execute(
+        text(
+            f"""
+            SELECT
+              frm.requested_return_date AS date,
+              COUNT(*) AS row_count
+            FROM flight_offers fo
+            LEFT JOIN flight_offer_raw_meta frm
+              ON frm.flight_offer_id = fo.id
+            WHERE {where_clause}
+              AND frm.requested_return_date IS NOT NULL
+            GROUP BY frm.requested_return_date
+            ORDER BY frm.requested_return_date
+            """
+        ),
+        params,
+    ).mappings().all()
+    return {
+        "cycle_id": resolved_cycle_id,
+        "departure_dates": _serialize_date_count_rows(_rows_to_dicts([dict(row) for row in departure_rows])),
+        "return_dates": _serialize_date_count_rows(_rows_to_dicts([dict(row) for row in return_rows])),
+    }
+
+
 def get_health(session: Session | None) -> dict[str, Any]:
     if session is not None:
         session.execute(text("SELECT 1"))

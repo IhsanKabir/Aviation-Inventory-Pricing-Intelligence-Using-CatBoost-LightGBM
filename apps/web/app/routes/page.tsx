@@ -3,8 +3,10 @@ import { MetricCard } from "@/components/metric-card";
 import { RouteMonitorMatrix } from "@/components/route-monitor-matrix";
 import {
   getRecentCycles,
+  getRouteDateAvailabilityPayload,
   getRouteMonitorMatrixPayload,
   getRoutes,
+  type RouteDateAvailabilityPoint,
   type RouteMonitorMatrixRoute
 } from "@/lib/api";
 import { buildReportingExportUrl } from "@/lib/export";
@@ -27,6 +29,10 @@ function uniqueByKey<T>(items: T[], keyFn: (item: T) => string) {
     unique.push(item);
   }
   return unique;
+}
+
+function buildDateAvailabilityMap(items: RouteDateAvailabilityPoint[]) {
+  return new Map(items.map((item) => [item.date, item.row_count]));
 }
 
 function buildRoutePriorityBoard(routes: RouteMonitorMatrixRoute[]) {
@@ -205,7 +211,7 @@ export default async function RoutesPage({ searchParams }: PageProps) {
     effectiveReturnDateEnd
   );
 
-  const [routes, recentCycles, matrix] = await Promise.all([
+  const [routes, recentCycles, matrix, availability] = await Promise.all([
     getRoutes(),
     getRecentCycles(8),
     getRouteMonitorMatrixPayload({
@@ -219,6 +225,13 @@ export default async function RoutesPage({ searchParams }: PageProps) {
       returnDateEnd: effectiveReturnDateEnd,
       routeLimit,
       historyLimit
+    }),
+    getRouteDateAvailabilityPayload({
+      cycleId,
+      origins: origin ? [origin] : undefined,
+      destinations: destination ? [destination] : undefined,
+      cabins: cabin ? [cabin] : undefined,
+      tripTypes: tripType ? [tripType] : undefined
     })
   ]);
 
@@ -237,6 +250,27 @@ export default async function RoutesPage({ searchParams }: PageProps) {
   const datedRowCount = routeBlocks.reduce((sum, route) => sum + route.date_groups.length, 0);
   const activeCycle = recentCycleOptions.find((item) => item.cycle_id === (matrix.data?.cycle_id ?? cycleId));
   const exportHref = buildReportingExportUrl(params, ["routes"]);
+  const departureDateOptions = availability.data?.departure_dates ?? [];
+  const returnDateOptions = availability.data?.return_dates ?? [];
+  const returnDateMap = buildDateAvailabilityMap(returnDateOptions);
+  const selectedReturnDateUnavailable =
+    tripType === "RT" &&
+    returnScope === "exact" &&
+    typeof effectiveReturnDate === "string" &&
+    !returnDateMap.has(effectiveReturnDate);
+  const selectedReturnRangeUnavailable =
+    tripType === "RT" &&
+    returnScope === "range" &&
+    Boolean(effectiveReturnDateStart || effectiveReturnDateEnd) &&
+    !returnDateOptions.some((item) => {
+      if (effectiveReturnDateStart && item.date < effectiveReturnDateStart) {
+        return false;
+      }
+      if (effectiveReturnDateEnd && item.date > effectiveReturnDateEnd) {
+        return false;
+      }
+      return true;
+    });
 
   return (
     <>
@@ -353,6 +387,60 @@ export default async function RoutesPage({ searchParams }: PageProps) {
             <p className="page-copy" style={{ marginTop: "0.25rem" }}>
               Trip scope: {tripScopeLabel}
             </p>
+            <div className="route-availability-grid">
+              <div className="filter-group">
+                <div className="filter-label">Collected departure dates</div>
+                {availability.ok ? (
+                  departureDateOptions.length ? (
+                    <div className="chip-row">
+                      {departureDateOptions.map((item) => (
+                        <span className="chip route-date-chip" key={`departure-${item.date}`}>
+                          {item.date} ({item.row_count})
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="empty-state">No collected departure dates for the current scope.</div>
+                  )
+                ) : (
+                  <div className="empty-state error-state">
+                    Availability error: {availability.error ?? "Unable to inspect collected dates."}
+                  </div>
+                )}
+              </div>
+              {tripType === "RT" ? (
+                <div className="filter-group">
+                  <div className="filter-label">Collected return dates</div>
+                  {availability.ok ? (
+                    returnDateOptions.length ? (
+                      <div className="chip-row">
+                        {returnDateOptions.map((item) => (
+                          <span className="chip route-date-chip" key={`return-${item.date}`}>
+                            {item.date} ({item.row_count})
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="empty-state">No collected round-trip return dates for the current scope.</div>
+                    )
+                  ) : (
+                    <div className="empty-state error-state">
+                      Availability error: {availability.error ?? "Unable to inspect collected return dates."}
+                    </div>
+                  )}
+                </div>
+              ) : null}
+            </div>
+            {selectedReturnDateUnavailable ? (
+              <div className="status-banner warn">
+                The selected return date is not currently collected for this route scope and comparable cycle.
+              </div>
+            ) : null}
+            {selectedReturnRangeUnavailable ? (
+              <div className="status-banner warn">
+                The selected return-date range has no collected matches for this route scope and comparable cycle.
+              </div>
+            ) : null}
             {routeOptions.length ? (
               <div className="route-hint-row">
                 {routeOptions.map((item) => (

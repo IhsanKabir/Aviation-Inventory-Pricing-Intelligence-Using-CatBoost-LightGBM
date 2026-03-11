@@ -622,6 +622,17 @@ a {
   gap: 10px;
 }
 
+.route-availability-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.route-date-chip {
+  min-height: 34px;
+  padding: 8px 12px;
+  cursor: default;
+}
+
 .route-hint-chip {
   padding: 10px 12px;
   border-radius: 999px;

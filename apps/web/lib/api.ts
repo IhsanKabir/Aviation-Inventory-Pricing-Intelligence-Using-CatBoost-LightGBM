@@ -173,6 +173,17 @@ export type RouteMonitorMatrixPayload = {
   signal_counts?: Record<string, number>;
 };
 
+export type RouteDateAvailabilityPoint = {
+  date: string;
+  row_count: number;
+};
+
+export type RouteDateAvailabilityPayload = {
+  cycle_id: string | null;
+  departure_dates: RouteDateAvailabilityPoint[];
+  return_dates: RouteDateAvailabilityPoint[];
+};
+
 export type OperationsWeekdayProfile = {
   day_label: string;
   flight_instance_count: number;
@@ -669,6 +680,24 @@ export async function getRouteMonitorMatrixPayload(
       return_date_end: query.returnDateEnd,
       route_limit: query.routeLimit,
       history_limit: query.historyLimit
+    }),
+    60
+  );
+}
+
+export async function getRouteDateAvailabilityPayload(
+  query: SnapshotQuery & {
+    tripTypes?: string[];
+  }
+) {
+  return fetchJsonWithRevalidate<RouteDateAvailabilityPayload>(
+    buildPath("/api/v1/reporting/route-date-availability", {
+      cycle_id: query.cycleId,
+      airline: query.airlines,
+      origin: query.origins,
+      destination: query.destinations,
+      cabin: query.cabins,
+      trip_type: query.tripTypes
     }),
     60
   );

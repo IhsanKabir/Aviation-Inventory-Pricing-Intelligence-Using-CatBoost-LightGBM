@@ -144,6 +144,27 @@ def route_monitor_matrix(
     )
 
 
+@app.get("/api/v1/reporting/route-date-availability")
+def route_date_availability(
+    cycle_id: str | None = None,
+    airline: list[str] | None = Query(default=None),
+    origin: list[str] | None = Query(default=None),
+    destination: list[str] | None = Query(default=None),
+    cabin: list[str] | None = Query(default=None),
+    trip_type: list[str] | None = Query(default=None),
+    db: Session | None = Depends(get_optional_db),
+) -> dict:
+    return reporting.get_route_date_availability(
+        db,
+        cycle_id=cycle_id,
+        airlines=airline,
+        origins=origin,
+        destinations=destination,
+        cabins=cabin,
+        trip_types=trip_type,
+    )
+
+
 @app.get("/api/v1/reporting/airline-operations")
 def airline_operations(
     cycle_id: str | None = None,
