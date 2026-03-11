@@ -23,14 +23,14 @@ if [[ -f "$ENVFILE" ]]; then
     [[ -z "${key// }" ]] && continue
     [[ "$key" =~ ^[[:space:]]*# ]] && continue
     case "$key" in
-      BIGQUERY_PROJECT_ID|BIGQUERY_DATASET|GOOGLE_APPLICATION_CREDENTIALS|ACCUMULATION_COMPLETION_BUFFER_MINUTES)
+      BIGQUERY_PROJECT_ID|BIGQUERY_DATASET|GOOGLE_APPLICATION_CREDENTIALS|OPERATIONAL_COMPLETION_BUFFER_MINUTES|ACCUMULATION_COMPLETION_BUFFER_MINUTES)
         export "$key"="${value:-}"
         ;;
     esac
   done < "$ENVFILE"
 fi
 
-export ACCUMULATION_COMPLETION_BUFFER_MINUTES="${ACCUMULATION_COMPLETION_BUFFER_MINUTES:-72}"
+export OPERATIONAL_COMPLETION_BUFFER_MINUTES="${OPERATIONAL_COMPLETION_BUFFER_MINUTES:-${ACCUMULATION_COMPLETION_BUFFER_MINUTES:-90}}"
 
 if [[ -z "${BIGQUERY_PROJECT_ID:-}" ]]; then
   echo "[$(timestamp)] warning: BIGQUERY_PROJECT_ID not set; automatic BigQuery sync will be skipped" >> "$LOGFILE"
@@ -50,7 +50,7 @@ if [[ -f "$RECOVERY_HELPER" ]]; then
     --python-exe "$PYEXE" \
     --root "$ROOT" \
     --reports-dir "$ROOT/output/reports" \
-    --min-completed-gap-minutes "$ACCUMULATION_COMPLETION_BUFFER_MINUTES" \
+    --min-completed-gap-minutes "$OPERATIONAL_COMPLETION_BUFFER_MINUTES" \
     -- \
     "$PYEXE" "$ROOT/run_pipeline.py" \
     --python-exe "$PYEXE" \
@@ -65,7 +65,7 @@ if [[ -f "$RECOVERY_HELPER" ]]; then
     exit 0
   fi
   if [[ "$RC" -eq 11 ]]; then
-    echo "[$(timestamp)] ingestion cycle skipped: ${ACCUMULATION_COMPLETION_BUFFER_MINUTES} minute post-completion buffer is active" >> "$LOGFILE"
+    echo "[$(timestamp)] ingestion cycle skipped: ${OPERATIONAL_COMPLETION_BUFFER_MINUTES} minute post-completion buffer is active" >> "$LOGFILE"
     exit 0
   fi
   echo "[$(timestamp)] ingestion cycle finished rc=$RC" >> "$LOGFILE"

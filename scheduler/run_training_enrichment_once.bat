@@ -20,6 +20,7 @@ if exist "%ENVFILE%" (
     if /I "%%~A"=="BIGQUERY_PROJECT_ID" set "BIGQUERY_PROJECT_ID=%%~B"
     if /I "%%~A"=="BIGQUERY_DATASET" set "BIGQUERY_DATASET=%%~B"
     if /I "%%~A"=="GOOGLE_APPLICATION_CREDENTIALS" set "GOOGLE_APPLICATION_CREDENTIALS=%%~B"
+    if /I "%%~A"=="TRAINING_COMPLETION_BUFFER_MINUTES" set "TRAINING_COMPLETION_BUFFER_MINUTES=%%~B"
     if /I "%%~A"=="ACCUMULATION_COMPLETION_BUFFER_MINUTES" set "ACCUMULATION_COMPLETION_BUFFER_MINUTES=%%~B"
     if /I "%%~A"=="TRAINING_PREDICTION_ML_MODELS" set "TRAINING_PREDICTION_ML_MODELS=%%~B"
     if /I "%%~A"=="TRAINING_PREDICTION_DL_MODELS" set "TRAINING_PREDICTION_DL_MODELS=%%~B"
@@ -27,7 +28,8 @@ if exist "%ENVFILE%" (
   )
 )
 
-if not defined ACCUMULATION_COMPLETION_BUFFER_MINUTES set "ACCUMULATION_COMPLETION_BUFFER_MINUTES=72"
+if not defined TRAINING_COMPLETION_BUFFER_MINUTES set "TRAINING_COMPLETION_BUFFER_MINUTES=%ACCUMULATION_COMPLETION_BUFFER_MINUTES%"
+if not defined TRAINING_COMPLETION_BUFFER_MINUTES set "TRAINING_COMPLETION_BUFFER_MINUTES=120"
 if not defined TRAINING_PREDICTION_ML_MODELS set "TRAINING_PREDICTION_ML_MODELS=catboost,lightgbm"
 if not defined TRAINING_PREDICTION_DL_MODELS set "TRAINING_PREDICTION_DL_MODELS=mlp"
 if not defined TRAINING_SKIP_BIGQUERY_SYNC set "TRAINING_SKIP_BIGQUERY_SYNC=0"
@@ -43,14 +45,14 @@ if defined BIGQUERY_PROJECT_ID if defined BIGQUERY_DATASET if not defined GOOGLE
 )
 
 if exist "%RECOVERY_HELPER%" (
-  "%PYEXE%" "%RECOVERY_HELPER%" --mode preflight --python-exe "%PYEXE%" --root "%ROOT%" --reports-dir "%ROOT%\output\reports" --min-completed-gap-minutes "%ACCUMULATION_COMPLETION_BUFFER_MINUTES%" >> "%LOGFILE%" 2>&1
+  "%PYEXE%" "%RECOVERY_HELPER%" --mode preflight --python-exe "%PYEXE%" --root "%ROOT%" --reports-dir "%ROOT%\output\reports" --min-completed-gap-minutes "%TRAINING_COMPLETION_BUFFER_MINUTES%" >> "%LOGFILE%" 2>&1
   set "PRE_RC=%ERRORLEVEL%"
   if "!PRE_RC!"=="10" (
     echo [%date% %time%] training enrichment skipped: active or fresh accumulation already present>> "%LOGFILE%"
     exit /b 0
   )
   if "!PRE_RC!"=="11" (
-    echo [%date% %time%] training enrichment skipped: %ACCUMULATION_COMPLETION_BUFFER_MINUTES% minute post-completion buffer is active>> "%LOGFILE%"
+    echo [%date% %time%] training enrichment skipped: %TRAINING_COMPLETION_BUFFER_MINUTES% minute post-completion buffer is active>> "%LOGFILE%"
     exit /b 0
   )
   if not "!PRE_RC!"=="0" (

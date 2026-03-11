@@ -62,18 +62,27 @@
         0,
         3,
         5,
-        7,
-        15
+        15,
+        30
       ],
       "date_ranges": [],
       "day_offset_ranges": [],
       "trip_type": "OW"
     },
+    "tourism_mle_bkk_kul_one_way_plus7": {
+      "description": "Tourism-focused one-way extension for MLE, BKK, and KUL routes. Adds a +7 day outbound check on top of the common one-way monitoring set.",
+      "trip_type": "OW",
+      "day_offsets": [
+        7
+      ],
+      "date_ranges": [],
+      "day_offset_ranges": []
+    },
     "bangladesh_domestic_round_trip_short": {
       "description": "Domestic Bangladesh return behavior. Keep return options very close to departure.",
       "trip_type": "RT",
       "return_date_offsets": [
-        2
+        7
       ],
       "return_date_ranges": [],
       "return_date_offset_ranges": []

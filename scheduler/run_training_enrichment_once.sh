@@ -24,14 +24,14 @@ if [[ -f "$ENVFILE" ]]; then
     [[ -z "${key// }" ]] && continue
     [[ "$key" =~ ^[[:space:]]*# ]] && continue
     case "$key" in
-      BIGQUERY_PROJECT_ID|BIGQUERY_DATASET|GOOGLE_APPLICATION_CREDENTIALS|ACCUMULATION_COMPLETION_BUFFER_MINUTES|TRAINING_PREDICTION_ML_MODELS|TRAINING_PREDICTION_DL_MODELS|TRAINING_SKIP_BIGQUERY_SYNC)
+      BIGQUERY_PROJECT_ID|BIGQUERY_DATASET|GOOGLE_APPLICATION_CREDENTIALS|TRAINING_COMPLETION_BUFFER_MINUTES|ACCUMULATION_COMPLETION_BUFFER_MINUTES|TRAINING_PREDICTION_ML_MODELS|TRAINING_PREDICTION_DL_MODELS|TRAINING_SKIP_BIGQUERY_SYNC)
         export "$key"="${value:-}"
         ;;
     esac
   done < "$ENVFILE"
 fi
 
-export ACCUMULATION_COMPLETION_BUFFER_MINUTES="${ACCUMULATION_COMPLETION_BUFFER_MINUTES:-72}"
+export TRAINING_COMPLETION_BUFFER_MINUTES="${TRAINING_COMPLETION_BUFFER_MINUTES:-${ACCUMULATION_COMPLETION_BUFFER_MINUTES:-120}}"
 export TRAINING_PREDICTION_ML_MODELS="${TRAINING_PREDICTION_ML_MODELS:-catboost,lightgbm}"
 export TRAINING_PREDICTION_DL_MODELS="${TRAINING_PREDICTION_DL_MODELS:-mlp}"
 export TRAINING_SKIP_BIGQUERY_SYNC="${TRAINING_SKIP_BIGQUERY_SYNC:-0}"
@@ -53,7 +53,7 @@ if [[ -f "$RECOVERY_HELPER" ]]; then
     --python-exe "$PYEXE" \
     --root "$ROOT" \
     --reports-dir "$ROOT/output/reports" \
-    --min-completed-gap-minutes "$ACCUMULATION_COMPLETION_BUFFER_MINUTES" >> "$LOGFILE" 2>&1
+    --min-completed-gap-minutes "$TRAINING_COMPLETION_BUFFER_MINUTES" >> "$LOGFILE" 2>&1
   PRE_RC=$?
   set -e
 
@@ -62,7 +62,7 @@ if [[ -f "$RECOVERY_HELPER" ]]; then
     exit 0
   fi
   if [[ "$PRE_RC" -eq 11 ]]; then
-    echo "[$(timestamp)] training enrichment skipped: ${ACCUMULATION_COMPLETION_BUFFER_MINUTES} minute post-completion buffer is active" >> "$LOGFILE"
+    echo "[$(timestamp)] training enrichment skipped: ${TRAINING_COMPLETION_BUFFER_MINUTES} minute post-completion buffer is active" >> "$LOGFILE"
     exit 0
   fi
   if [[ "$PRE_RC" -ne 0 ]]; then

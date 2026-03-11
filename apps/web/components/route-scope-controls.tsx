@@ -23,6 +23,7 @@ type DateAvailabilityPoint = {
 
 type ScopeState = {
   cycleId: string;
+  airlines: string[];
   origin: string;
   destination: string;
   cabin: string;
@@ -44,6 +45,12 @@ function buildQueryString(state: ScopeState) {
 
   if (state.cycleId.trim()) {
     next.set("cycle_id", state.cycleId.trim());
+  }
+  for (const airline of state.airlines) {
+    const normalizedAirline = airline.trim().toUpperCase();
+    if (normalizedAirline) {
+      next.append("airline", normalizedAirline);
+    }
   }
   if (normalizeAirportCode(state.origin)) {
     next.set("origin", normalizeAirportCode(state.origin));
@@ -104,6 +111,7 @@ export function RouteScopeControls({
   initialState,
   tripScopeLabel,
   cycleOptions,
+  airlineOptions,
   routeOptions,
   departureDateOptions,
   returnDateOptions,
@@ -116,6 +124,7 @@ export function RouteScopeControls({
   initialState: ScopeState;
   tripScopeLabel: string;
   cycleOptions: CycleOption[];
+  airlineOptions: string[];
   routeOptions: RouteOption[];
   departureDateOptions: DateAvailabilityPoint[];
   returnDateOptions: DateAvailabilityPoint[];
@@ -195,8 +204,9 @@ export function RouteScopeControls({
     return false;
   }, [airportCodesAreValid, exactRouteMatch, state.destination, state.origin]);
   const exportHref = useMemo(() => {
-    const params: Record<string, string | undefined> = {
+    const params: Record<string, string | string[] | undefined> = {
       cycle_id: state.cycleId || undefined,
+      airline: state.airlines.length ? state.airlines : undefined,
       origin: normalizeAirportCode(state.origin) || undefined,
       destination: normalizeAirportCode(state.destination) || undefined,
       cabin: state.cabin.trim() || undefined,
@@ -234,6 +244,19 @@ export function RouteScopeControls({
 
   function updateState(next: Partial<ScopeState>) {
     setState((current) => ({ ...current, ...next }));
+  }
+
+  function toggleAirline(airline: string) {
+    setState((current) => {
+      const normalizedAirline = airline.trim().toUpperCase();
+      const exists = current.airlines.includes(normalizedAirline);
+      return {
+        ...current,
+        airlines: exists
+          ? current.airlines.filter((item) => item !== normalizedAirline)
+          : [...current.airlines, normalizedAirline].sort()
+      };
+    });
   }
 
   function setTripType(nextTripType: string) {
@@ -279,6 +302,7 @@ export function RouteScopeControls({
   function resetScope() {
     setState({
       cycleId: "",
+      airlines: [],
       origin: "",
       destination: "",
       cabin: "",
@@ -312,6 +336,25 @@ export function RouteScopeControls({
                 type="button"
               >
                 {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {airlineOptions.length ? (
+        <div className="filter-group">
+          <div className="filter-label">Airlines</div>
+          <div className="chip-row">
+            {airlineOptions.map((item) => (
+              <button
+                key={`airline-${item}`}
+                className="chip"
+                data-active={state.airlines.includes(item)}
+                onClick={() => toggleAirline(item)}
+                type="button"
+              >
+                {item}
               </button>
             ))}
           </div>

@@ -627,6 +627,23 @@ export async function getRoutes() {
   return fetchJsonWithRevalidate<{ items: RouteItem[] }>("/api/v1/meta/routes", 900);
 }
 
+export async function getFilteredRoutes(query?: {
+  cycleId?: string;
+  airlines?: string[];
+  cabins?: string[];
+  tripTypes?: string[];
+}) {
+  return fetchJsonWithRevalidate<{ items: RouteItem[] }>(
+    buildPath("/api/v1/meta/routes", {
+      cycle_id: query?.cycleId,
+      airline: query?.airlines,
+      cabin: query?.cabins,
+      trip_type: query?.tripTypes
+    }),
+    120
+  );
+}
+
 export async function getDashboardPayload() {
   const [health, latestCycle, airlines, routes, cycleHealth] = await Promise.all([
     fetchJson<HealthPayload>("/health"),

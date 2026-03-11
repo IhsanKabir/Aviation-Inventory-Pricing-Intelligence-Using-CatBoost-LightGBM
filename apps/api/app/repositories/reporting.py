@@ -1333,47 +1333,102 @@ def list_airlines(session: Session | None) -> list[dict[str, Any]]:
     return _rows_to_dicts([dict(row) for row in rows])
 
 
-def list_routes(session: Session | None) -> list[dict[str, Any]]:
+def list_routes(
+    session: Session | None,
+    cycle_id: str | None = None,
+    airlines: Sequence[str] | None = None,
+    cabins: Sequence[str] | None = None,
+    trip_types: Sequence[str] | None = None,
+) -> list[dict[str, Any]]:
+    normalized_trip_types = [value for value in _normalize_codes(trip_types) if value in {"OW", "RT"}]
+    use_filtered_scope = bool(cycle_id or airlines or cabins or normalized_trip_types)
     if _bigquery_ready():
         try:
-            rows = _run_bigquery_query(
-                f"""
-                WITH ranked_routes AS (
-                  SELECT
-                    origin,
-                    destination,
-                    route_key,
-                    offer_rows,
-                    airlines_present,
-                    first_seen_at_utc,
-                    last_seen_at_utc,
-                    ROW_NUMBER() OVER (
-                      PARTITION BY route_key
-                      ORDER BY last_seen_at_utc DESC, offer_rows DESC, airlines_present DESC
-                    ) AS row_rank
-                  FROM {_bq_table("dim_route")}
+            if use_filtered_scope:
+                resolved_cycle_id = _resolve_cycle_id_bigquery(cycle_id)
+                if not resolved_cycle_id:
+                    return []
+                filters = ["cycle_id = @cycle_id"]
+                params: list[bigquery.ScalarQueryParameter] = [
+                    bigquery.ScalarQueryParameter("cycle_id", "STRING", resolved_cycle_id)
+                ]
+                if airlines:
+                    filters.append("airline IN UNNEST(@airlines)")
+                    params.append(bigquery.ArrayQueryParameter("airlines", "STRING", _normalize_codes(airlines)))
+                if cabins:
+                    filters.append("cabin IN UNNEST(@cabins)")
+                    params.append(bigquery.ArrayQueryParameter("cabins", "STRING", _normalize_codes(cabins, uppercase=False)))
+                if normalized_trip_types:
+                    filters.append("search_trip_type IN UNNEST(@trip_types)")
+                    params.append(bigquery.ArrayQueryParameter("trip_types", "STRING", normalized_trip_types))
+                rows = _run_bigquery_query(
+                    f"""
+                    SELECT
+                      origin,
+                      destination,
+                      route_key,
+                      COUNT(*) AS offer_rows,
+                      COUNT(DISTINCT airline) AS airlines_present,
+                      MIN(captured_at_utc) AS first_seen_at_utc,
+                      MAX(captured_at_utc) AS last_seen_at_utc
+                    FROM {_bq_table("fact_offer_snapshot")}
+                    WHERE {' AND '.join(filters)}
+                    GROUP BY origin, destination, route_key
+                    ORDER BY offer_rows DESC NULLS LAST, route_key
+                    """,
+                    params,
                 )
-                SELECT
-                  origin,
-                  destination,
-                  route_key,
-                  offer_rows,
-                  airlines_present,
-                  first_seen_at_utc,
-                  last_seen_at_utc
-                FROM ranked_routes
-                WHERE row_rank = 1
-                ORDER BY offer_rows DESC NULLS LAST, route_key
-                """
-            )
+            else:
+                rows = _run_bigquery_query(
+                    f"""
+                    WITH ranked_routes AS (
+                      SELECT
+                        origin,
+                        destination,
+                        route_key,
+                        offer_rows,
+                        airlines_present,
+                        first_seen_at_utc,
+                        last_seen_at_utc,
+                        ROW_NUMBER() OVER (
+                          PARTITION BY route_key
+                          ORDER BY last_seen_at_utc DESC, offer_rows DESC, airlines_present DESC
+                        ) AS row_rank
+                      FROM {_bq_table("dim_route")}
+                    )
+                    SELECT
+                      origin,
+                      destination,
+                      route_key,
+                      offer_rows,
+                      airlines_present,
+                      first_seen_at_utc,
+                      last_seen_at_utc
+                    FROM ranked_routes
+                    WHERE row_rank = 1
+                    ORDER BY offer_rows DESC NULLS LAST, route_key
+                    """
+                )
             return _annotate_route_records(_serialize_warehouse_rows(rows))
         except (GoogleAPIError, RuntimeError, ValueError):
             pass
     if session is None:
         return []
+
+    resolved_cycle_id = _resolve_cycle_id(session, cycle_id) if use_filtered_scope else None
+    clauses = ["1=1"]
+    params: dict[str, Any] = {}
+    if resolved_cycle_id:
+        clauses.append("fo.scrape_id = CAST(:cycle_id AS uuid)")
+        params["cycle_id"] = resolved_cycle_id
+    _apply_in_filter(clauses, params, "fo.airline", airlines, "route_airline")
+    _apply_in_filter(clauses, params, "fo.cabin", cabins, "route_cabin", uppercase=False)
+    if normalized_trip_types:
+        _apply_in_filter(clauses, params, "COALESCE(frm.search_trip_type, 'OW')", normalized_trip_types, "route_trip_type")
+
     rows = session.execute(
         text(
-            """
+            f"""
             SELECT
                 fo.origin,
                 fo.destination,
@@ -1383,10 +1438,14 @@ def list_routes(session: Session | None) -> list[dict[str, Any]]:
                 MIN(fo.scraped_at) AS first_seen_at_utc,
                 MAX(fo.scraped_at) AS last_seen_at_utc
             FROM flight_offers fo
+            LEFT JOIN flight_offer_raw_meta frm
+              ON frm.flight_offer_id = fo.id
+            WHERE {' AND '.join(clauses)}
             GROUP BY fo.origin, fo.destination
             ORDER BY offer_rows DESC, route_key
             """
-        )
+        ),
+        params,
     ).mappings().all()
     return _annotate_route_records(_rows_to_dicts([dict(row) for row in rows]))
 

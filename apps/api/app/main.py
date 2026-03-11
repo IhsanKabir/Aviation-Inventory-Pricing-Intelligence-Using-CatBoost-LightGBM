@@ -72,8 +72,22 @@ def meta_airlines(db: Session | None = Depends(get_optional_db)) -> dict:
 
 
 @app.get("/api/v1/meta/routes")
-def meta_routes(db: Session | None = Depends(get_optional_db)) -> dict:
-    return {"items": reporting.list_routes(db)}
+def meta_routes(
+    cycle_id: str | None = None,
+    airline: list[str] | None = Query(default=None),
+    cabin: list[str] | None = Query(default=None),
+    trip_type: list[str] | None = Query(default=None),
+    db: Session | None = Depends(get_optional_db),
+) -> dict:
+    return {
+        "items": reporting.list_routes(
+            db,
+            cycle_id=cycle_id,
+            airlines=airline,
+            cabins=cabin,
+            trip_types=trip_type,
+        )
+    }
 
 
 @app.get("/api/v1/reporting/cycles/latest")

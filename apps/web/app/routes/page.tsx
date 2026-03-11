@@ -3,10 +3,11 @@ import { MetricCard } from "@/components/metric-card";
 import { RouteScopeControls } from "@/components/route-scope-controls";
 import { RouteMonitorMatrix } from "@/components/route-monitor-matrix";
 import {
+  getAirlines,
   getRecentCycles,
   getRouteDateAvailabilityPayload,
   getRouteMonitorMatrixPayload,
-  getRoutes,
+  getFilteredRoutes,
   type RouteDateAvailabilityPoint,
   type RouteMonitorMatrixRoute
 } from "@/lib/api";
@@ -182,11 +183,16 @@ function buildTripScopeLabel(
   return "Round-trip · any collected return date";
 }
 
+function normalizeAirportCode(value?: string | null) {
+  const normalized = value?.trim().toUpperCase();
+  return normalized || undefined;
+}
+
 export default async function RoutesPage({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
-  const selectedAirlines = manyParams(params, "airline");
-  const origin = firstParam(params, "origin");
-  const destination = firstParam(params, "destination");
+  const selectedAirlines = manyParams(params, "airline").map((item) => item.trim().toUpperCase()).filter(Boolean);
+  const origin = normalizeAirportCode(firstParam(params, "origin"));
+  const destination = normalizeAirportCode(firstParam(params, "destination"));
   const cabin = firstParam(params, "cabin");
   const tripType = firstParam(params, "trip_type") ?? "OW";
   const returnDate = firstParam(params, "return_date");
@@ -211,11 +217,18 @@ export default async function RoutesPage({ searchParams }: PageProps) {
     effectiveReturnDateEnd
   );
 
-  const [routes, recentCycles, matrix, availability] = await Promise.all([
-    getRoutes(),
+  const [airlines, routes, recentCycles, matrix, availability] = await Promise.all([
+    getAirlines(),
+    getFilteredRoutes({
+      cycleId,
+      airlines: selectedAirlines.length ? selectedAirlines : undefined,
+      cabins: cabin ? [cabin] : undefined,
+      tripTypes: tripType ? [tripType] : undefined
+    }),
     getRecentCycles(8),
     getRouteMonitorMatrixPayload({
       cycleId,
+      airlines: selectedAirlines.length ? selectedAirlines : undefined,
       origins: origin ? [origin] : undefined,
       destinations: destination ? [destination] : undefined,
       cabins: cabin ? [cabin] : undefined,
@@ -228,6 +241,7 @@ export default async function RoutesPage({ searchParams }: PageProps) {
     }),
     getRouteDateAvailabilityPayload({
       cycleId,
+      airlines: selectedAirlines.length ? selectedAirlines : undefined,
       origins: origin ? [origin] : undefined,
       destinations: destination ? [destination] : undefined,
       cabins: cabin ? [cabin] : undefined,
@@ -238,6 +252,9 @@ export default async function RoutesPage({ searchParams }: PageProps) {
   const routeBlocks = matrix.data?.routes ?? [];
   const routePriorityBoard = buildRoutePriorityBoard(routeBlocks);
   const recentCycleOptions = uniqueByKey(recentCycles.data?.items ?? [], (item) => item.cycle_id ?? "");
+  const airlineOptions = uniqueByKey(airlines.data?.items ?? [], (item) => item.airline)
+    .map((item) => item.airline)
+    .sort((left, right) => left.localeCompare(right));
   const routeOptions = uniqueByKey(routes.data?.items ?? [], (item) => item.route_key)
     .sort((left, right) => (right.offer_rows ?? 0) - (left.offer_rows ?? 0) || left.route_key.localeCompare(right.route_key))
     .map((item) => ({ routeKey: item.route_key, origin: item.origin, destination: item.destination }));
@@ -320,6 +337,7 @@ export default async function RoutesPage({ searchParams }: PageProps) {
             departureDateOptions={departureDateOptions}
             initialState={{
               cycleId: cycleId ?? "",
+              airlines: selectedAirlines,
               origin: origin ?? "",
               destination: destination ?? "",
               cabin: cabin ?? "",
@@ -331,6 +349,7 @@ export default async function RoutesPage({ searchParams }: PageProps) {
               routeLimit: String(routeLimit),
               historyLimit: String(historyLimit)
             }}
+            airlineOptions={airlineOptions}
             returnDateOptions={returnDateOptions}
             routeOptions={routeOptions}
             selectedReturnDateUnavailable={selectedReturnDateUnavailable}

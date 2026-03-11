@@ -33,8 +33,13 @@
    - `AirlineIntel_IngestionOnLogon`
 - Current default ingestion cadence is every 6 hours (`RepeatMinutes=360`).
 - Ingestion launch policy is sequential: never start a new cycle while an active/fresh accumulation exists, and enforce a configurable completion buffer after the last completed accumulation.
-- Current configured completion buffer is controlled by `ACCUMULATION_COMPLETION_BUFFER_MINUTES`.
-- Recommended home-laptop setting: `72` minutes.
+- Current configured completion buffers are controlled by:
+  - `OPERATIONAL_COMPLETION_BUFFER_MINUTES`
+  - `TRAINING_COMPLETION_BUFFER_MINUTES`
+- `ACCUMULATION_COMPLETION_BUFFER_MINUTES` remains a compatibility fallback.
+- Recommended settings:
+  - operational: `90` minutes
+  - training: `120` minutes
 
 ## Exact Verification Commands
 
@@ -205,7 +210,9 @@ Use a frequent lightweight launcher plus the preflight lock/buffer. That is more
 Suggested settings:
 
 - `.env`
-  - `ACCUMULATION_COMPLETION_BUFFER_MINUTES=72`
+  - `OPERATIONAL_COMPLETION_BUFFER_MINUTES=90`
+  - `TRAINING_COMPLETION_BUFFER_MINUTES=120`
+  - `ACCUMULATION_COMPLETION_BUFFER_MINUTES=90` (fallback only)
   - `TRAINING_PREDICTION_ML_MODELS=catboost,lightgbm`
   - `TRAINING_PREDICTION_DL_MODELS=mlp`
   - `TRAINING_SKIP_BIGQUERY_SYNC=0`
@@ -220,7 +227,7 @@ Why this is sensible:
 
 - the launcher itself is cheap
 - the preflight lock prevents overlap
-- the 3-hour completion buffer prevents immediate back-to-back restarts
+- separate operational/training completion buffers prevent immediate back-to-back restarts while keeping each run family independently tunable
 - hourly operational checks recover sooner after long runs than a rigid 6-hour trigger
 
 Important capacity note:
