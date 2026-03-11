@@ -31,9 +31,9 @@ def parse_args():
     parser.add_argument("--db-url", default=os.getenv("AIRLINE_DB_URL", DEFAULT_DATABASE_URL), help="Postgres URL")
     parser.add_argument(
         "--trip-plan-mode",
-        choices=["operational", "training"],
+        choices=["operational", "training", "deep"],
         default=os.getenv("RUN_ALL_TRIP_PLAN_MODE", "operational"),
-        help="Trip planning mode. 'operational' uses only comparison-safe active route profiles; 'training' expands to the fuller candidate profile set including holiday overlays.",
+        help="Trip planning mode. 'operational' uses comparison-safe active route profiles; 'training' adds daily core enrichment; 'deep' enables the broadest weekly enrichment set.",
     )
 
     # accumulation filters

@@ -23,7 +23,7 @@ def parse_args():
     p.add_argument("--max-workers", type=int, default=2)
     p.add_argument(
         "--trip-plan-mode",
-        choices=["operational", "training"],
+        choices=["operational", "training", "deep"],
         default="operational",
     )
     p.add_argument("--cycle-id", help="Optional shared cycle UUID for all airline worker processes")

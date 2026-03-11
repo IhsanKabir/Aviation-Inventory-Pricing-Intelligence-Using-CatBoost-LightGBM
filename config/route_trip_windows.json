@@ -17,6 +17,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CGP-DAC": {
@@ -28,6 +33,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CXB-DAC": {
@@ -39,6 +49,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "DAC-BZL": {
@@ -50,6 +65,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CGP": {
@@ -61,6 +81,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CXB": {
@@ -72,6 +97,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-JSR": {
@@ -83,6 +113,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-RJH": {
@@ -94,6 +129,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-SPD": {
@@ -105,6 +145,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-ZYL": {
@@ -116,6 +161,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "JSR-DAC": {
@@ -127,6 +177,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "RJH-DAC": {
@@ -138,6 +193,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "SPD-DAC": {
@@ -149,6 +209,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "ZYL-DAC": {
@@ -160,10 +225,18 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         }
       },
       "training_market_trip_profiles": [
+        "bangladesh_domestic_eid_round_trip_2026",
+        "bangladesh_domestic_eid_capital_outbound_one_way_2026",
+        "bangladesh_domestic_eid_capital_return_one_way_2026",
         "inventory_anchor_departure_tracking_default"
       ]
     },
@@ -173,12 +246,18 @@
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DAC-AUH": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         }
       },
@@ -192,24 +271,36 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-CCU": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-MAA": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "MAA-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         }
       },
@@ -231,17 +322,24 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "MLE-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         }
       },
       "training_market_trip_profiles": [
-        "inventory_anchor_departure_tracking_default"
+        "inventory_anchor_departure_tracking_default",
+        "tourism_mle_bkk_kul_one_way_plus7"
       ]
     },
     "AK": {
@@ -258,17 +356,24 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "KUL-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         }
       },
       "training_market_trip_profiles": [
-        "inventory_anchor_departure_tracking_default"
+        "inventory_anchor_departure_tracking_default",
+        "tourism_mle_bkk_kul_one_way_plus7"
       ]
     },
     "BG": {
@@ -277,18 +382,27 @@
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "AUH-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "BAH-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "BKK-DAC": {
@@ -299,6 +413,10 @@
           "market_trip_profile": "tourism_bkk_can_round_trip",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "tourism_bkk_can_round_trip",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -311,24 +429,38 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CAN-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CCU-CGP": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CCU-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CGP-DAC": {
@@ -340,12 +472,20 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CMB-CXB": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CXB-DAC": {
@@ -357,12 +497,20 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "DAC-AUH": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-BKK": {
@@ -373,6 +521,10 @@
           "market_trip_profile": "tourism_bkk_can_round_trip",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "tourism_bkk_can_round_trip",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -385,18 +537,29 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CAN": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-CCU": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-CGP": {
@@ -408,6 +571,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CXB": {
@@ -419,24 +587,38 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-DOH": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-DXB": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-JED": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-JSR": {
@@ -448,6 +630,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-KUL": {
@@ -459,18 +646,28 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
+            "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
         "DAC-MAA": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-MCT": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-MLE": {
@@ -481,6 +678,10 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -493,18 +694,29 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-SHJ": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-SIN": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-SPD": {
@@ -516,6 +728,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-ZYL": {
@@ -527,66 +744,101 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DOH-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DOH-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DOH-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DXB-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DXB-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DXB-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JSR-DAC": {
@@ -598,6 +850,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "KUL-CGP": {
@@ -608,6 +865,10 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -620,60 +881,91 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
+            "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
         "KWI-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "LHR-ZYL": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "MAA-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "MAN-ZYL": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "MCT-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MCT-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MCT-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MED-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MED-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MLE-DAC": {
@@ -684,6 +976,10 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -696,36 +992,56 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "SHJ-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "SHJ-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "SHJ-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "SIN-CGP": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "SIN-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "SPD-DAC": {
@@ -737,6 +1053,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "ZYL-DAC": {
@@ -748,10 +1069,18 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         }
       },
       "training_market_trip_profiles": [
+        "bangladesh_domestic_eid_round_trip_2026",
+        "bangladesh_domestic_eid_capital_outbound_one_way_2026",
+        "bangladesh_domestic_eid_capital_return_one_way_2026",
         "inventory_anchor_departure_tracking_default"
       ]
     },
@@ -761,18 +1090,27 @@
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "AUH-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "BAH-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "BKK-DAC": {
@@ -783,6 +1121,10 @@
           "market_trip_profile": "tourism_bkk_can_round_trip",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "tourism_bkk_can_round_trip",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -795,24 +1137,38 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CAN-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CCU-CGP": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CCU-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CGP-DAC": {
@@ -824,12 +1180,20 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CMB-CXB": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "CXB-DAC": {
@@ -841,12 +1205,20 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "DAC-AUH": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-BKK": {
@@ -857,6 +1229,10 @@
           "market_trip_profile": "tourism_bkk_can_round_trip",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "tourism_bkk_can_round_trip",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -869,18 +1245,29 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CAN": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-CCU": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-CGP": {
@@ -892,6 +1279,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CXB": {
@@ -903,24 +1295,38 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-DOH": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-DXB": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-JED": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-JSR": {
@@ -932,6 +1338,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-KUL": {
@@ -943,18 +1354,28 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
+            "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
         "DAC-MAA": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-MCT": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-MLE": {
@@ -965,6 +1386,10 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -977,18 +1402,29 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-SHJ": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-SIN": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "DAC-SPD": {
@@ -1000,6 +1436,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-ZYL": {
@@ -1011,66 +1452,101 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DOH-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DOH-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DOH-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DXB-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DXB-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "DXB-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JED-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "JSR-DAC": {
@@ -1082,6 +1558,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "KUL-CGP": {
@@ -1092,6 +1573,10 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -1104,60 +1589,91 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
+            "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
         "KWI-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "LHR-ZYL": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "MAA-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "MAN-ZYL": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "MCT-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MCT-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MCT-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MED-CGP": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MED-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "MLE-DAC": {
@@ -1168,6 +1684,10 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
+            "tourism_mle_bkk_kul_one_way_plus7"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible",
             "tourism_mle_bkk_kul_one_way_plus7"
           ]
         },
@@ -1180,36 +1700,56 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "SHJ-CXB": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "SHJ-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "SHJ-ZYL": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "SIN-CGP": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "SIN-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "SPD-DAC": {
@@ -1221,6 +1761,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "ZYL-DAC": {
@@ -1232,10 +1777,18 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         }
       },
       "training_market_trip_profiles": [
+        "bangladesh_domestic_eid_round_trip_2026",
+        "bangladesh_domestic_eid_capital_outbound_one_way_2026",
+        "bangladesh_domestic_eid_capital_return_one_way_2026",
         "inventory_anchor_departure_tracking_default"
       ]
     },
@@ -1245,12 +1798,18 @@
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "DAC-CAN": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         }
       },
@@ -1264,12 +1823,18 @@
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DXB-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         }
       },
@@ -1283,12 +1848,18 @@
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DXB-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         }
       },
@@ -1302,12 +1873,18 @@
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "SHJ-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         }
       },
@@ -1329,17 +1906,24 @@
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "KUL-DAC": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         }
       },
       "training_market_trip_profiles": [
-        "inventory_anchor_departure_tracking_default"
+        "inventory_anchor_departure_tracking_default",
+        "tourism_mle_bkk_kul_one_way_plus7"
       ]
     },
     "OD": {
@@ -1356,17 +1940,24 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "KUL-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         }
       },
       "training_market_trip_profiles": [
-        "inventory_anchor_departure_tracking_default"
+        "inventory_anchor_departure_tracking_default",
+        "tourism_mle_bkk_kul_one_way_plus7"
       ]
     },
     "Q2": {
@@ -1383,17 +1974,24 @@
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         },
         "MLE-DAC": {
           "market_trip_profile": "regional_round_trip_flexible",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "regional_round_trip_flexible"
           ]
         }
       },
       "training_market_trip_profiles": [
-        "inventory_anchor_departure_tracking_default"
+        "inventory_anchor_departure_tracking_default",
+        "tourism_mle_bkk_kul_one_way_plus7"
       ]
     },
     "QR": {
@@ -1402,12 +2000,18 @@
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DOH-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         }
       },
@@ -1421,12 +2025,18 @@
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "SIN-DAC": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         }
       },
@@ -1440,24 +2050,36 @@
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "DAC-RUH": {
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "JED-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         },
         "RUH-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         }
       },
@@ -1479,17 +2101,24 @@
           "market_trip_profile": "tourism_bkk_can_round_trip",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "tourism_bkk_can_round_trip"
           ]
         },
         "DAC-BKK": {
           "market_trip_profile": "tourism_bkk_can_round_trip",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "tourism_bkk_can_round_trip"
           ]
         }
       },
       "training_market_trip_profiles": [
-        "inventory_anchor_departure_tracking_default"
+        "inventory_anchor_departure_tracking_default",
+        "tourism_mle_bkk_kul_one_way_plus7"
       ]
     },
     "UL": {
@@ -1506,17 +2135,24 @@
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         },
         "MLE-DAC": {
           "market_trip_profile": "hub_spoke_or_longhaul_return_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "hub_spoke_or_longhaul_return_window"
           ]
         }
       },
       "training_market_trip_profiles": [
-        "inventory_anchor_departure_tracking_default"
+        "inventory_anchor_departure_tracking_default",
+        "tourism_mle_bkk_kul_one_way_plus7"
       ]
     },
     "VQ": {
@@ -1530,6 +2166,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CGP-DAC": {
@@ -1541,6 +2182,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "CXB-DAC": {
@@ -1552,6 +2198,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "DAC-BZL": {
@@ -1563,6 +2214,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CGP": {
@@ -1574,6 +2230,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-CXB": {
@@ -1585,6 +2246,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-JSR": {
@@ -1596,6 +2262,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-RJH": {
@@ -1607,6 +2278,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-SPD": {
@@ -1618,6 +2294,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "DAC-ZYL": {
@@ -1629,6 +2310,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_outbound_one_way_2026"
           ]
         },
         "JSR-DAC": {
@@ -1640,6 +2326,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "RJH-DAC": {
@@ -1651,6 +2342,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "SPD-DAC": {
@@ -1662,6 +2358,11 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         },
         "ZYL-DAC": {
@@ -1673,10 +2374,18 @@
           "active_market_trip_profiles": [
             "default_one_way_monitoring",
             "bangladesh_domestic_round_trip_short"
+          ],
+          "training_market_trip_profiles": [
+            "bangladesh_domestic_round_trip_short",
+            "bangladesh_domestic_eid_round_trip_2026",
+            "bangladesh_domestic_eid_capital_return_one_way_2026"
           ]
         }
       },
       "training_market_trip_profiles": [
+        "bangladesh_domestic_eid_round_trip_2026",
+        "bangladesh_domestic_eid_capital_outbound_one_way_2026",
+        "bangladesh_domestic_eid_capital_return_one_way_2026",
         "inventory_anchor_departure_tracking_default"
       ]
     },
@@ -1686,12 +2395,18 @@
           "market_trip_profile": "worker_visa_outbound_to_middle_east_one_way",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_visa_outbound_to_middle_east_one_way"
           ]
         },
         "MCT-DAC": {
           "market_trip_profile": "worker_return_from_middle_east_long_window",
           "active_market_trip_profiles": [
             "default_one_way_monitoring"
+          ],
+          "training_market_trip_profiles": [
+            "worker_return_from_middle_east_long_window"
           ]
         }
       },

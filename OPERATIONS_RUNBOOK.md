@@ -36,10 +36,12 @@
 - Current configured completion buffers are controlled by:
   - `OPERATIONAL_COMPLETION_BUFFER_MINUTES`
   - `TRAINING_COMPLETION_BUFFER_MINUTES`
+  - `DEEP_COMPLETION_BUFFER_MINUTES`
 - `ACCUMULATION_COMPLETION_BUFFER_MINUTES` remains a compatibility fallback.
 - Recommended settings:
   - operational: `90` minutes
   - training: `120` minutes
+  - deep: `120` minutes
 
 ## Exact Verification Commands
 
@@ -124,16 +126,23 @@ The collection stack now supports two trip-planning modes:
   - comparison-safe baseline for web freshness, health, and default cycle-to-cycle views
   - uses only `active_market_trip_profiles` from [`config/route_trip_windows.json`](config/route_trip_windows.json)
 - `training`
-  - forecasting/model-enrichment pass
-  - expands to the fuller candidate `market_trip_profiles`, including holiday overlays and richer return windows
+  - forecasting/model core-enrichment pass
+  - uses operationally active profiles plus `training_market_trip_profiles`
   - may also include training-only inventory anchor profiles so repeated observations of the same departure horizon are collected for inventory movement modeling
   - should own the richer forecasting refresh (`CatBoost + LightGBM + MLP`) and publish updated forecast outputs to BigQuery
+- `deep`
+  - broad weekly/opportunistic enrichment pass
+  - starts from the fuller route-level `market_trip_profiles` candidate set
+  - then adds `training_market_trip_profiles`
+  - then adds `deep_market_trip_profiles`
+  - intended for the heaviest holiday, tourism, worker-return, and long-haul market-movement expansions
 
 Current intent:
 
 - operational cycle = basic monitoring/comparison
-- training enrichment cycle = forecasting/training signal expansion
-- holiday overlays belong in training enrichment, not the default operational cycle
+- training enrichment cycle = daily forecasting/training signal expansion
+- deep enrichment cycle = weekly/opportunistic broad market-movement expansion
+- holiday overlays belong in training or deep enrichment, not the default operational cycle
 - inventory-anchor tracking belongs in training enrichment, not the default operational cycle
 
 Current wrappers:
@@ -144,11 +153,15 @@ Current wrappers:
 - training enrichment:
   - [`scheduler/run_training_enrichment_once.bat`](scheduler/run_training_enrichment_once.bat)
   - [`scheduler/run_training_enrichment_once.sh`](scheduler/run_training_enrichment_once.sh)
+- deep enrichment:
+  - [`scheduler/run_training_deep_once.bat`](scheduler/run_training_deep_once.bat)
+  - [`scheduler/run_training_deep_once.sh`](scheduler/run_training_deep_once.sh)
 
 Notes:
 
 - the training wrapper sets `RUN_ALL_TRIP_PLAN_MODE=training`
-- `run_pipeline.py` now accepts `--trip-plan-mode operational|training`
+- the deep wrapper sets `RUN_ALL_TRIP_PLAN_MODE=deep`
+- `run_pipeline.py` now accepts `--trip-plan-mode operational|training|deep`
 - the operational wrapper remains the default comparison-safe scheduler path
 
 ## Home Laptop Scheduler
@@ -163,6 +176,7 @@ Recommended split:
 - home / always-on laptop:
   - training enrichment cycle
   - long-running holiday/return-window expansion for forecasting
+  - optional deep enrichment attempts when the training lane is free
   - if both operational and training are moved there, the machine becomes the single scheduler host
 
 Requirements for the home laptop:
@@ -190,11 +204,18 @@ Default training model configuration:
 - `TRAINING_PREDICTION_DL_MODELS=mlp`
 - `TRAINING_SKIP_BIGQUERY_SYNC=0`
 
+Default deep model configuration:
+
+- `DEEP_PREDICTION_ML_MODELS=catboost,lightgbm`
+- `DEEP_PREDICTION_DL_MODELS=mlp`
+- `DEEP_SKIP_BIGQUERY_SYNC=0`
+
 Meaning:
 
 - the home-laptop training scheduler is expected to refresh forecasting outputs
 - BigQuery forecast tables should be updated from that run
 - the hosted forecasting page should then read the refreshed outputs
+- a deep run uses the same training lane and should be treated as opportunistic; it should not overlap with daily core training
 
 Recommended training schedule:
 
@@ -202,6 +223,13 @@ Recommended training schedule:
 - every 12-24 hours depending on runtime and model appetite
 
 Do not schedule training every 4 hours unless the runtime is proven safe on that second machine.
+
+Recommended deep schedule:
+
+- weekly attempt, or
+- manual/event-triggered run
+
+Do not treat deep as a fixed guaranteed weekly slot unless you are comfortable with it delaying core daily training on the same laptop.
 
 ## Recommended Home Laptop Setup
 
@@ -212,6 +240,7 @@ Suggested settings:
 - `.env`
   - `OPERATIONAL_COMPLETION_BUFFER_MINUTES=90`
   - `TRAINING_COMPLETION_BUFFER_MINUTES=120`
+  - `DEEP_COMPLETION_BUFFER_MINUTES=120`
   - `ACCUMULATION_COMPLETION_BUFFER_MINUTES=90` (fallback only)
   - `TRAINING_PREDICTION_ML_MODELS=catboost,lightgbm`
   - `TRAINING_PREDICTION_DL_MODELS=mlp`
@@ -222,6 +251,10 @@ Suggested settings:
 - training enrichment task
   - once daily or every `1440` minutes
   - recommended start: `01:30` local time
+- deep enrichment task
+  - weekly attempt or manual trigger
+  - should use the same lock/buffer behavior as training
+  - recommended as opportunistic, not guaranteed, on a single-laptop training lane
 
 Why this is sensible:
 
@@ -235,8 +268,9 @@ Important capacity note:
 - one laptop can host both schedulers
 - but with current estimated runtimes it is not realistic to expect many operational cycles plus a full training cycle every day from a single machine
 - realistic near-term expectation on one always-on laptop is:
-  - one comparison-safe operational run per day, and
-  - one training enrichment run per day
+- one comparison-safe operational run per day, and
+- one training enrichment run per day
+- deep enrichment should be considered optional and opportunistic on a single home laptop
 - if you need more operational freshness than that, runtime must be reduced further or collection must be split across machines
 
 Windows install commands:
@@ -244,6 +278,7 @@ Windows install commands:
 ```powershell
 powershell -ExecutionPolicy Bypass -File scheduler\install_ingestion_autorun.ps1 -RepeatMinutes 60
 powershell -ExecutionPolicy Bypass -File scheduler\install_training_enrichment_autorun.ps1 -StartTime 01:30 -RepeatMinutes 1440
+powershell -ExecutionPolicy Bypass -File scheduler\install_training_deep_autorun.ps1 -StartTime 02:00
 ```
 
 ## If Daily Ops File Did Not Update

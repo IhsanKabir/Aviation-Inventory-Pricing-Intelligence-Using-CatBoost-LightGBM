@@ -1,6 +1,6 @@
 ﻿# Airline Intelligence System Decisions (Thesis Track)
 
-Last updated: 2026-03-09
+Last updated: 2026-03-12
 
 ## 1) Program Vision
 
@@ -58,9 +58,15 @@ Target: implement as much as possible in parallel, but execute in phases when ne
     - `ACCUMULATION_COMPLETION_BUFFER_MINUTES` remains a fallback for older hosts
 - Collection is now split into two planning modes:
   - `operational`: comparison-safe baseline for web freshness and cycle-to-cycle monitoring
-  - `training`: fuller candidate profile set for forecasting/model enrichment, including holiday overlays where configured
-  - training mode may also include inventory-anchor departure tracking so the same future departure horizon is observed repeatedly for inventory movement learning
-  - training mode is the preferred place to run richer forecasting refreshes (`CatBoost`, `LightGBM`, `MLP`) and publish those outputs to BigQuery for the hosted forecasting surfaces
+  - `training`: core daily enrichment for forecasting/model refresh
+  - `deep`: broad weekly/opportunistic enrichment for the heaviest market-movement patterns
+  - training mode may include inventory-anchor departure tracking so the same future departure horizon is observed repeatedly for inventory movement learning
+  - training mode is the preferred place to run daily forecasting refreshes (`CatBoost`, `LightGBM`, `MLP`) and publish those outputs to BigQuery for the hosted forecasting surfaces
+  - deep mode is where the widest candidate profile set should run:
+    - route-level market-prior candidates can expand
+    - Bangladesh domestic Eid round-trip plus directional Eid one-way behavior can run together
+    - worker outbound / return, regional round-trip, tourism, and hub-spoke / long-haul route behaviors can be layered together
+  - operational remains the comparison-safe baseline; training is the core daily enrichment lane; deep is the optional weekly/opportunistic enrichment lane
 
 ### Required Data Fields
 

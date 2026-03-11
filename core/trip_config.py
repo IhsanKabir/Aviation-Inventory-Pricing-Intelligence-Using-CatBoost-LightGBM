@@ -340,6 +340,27 @@ def _normalize_training_market_trip_profile_names(item: dict[str, Any]) -> list[
     return names
 
 
+def _normalize_deep_market_trip_profile_names(item: dict[str, Any]) -> list[str]:
+    names: list[str] = []
+    raw_list = item.get("deep_market_trip_profiles")
+    if isinstance(raw_list, list):
+        for value in raw_list:
+            normalized = str(value or "").strip()
+            if normalized and normalized not in names:
+                names.append(normalized)
+    elif isinstance(raw_list, str):
+        for part in raw_list.split(","):
+            normalized = str(part or "").strip()
+            if normalized and normalized not in names:
+                names.append(normalized)
+
+    single = str(item.get("deep_market_trip_profile") or "").strip()
+    if single and single not in names:
+        names.append(single)
+
+    return names
+
+
 def _flatten_grouped_airlines(
     payload: dict[str, Any],
     *,
@@ -372,6 +393,10 @@ def _flatten_grouped_airlines(
             airline_defaults["training_market_trip_profile"] = airline_block.get("training_market_trip_profile")
         if "training_market_trip_profiles" in airline_block:
             airline_defaults["training_market_trip_profiles"] = airline_block.get("training_market_trip_profiles")
+        if "deep_market_trip_profile" in airline_block:
+            airline_defaults["deep_market_trip_profile"] = airline_block.get("deep_market_trip_profile")
+        if "deep_market_trip_profiles" in airline_block:
+            airline_defaults["deep_market_trip_profiles"] = airline_block.get("deep_market_trip_profiles")
         if airline_block.get("trip_type") is not None:
             airline_defaults["trip_type"] = airline_block.get("trip_type")
         for key in (
@@ -531,6 +556,7 @@ def load_route_trip_overrides(
         market_profile_names = _normalize_market_trip_profile_names(base_item)
         active_market_profile_names = _normalize_active_market_trip_profile_names(base_item)
         training_market_profile_names = _normalize_training_market_trip_profile_names(base_item)
+        deep_market_profile_names = _normalize_deep_market_trip_profile_names(base_item)
         mode = str(trip_plan_mode or "operational").strip().lower()
         if mode == "operational":
             if active_market_profile_names is not None:
@@ -546,8 +572,26 @@ def load_route_trip_overrides(
                     )
                     continue
         elif mode == "training":
-            # Training mode intentionally uses the broader candidate profile set.
+            if active_market_profile_names is not None:
+                market_profile_names = [
+                    name for name in market_profile_names
+                    if name is None or name in active_market_profile_names
+                ]
+                if not market_profile_names and logger:
+                    logger.info(
+                        "Skipping route trip override %s[%d]: no active market trip profiles enabled",
+                        path,
+                        index,
+                    )
+                    continue
             for name in training_market_profile_names:
+                if name not in market_profile_names:
+                    market_profile_names.append(name)
+        elif mode == "deep":
+            for name in training_market_profile_names:
+                if name not in market_profile_names:
+                    market_profile_names.append(name)
+            for name in deep_market_profile_names:
                 if name not in market_profile_names:
                     market_profile_names.append(name)
         else:

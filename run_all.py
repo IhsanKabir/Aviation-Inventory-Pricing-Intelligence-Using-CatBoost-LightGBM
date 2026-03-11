@@ -131,9 +131,9 @@ def parse_args():
     )
     parser.add_argument(
         "--trip-plan-mode",
-        choices=["operational", "training"],
+        choices=["operational", "training", "deep"],
         default=os.getenv("RUN_ALL_TRIP_PLAN_MODE", "operational"),
-        help="Route trip activation mode: 'operational' uses active subsets, 'training' uses the fuller candidate profile set.",
+        help="Route trip activation mode: 'operational' uses active subsets, 'training' adds core daily enrichment, 'deep' enables the broadest weekly enrichment set.",
     )
     parser.add_argument("--cabin", help="Filter to a single cabin name (e.g., Economy)")
     parser.add_argument("--adt", type=int, default=1, help="Adult passenger count for search requests (default: 1)")
