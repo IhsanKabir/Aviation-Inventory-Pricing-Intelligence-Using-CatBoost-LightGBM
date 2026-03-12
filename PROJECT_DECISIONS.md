@@ -48,10 +48,11 @@ Target: implement as much as possible in parallel, but execute in phases when ne
 
 ### Collection Frequency
 
-- Target every 3-4 hours (adaptive by actual runtime/load)
+- Use finish-driven launch semantics for operational and daily training: start the next run only after the previous run has finished and the configured completion buffer has elapsed.
 - Scheduler launch policy is sequential, not overlapping:
   - do not start a new ingestion cycle while an active/fresh accumulation exists
   - enforce a configurable completion buffer after a completed accumulation before the next launch
+  - prefer wrapper-owned self-rescheduling over fixed repeating scheduled-task triggers for operational and daily training lanes
   - fail fast when PostgreSQL is unavailable instead of starting a partial/broken cycle
   - current recommended defaults:
     - operational: `90` minutes

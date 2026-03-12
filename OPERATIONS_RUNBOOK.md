@@ -31,7 +31,8 @@
    - `AirlineIntel_MaintenancePulse`
    - `AirlineIntel_Ingestion4H`
    - `AirlineIntel_IngestionOnLogon`
-- Current default ingestion cadence is every 6 hours (`RepeatMinutes=360`).
+- Operational and daily training launchers are now finish-driven.
+- Installers create the initial one-shot trigger only; the wrapper reschedules the next run after finish plus buffer.
 - Ingestion launch policy is sequential: never start a new cycle while an active/fresh accumulation exists, and enforce a configurable completion buffer after the last completed accumulation.
 - Current configured completion buffers are controlled by:
   - `OPERATIONAL_COMPLETION_BUFFER_MINUTES`
@@ -287,8 +288,8 @@ Suggested settings:
   - `TRAINING_PREDICTION_DL_MODELS=mlp`
   - `TRAINING_SKIP_BIGQUERY_SYNC=0`
 - operational launcher task
-  - check every `60` minutes
-  - preflight decides whether a real run may start
+  - one initial trigger only
+  - wrapper schedules the next run after completion + buffer
 - training enrichment task
   - once daily or every `1440` minutes
   - recommended start: `01:30` local time
@@ -317,8 +318,8 @@ Important capacity note:
 Windows install commands:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scheduler\install_ingestion_autorun.ps1 -RepeatMinutes 60
-powershell -ExecutionPolicy Bypass -File scheduler\install_training_enrichment_autorun.ps1 -StartTime 01:30 -RepeatMinutes 1440
+powershell -ExecutionPolicy Bypass -File scheduler\install_ingestion_autorun.ps1
+powershell -ExecutionPolicy Bypass -File scheduler\install_training_enrichment_autorun.ps1 -StartTime 01:30
 powershell -ExecutionPolicy Bypass -File scheduler\install_training_deep_autorun.ps1 -StartTime 02:00
 ```
 

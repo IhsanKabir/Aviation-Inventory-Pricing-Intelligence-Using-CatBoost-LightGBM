@@ -9,6 +9,8 @@ set "LOGFILE=%ROOT%\logs\ingestion_4h.log"
 set "RECOVERY_HELPER=%ROOT%\tools\recover_interrupted_accumulation.py"
 set "RECOVERY_STATUS=%ROOT%\output\reports\accumulation_recovery_latest.json"
 set "CYCLE_STATE=%ROOT%\output\reports\accumulation_cycle_latest.json"
+set "RESCHEDULER=%ROOT%\scheduler\reschedule_finish_driven_task.ps1"
+set "TASK_NAME=AirlineIntel_Ingestion4H"
 set "ENVFILE=%ROOT%\.env"
 
 if not exist "%PYEXE%" (
@@ -43,25 +45,30 @@ if exist "%RECOVERY_HELPER%" (
   echo [%date% %time%] ingestion cycle launch check>> "%LOGFILE%"
   "%PYEXE%" "%RECOVERY_HELPER%" --mode guarded-run --python-exe "%PYEXE%" --root "%ROOT%" --reports-dir "%ROOT%\output\reports" --min-completed-gap-minutes "%OPERATIONAL_COMPLETION_BUFFER_MINUTES%" -- "%PYEXE%" "%ROOT%\run_pipeline.py" --python-exe "%PYEXE%" --skip-reports --report-output-dir "%ROOT%\output\reports" --report-timestamp-tz local >> "%LOGFILE%" 2>&1
   set "RC=%ERRORLEVEL%"
+  set "RESCHEDULED=0"
+  if exist "%RESCHEDULER%" (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "%RESCHEDULER%" -TaskName "%TASK_NAME%" -BatchPath "%~f0" -DelayMinutes %OPERATIONAL_COMPLETION_BUFFER_MINUTES% -ExecutionTimeLimitHours 8 >> "%LOGFILE%" 2>&1
+    if "!ERRORLEVEL!"=="0" set "RESCHEDULED=1"
+  )
   if exist "%RECOVERY_STATUS%" if exist "%CYCLE_STATE%" (
     powershell -NoProfile -Command "$p = Get-Content -Raw '%RECOVERY_STATUS%' | ConvertFrom-Json; $c = Get-Content -Raw '%CYCLE_STATE%' | ConvertFrom-Json; $msg = ('[{0} {1}] ingestion wrapper result: event={2} state={3} reason={4} cycle_id={5} launched={6} db_ok={7} rc={8}' -f (Get-Date -Format 'ddd MM/dd/yyyy'), (Get-Date -Format 'HH:mm:ss.ff'), $p.wrapper_event, $c.state, $p.reason, $c.cycle_id, $p.launched, $p.db_check.ok, '!RC!'); Add-Content -Path '%LOGFILE%' -Value $msg" >nul 2>&1
   )
   if "!RC!"=="10" (
-    echo [%date% %time%] ingestion wrapper result: event=skipped_active_run rc=0>> "%LOGFILE%"
+    echo [%date% %time%] ingestion wrapper result: event=skipped_active_run rescheduled=!RESCHEDULED! rc=0>> "%LOGFILE%"
     exit /b 0
   )
   if "!RC!"=="11" (
-    echo [%date% %time%] ingestion wrapper result: event=skipped_buffer rc=0>> "%LOGFILE%"
+    echo [%date% %time%] ingestion wrapper result: event=skipped_buffer rescheduled=!RESCHEDULED! rc=0>> "%LOGFILE%"
     exit /b 0
   )
   if "!RC!"=="12" (
-    echo [%date% %time%] ingestion wrapper result: event=skipped_db_unavailable rc=0>> "%LOGFILE%"
+    echo [%date% %time%] ingestion wrapper result: event=skipped_db_unavailable rescheduled=!RESCHEDULED! rc=0>> "%LOGFILE%"
     exit /b 0
   )
   if "!RC!"=="0" (
-    echo [%date% %time%] ingestion wrapper result: event=wrapper_finished_success rc=0>> "%LOGFILE%"
+    echo [%date% %time%] ingestion wrapper result: event=wrapper_finished_success rescheduled=!RESCHEDULED! rc=0>> "%LOGFILE%"
   ) else (
-    echo [%date% %time%] ingestion wrapper result: event=wrapper_finished_failure rc=!RC!>> "%LOGFILE%"
+    echo [%date% %time%] ingestion wrapper result: event=wrapper_finished_failure rescheduled=!RESCHEDULED! rc=!RC!>> "%LOGFILE%"
   )
   exit /b !RC!
 )
@@ -69,5 +76,11 @@ if exist "%RECOVERY_HELPER%" (
 echo [%date% %time%] starting ingestion cycle>> "%LOGFILE%"
 "%PYEXE%" "%ROOT%\run_pipeline.py" --python-exe "%PYEXE%" --skip-reports --report-output-dir "%ROOT%\output\reports" --report-timestamp-tz local >> "%LOGFILE%" 2>&1
 set "RC=%ERRORLEVEL%"
+set "RESCHEDULED=0"
+if exist "%RESCHEDULER%" (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%RESCHEDULER%" -TaskName "%TASK_NAME%" -BatchPath "%~f0" -DelayMinutes %OPERATIONAL_COMPLETION_BUFFER_MINUTES% -ExecutionTimeLimitHours 8 >> "%LOGFILE%" 2>&1
+  if "!ERRORLEVEL!"=="0" set "RESCHEDULED=1"
+)
+echo [%date% %time%] ingestion cycle rescheduled=!RESCHEDULED! next_delay_min=%OPERATIONAL_COMPLETION_BUFFER_MINUTES%>> "%LOGFILE%"
 echo [%date% %time%] ingestion cycle finished rc=!RC!>> "%LOGFILE%"
 exit /b !RC!

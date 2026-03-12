@@ -30,8 +30,7 @@ function Register-TrainingTask {
     param(
         [string]$Name,
         [string]$TargetBatch,
-        [datetime]$At,
-        [int]$EveryMinutes
+        [datetime]$At
     )
     $now = Get-Date
     $anchor = Get-Date -Hour $At.Hour -Minute $At.Minute -Second 0
@@ -40,17 +39,13 @@ function Register-TrainingTask {
     }
 
     if ($WhatIf) {
-        Write-Host "[WhatIf] Register-ScheduledTask -TaskName $Name (every $EveryMinutes minutes, anchor $($anchor.ToString('yyyy-MM-dd HH:mm')))"
+        Write-Host "[WhatIf] Register-ScheduledTask -TaskName $Name (initial one-shot at $($anchor.ToString('yyyy-MM-dd HH:mm')))"
         return
     }
 
     $arg = "/c `"$TargetBatch`""
     $action = New-ScheduledTaskAction -Execute "cmd.exe" -Argument $arg
-    $trigger = New-ScheduledTaskTrigger `
-        -Once `
-        -At $anchor `
-        -RepetitionInterval (New-TimeSpan -Minutes $EveryMinutes) `
-        -RepetitionDuration (New-TimeSpan -Days 3650)
+    $trigger = New-ScheduledTaskTrigger -Once -At $anchor
 
     $settings = New-ScheduledTaskSettingsSet `
         -WakeToRun `
@@ -76,12 +71,13 @@ function Show-TaskSummary {
 }
 
 $startAt = Parse-Time $StartTime
-Register-TrainingTask -Name $TaskName -TargetBatch $batchPath -At $startAt -EveryMinutes $RepeatMinutes
+Register-TrainingTask -Name $TaskName -TargetBatch $batchPath -At $startAt
 Show-TaskSummary -Name $TaskName
 
 if (-not $WhatIf) {
     Write-Host ""
     Write-Host "Done. Training enrichment autorun is installed for current user context."
+    Write-Host "This task is finish-driven: the wrapper reschedules the next run after completion + buffer."
     Write-Host "Main command:"
     Write-Host "  $batchPath"
 }
