@@ -670,10 +670,21 @@ def get_health(session: Session | None) -> dict[str, Any]:
     if session is not None:
         session.execute(text("SELECT 1"))
     latest_cycle = get_latest_cycle(session)
+    run_status = None
+    if latest_cycle:
+        run_status = _build_cycle_run_status(
+            cycle_id=str(latest_cycle["cycle_id"]),
+            latest_cycle=latest_cycle,
+            wrapper_status=_load_latest_cycle_wrapper_status(),
+            worker_status=_load_latest_run_status(),
+            parallel_status=_load_latest_parallel_status(),
+        )
     return {
         "database_ok": session is not None or _bigquery_ready(),
         "latest_cycle_id": latest_cycle["cycle_id"] if latest_cycle else None,
+        "latest_cycle_started_at_utc": latest_cycle.get("cycle_started_at_utc") if latest_cycle else None,
         "latest_cycle_completed_at_utc": latest_cycle["cycle_completed_at_utc"] if latest_cycle else None,
+        "latest_run_status": run_status,
     }
 
 

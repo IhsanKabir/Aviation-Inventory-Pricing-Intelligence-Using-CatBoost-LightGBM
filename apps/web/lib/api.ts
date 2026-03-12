@@ -10,7 +10,23 @@ export type CycleSummary = {
 export type HealthPayload = {
   database_ok: boolean;
   latest_cycle_id: string | null;
+  latest_cycle_started_at_utc?: string | null;
   latest_cycle_completed_at_utc?: string | null;
+  latest_run_status?: {
+    cycle_id?: string | null;
+    state?: string | null;
+    phase?: string | null;
+    overall_query_total?: number | null;
+    overall_query_completed?: number | null;
+    total_rows_accumulated?: number | null;
+    completed_at_utc?: string | null;
+    selected_dates?: string[] | null;
+    matches_latest_cycle?: boolean | null;
+    status_source?: string | null;
+    aggregate_airline_count?: number | null;
+    aggregate_failed_count?: number | null;
+    duration_sec?: number | null;
+  } | null;
 };
 
 export type CycleHealthPayload = {
