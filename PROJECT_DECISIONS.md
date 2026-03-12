@@ -854,3 +854,10 @@ Until the roadmap above is complete:
 - treat PostgreSQL service health as a blocker, not a warning
 - let guarded wrappers skip rather than force launches
 - prefer fewer clean cycles over more ambiguous cycles
+## Trip Config Validation
+
+Trip configuration now has a dedicated validator:
+- `tools/validate_trip_config.py`
+
+Operational rule:
+- validate `config/route_trip_windows.json`, `config/market_priors.json`, and `config/routes.json` before relying on new scheduler-facing trip-profile changes
