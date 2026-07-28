@@ -126,18 +126,30 @@ const PRODUCTS: Product[] = [
     slug: "iata",
     name: "Travel Ops Console",
     tagline:
-      "The combined desktop console (IATACodeValidator.exe): IATA Code Validator, BD Travel Agency Lookup, Traffic Movement, Zenith (customer / PNR / flight loads / history + Flight Load Inspection + per-passenger passport & contact details to Excel), built-in Bulk Mailer with Split & Send, free WhatsApp Blast (text + one image, from your own number), Health checks and an in-app visual Guide. One portable .exe.",
+      "The combined desktop console (TravelOpsConsole.exe): IATA Code Validator, BD Travel Agency Lookup, Traffic Movement, Zenith (customer / PNR / flight loads / history + Flight Load Inspection + per-passenger passport & contact details to Excel), built-in Bulk Mailer with Split & Send, free WhatsApp Blast (text + one image, from your own number), Health checks and an in-app visual Guide. One portable .exe.",
     repo: IATA_REPO,
-    assetMatch: (n) => n === "IATACodeValidator.exe" || n.endsWith(".exe"),
+    assetMatch: (n) => n === "TravelOpsConsole.exe" || n === "IATACodeValidator.exe" || n.endsWith(".exe"),
     requirements:
       "Windows 10/11 · Internet connection · Excel inputs per tool · WhatsApp Blast: your own WhatsApp account (QR scan)",
     latestDownloadOverride: IATA_DOWNLOAD_URL,
     manifestUrl: `${IATA_DOWNLOAD_URL.replace("/download", "/latest")}`,
     fallback: [
       {
+        version: "v1.40.0",
+        date: "2026-07-28",
+        label: "Latest",
+        notes: [
+          "The app file is now TravelOpsConsole.exe (renamed from IATACodeValidator.exe) — existing installs keep auto-updating, nothing to do",
+          "NEW: Load Factor in Seats report — flight loads counted in seats offered / filled / EMPTY instead of a percentage, split into Domestic, International and the domestic sector of an international flight",
+          "Nepal NATTA member directory extractor with full contacts (v1.39)",
+          "Customer Lookup by ID or agency NAME; per-passenger passport & contact details to Excel (v1.30–1.31)",
+        ],
+        exe_url: `https://github.com/${IATA_REPO}/releases/download/v1.40.0/TravelOpsConsole.exe`,
+        guide_url: null,
+      },
+      {
         version: "v1.29.7",
         date: "2026-07-15",
-        label: "Latest",
         notes: [
           "NEW: Passenger details → Excel — PNR Bulk Lookup can now pull every passenger's passport no., document type & expiry, issuing country, nationality, DOB, title, gender, email and phones into one workbook (validated on a 985-PNR file: 1,379 passengers, ~99.8% passport-field fill)",
           "In-app visual Guide tab + Agency Visit Tracking in Instant Reports (v1.27–1.28)",

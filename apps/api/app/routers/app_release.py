@@ -30,7 +30,8 @@ CLOUD RUN NOTE
 
 OPTIONAL ENV
     APP_RELEASE_GITHUB_REPO   default "IhsanKabir/iata-code-validator"
-    APP_RELEASE_ASSET_NAME    default "IATACodeValidator.exe"
+    APP_RELEASE_ASSET_NAME    default "TravelOpsConsole.exe"
+                              (falls back to the legacy IATACodeValidator.exe)
     APP_RELEASE_GITHUB_TOKEN  optional PAT to lift GitHub's 60/hr anon limit
     APP_PUBLIC_BASE_URL       optional explicit https base for download_url
 """
@@ -56,7 +57,11 @@ router = APIRouter()
 APPS: dict[str, dict[str, str]] = {
     "iata": {
         "repo": os.environ.get("APP_RELEASE_GITHUB_REPO", "IhsanKabir/iata-code-validator"),
-        "asset": os.environ.get("APP_RELEASE_ASSET_NAME", "IATACodeValidator.exe"),
+        # The exe was renamed to TravelOpsConsole.exe; releases carry BOTH names for
+        # a while. Serve the NEW name when present, fall back to the legacy one so
+        # older releases still resolve. APP_RELEASE_ASSET_NAME overrides the choice.
+        "asset": os.environ.get("APP_RELEASE_ASSET_NAME", "TravelOpsConsole.exe"),
+        "asset_fallback": "IATACodeValidator.exe",
     },
     "discount-report": {
         "repo": os.environ.get(
@@ -119,17 +124,38 @@ def _fetch_latest_release(app_key: str, cfg: dict[str, str]) -> dict:
     return data
 
 
-def _asset_url(cfg: dict[str, str], data: dict) -> str | None:
-    for a in (data.get("assets") or []):
-        if a.get("name") == cfg["asset"]:
-            return a.get("browser_download_url")
+def _asset_names(cfg: dict[str, str]) -> tuple[str, ...]:
+    """Preferred asset name first, then any legacy alias."""
+    names = [cfg["asset"]]
+    fb = cfg.get("asset_fallback")
+    if fb and fb != cfg["asset"]:
+        names.append(fb)
+    return tuple(names)
+
+
+def _resolve_asset(cfg: dict[str, str], data: dict) -> tuple[str, str] | None:
+    """(filename, download_url) of the first asset name this release actually has."""
+    assets = data.get("assets") or []
+    for name in _asset_names(cfg):
+        for a in assets:
+            if a.get("name") == name:
+                url = a.get("browser_download_url")
+                if url:
+                    return name, url
     return None
+
+
+def _asset_url(cfg: dict[str, str], data: dict) -> str | None:
+    hit = _resolve_asset(cfg, data)
+    return hit[1] if hit else None
 
 
 def _sha256_from_release(cfg: dict[str, str], data: dict) -> str:
     """Read the sibling <asset>.sha256 release asset, if CI published one."""
+    hit = _resolve_asset(cfg, data)
+    served = hit[0] if hit else cfg["asset"]
     for a in (data.get("assets") or []):
-        if a.get("name") == f"{cfg['asset']}.sha256":
+        if a.get("name") == f"{served}.sha256":
             try:
                 with urllib.request.urlopen(
                     _gh_request(a["browser_download_url"], "text/plain"), timeout=15,
@@ -205,7 +231,9 @@ def download(app: str | None = None) -> StreamingResponse:
     """
     app_key, cfg = _app_config(app)
     try:
-        url = _asset_url(cfg, _fetch_latest_release(app_key, cfg))
+        hit = _resolve_asset(cfg, _fetch_latest_release(app_key, cfg))
+        url = hit[1] if hit else None
+        served_name = hit[0] if hit else cfg["asset"]
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=502, detail=f"release lookup failed: {exc}")
     if not url:
@@ -244,5 +272,5 @@ def download(app: str | None = None) -> StreamingResponse:
     return StreamingResponse(
         _stream(),
         media_type="application/octet-stream",
-        headers={"Content-Disposition": f'attachment; filename="{cfg["asset"]}"'},
+        headers={"Content-Disposition": f'attachment; filename="{served_name}"'},
     )
