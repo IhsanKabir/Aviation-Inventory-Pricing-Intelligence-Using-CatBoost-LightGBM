@@ -111,14 +111,17 @@
   </section>
 
   <section class="card" id="account-card" style="display:none">
-    <details>
-      <summary class="muted" style="cursor:pointer">Account: change password</summary>
-      <div class="row" style="margin-top:8px">
-        <label>New password <input id="new_password" type="password" autocomplete="new-password"></label>
-        <label>Confirm <input id="confirm_password" type="password" autocomplete="new-password"></label>
-        <button class="secondary" onclick="changePassword()">Save password</button>
-      </div>
-    </details>
+    <div class="row" style="justify-content:space-between;align-items:flex-start;gap:12px">
+      <details style="flex:1">
+        <summary class="muted" style="cursor:pointer">Account: change password</summary>
+        <div class="row" style="margin-top:8px">
+          <label>New password <input id="new_password" type="password" autocomplete="new-password"></label>
+          <label>Confirm <input id="confirm_password" type="password" autocomplete="new-password"></label>
+          <button class="secondary" onclick="changePassword()">Save password</button>
+        </div>
+      </details>
+      <button class="secondary" onclick="signOut()" style="padding:4px 12px" title="Sign out and return to the sign-in screen">Sign out</button>
+    </div>
   </section>
 
   <section class="card" id="main-card">
@@ -249,6 +252,12 @@ async function changePassword() {
   addBanner("ok", "Password changed.");
 }
 
+async function signOut() {
+  await api().logout();          // best-effort server revoke + clears the local token
+  addBanner("ok", "Signed out.");
+  await refreshState();          // token gone -> get_state reports logged_in=false -> sign-in card
+}
+
 async function runDiagnostics() {
   const modal = document.getElementById("diag-modal");
   const body = document.getElementById("diag-body");
@@ -304,6 +313,13 @@ async function refreshAccess() {
   const line = document.getElementById("access-line");
   const btn = document.getElementById("access-request-btn");
   const st = a.status || "unknown";
+  if (st === "signed_out") {
+    // session expired/revoked: the backend just cleared the stale token, so re-render
+    // state to surface the Sign-in card (refreshState -> refreshAccess bails on !logged_in).
+    addBanner("err", a.detail || "Session expired — sign in again.");
+    await refreshState();
+    return;
+  }
   row.style.display = "flex";
   if (a.allowed) {
     const plan = a.plan || {};

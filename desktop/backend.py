@@ -288,6 +288,7 @@ class DesktopApi:
         except requests.RequestException as exc:
             return {"ok": False, "error": f"API unreachable: {exc}"}
         if response.status_code == 401:
+            self._clear_token()     # expired -> drop to the sign-in card on refresh
             return {"ok": False, "error": "Session expired — sign in again.",
                     "needs_login": True}
         if response.status_code != 200:
@@ -358,6 +359,10 @@ class DesktopApi:
                     self._save_config()
                 return result
             if r.status_code == 401:
+                # Expired/revoked session: clear the stale token so get_state reports
+                # logged_in=False and the UI drops back to the sign-in card (otherwise a
+                # present-but-expired token traps the user on the "logged in" surface).
+                self._clear_token()
                 return {"status": "signed_out", "allowed": False,
                         "detail": "Session expired — sign in again."}
         except requests.RequestException:

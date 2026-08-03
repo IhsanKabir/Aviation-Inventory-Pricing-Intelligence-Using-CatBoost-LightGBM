@@ -116,6 +116,20 @@ def test_sync_network_failure_queues_but_auth_failure_does_not(api, monkeypatch)
     assert api._outbox.count() == 0                            # auth errors never queue
 
 
+def test_check_access_401_clears_token_so_signin_card_shows(api, monkeypatch):
+    """An expired/revoked session (401) must clear the stored token so get_state reports
+    logged_in=False and the UI drops back to the sign-in card — otherwise a present-but-
+    expired token traps the user on the 'logged in' surface with no way to re-login."""
+    api._store_token("tok-1")
+    assert api.get_state()["logged_in"] is True
+    monkeypatch.setattr(backend_mod.requests, "get",
+                        lambda url, **kw: FakeResponse(401, {"detail": "expired"}))
+    result = api.check_access()
+    assert result["status"] == "signed_out"
+    assert api._token() == ""                          # stale token cleared
+    assert api.get_state()["logged_in"] is False       # -> sign-in card
+
+
 def _sign_in(api, monkeypatch, status="approved", allowed=True):
     api._store_token("tok-1")
     monkeypatch.setattr(api, "check_access",
