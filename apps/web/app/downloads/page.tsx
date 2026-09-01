@@ -56,6 +56,7 @@ const IATA_REPO = "IhsanKabir/iata-code-validator";
 const MAILER_REPO = "IhsanKabir/bulk-mailer";
 const DISCOUNT_REPO =
   "IhsanKabir/Aviation-Inventory-Pricing-Intelligence-Using-CatBoost-LightGBM-MLP";
+const IMAGE2EXCEL_REPO = "IhsanKabir/Image2Excel";
 
 // Reachable download mirror for corporate networks that block GitHub. The
 // Cloud Run backend streams the latest IATA exe over a public route; once a
@@ -233,6 +234,16 @@ const PRODUCTS: Product[] = [
     guideUrl: "/discount-comparison/guide",
     latestDownloadOverride: DISCOUNT_DOWNLOAD_URL,
     manifestUrl: `${IATA_DOWNLOAD_URL.replace("/download", "/latest")}?app=discount-report`,
+    fallback: [],
+  },
+  {
+    slug: "image2excel",
+    name: "Image2Excel",
+    tagline:
+      "Turn a photo of your OTP / No-Show / Offload flight-ops report into an Excel file matching your exact daily template. 100% local OCR — no internet connection needed, nothing ever leaves your machine.",
+    repo: IMAGE2EXCEL_REPO,
+    assetMatch: (n) => n.endsWith(".zip"),
+    requirements: "Windows 10/11 · unzip fully, then run Image2Excel.exe inside · no install",
     fallback: [],
   },
 ];
